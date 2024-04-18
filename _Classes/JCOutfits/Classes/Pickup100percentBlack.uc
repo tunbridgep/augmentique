@@ -4,10 +4,9 @@ defaultProperties
 {
     outfitName="100% Black Outfit"
     ItemName="100% Black Outfit"
-    shirtTex="JCOutfits.Outfit1F_Tex1"
-    pantsTex="JCOutfits.Outfit1F_Tex1"
-    trench1Tex="JCOutfits.Outfit1F_Tex1"
-    trench2Tex="JCOutfits.Outfit1F_Tex1"
-    //framesTex = "JCOutfits.Outfit1F_Tex1"
-    //lensesTex = "JCOutfits.Outfit1F_Tex1"
+    outfitMesh="DeusExCharacters.GM_Trench"
+    tex1="JCOutfits.Outfit1F_Tex1"
+    tex2="JCOutfits.Outfit1F_Tex1"
+    tex4="JCOutfits.Outfit1F_Tex1"
+    tex5="JCOutfits.Outfit1F_Tex1"
 }

@@ -357,7 +357,7 @@ const			NintendoDelay = 6.0;
 var Computers ActiveComputer;
 
 // OUTFIT STUFF
-var OutfitManagerBase outfitManager;
+var travel OutfitManagerBase outfitManager;
 
 // native Functions
 native(1099) final function string GetDeusExVersion();

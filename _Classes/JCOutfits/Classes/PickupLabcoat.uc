@@ -4,10 +4,11 @@ defaultProperties
 {
     outfitName="Lab Coat"
     ItemName="Lab Coat"
-    shirtTex="DeusExCharacters.Skins.TrenchShirtTex3"
-    pantsTex="DeusExCharacters.Skins.PantsTex1"
-    trench1Tex="DeusExCharacters.Skins.LabCoatTex1"
-    trench2Tex="DeusExCharacters.Skins.LabCoatTex1"
-    framesTex="DeusExCharacters.Skins.FramesTex1"
-    lensesTex="DeusExCharacters.Skins.LensesTex2"
+    outfitMesh="DeusExCharacters.GM_Trench"
+    tex1="DeusExCharacters.Skins.LabCoatTex1"
+    tex2="DeusExCharacters.Skins.PantsTex1"
+    tex4="DeusExCharacters.Skins.TrenchShirtTex3"
+    tex5="DeusExCharacters.Skins.LabCoatTex1"
+    tex6="DeusExCharacters.Skins.FramesTex1"
+    tex7="DeusExCharacters.Skins.LensesTex2"
 }

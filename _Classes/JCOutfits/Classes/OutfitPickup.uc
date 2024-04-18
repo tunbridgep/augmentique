@@ -11,12 +11,14 @@ var const localized string outfitDesc;
 var const localized string itemArticle;
 var const localized string PickupMessage;
 
-var const string shirtTex;
-var const string pantsTex;
-var const string trench1Tex;
-var const string trench2Tex;
-var const string framesTex;
-var const string lensesTex;
+var const string tex1;
+var const string tex2;
+var const string tex3;
+var const string tex4;
+var const string tex5;
+var const string tex6;
+var const string tex7;
+var const string outfitMesh;
 
 function Frob(Actor Frobber, Inventory frobWith)
 {
@@ -31,7 +33,7 @@ function Frob(Actor Frobber, Inventory frobWith)
         if (M != None)
         {
             P.ClientMessage(PickupMessage @ itemArticle @ ItemName, 'Pickup');
-            M.AddOutfit(outfitName,outfitDesc,shirtTex,pantsTex,trench1Tex,trench2Tex,framesTex,lensesTex);
+            M.AddOutfit(outfitName,outfitDesc,outfitMesh,tex1,tex2,tex3,tex4,tex5,tex6,tex7);
             Destroy();
         }
     }
@@ -40,6 +42,7 @@ function Frob(Actor Frobber, Inventory frobWith)
 defaultproperties
 {
      outfitName="Cool Outfit"
+     outfitMesh="DeusExCharacters.GM_Trench"
      PickupMessage="You found"
      ItemName="Fashionable Outfit"
      ItemArticle="a"
