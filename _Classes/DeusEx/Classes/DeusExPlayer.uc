@@ -5,7 +5,6 @@ class DeusExPlayer extends PlayerPawnExt
 	native;
 
 #exec OBJ LOAD FILE=Effects
-#exec OBJ LOAD FILE=JCOutfits
 
 // Name and skin assigned to PC by player on the Character Generation screen
 var travel String	TruePlayerName;
@@ -358,7 +357,7 @@ const			NintendoDelay = 6.0;
 var Computers ActiveComputer;
 
 // OUTFIT STUFF
-var OutfitManager outfitManager;
+var OutfitManagerBase outfitManager;
 
 // native Functions
 native(1099) final function string GetDeusExVersion();
@@ -1267,15 +1266,26 @@ function ResetPlayerToDefaults()
 
 function SetupOutfitManager()
 {
+    local class<OutfitManagerBase> managerBaseClass;
+
 	// create the Outfit Manager if not found
 	if (outfitManager == None)
     {
-	    outfitManager = new(Self) class'OutfitManager';
+	    //outfitManager = new(Self) class'OutfitManager';
+        managerBaseClass = class<OutfitManagerBase>(DynamicLoadObject("JCOutfits.OutfitManager", class'Class'));
+        outfitManager = new(Self) managerBaseClass;
     }
-    outfitManager.Setup(Self);
 
-    //Re-assign current outfit
-    outfitManager.ApplyCurrentOutfit();
+    if (outfitManager != None)
+    {
+        //ClientMessage("Outfit Manager successfully inited");
+
+        //Call base setup code, required each map load
+        outfitManager.Setup(Self);
+
+        //Re-assign current outfit
+        outfitManager.ApplyCurrentOutfit();
+    }
 }
 
 
@@ -4496,12 +4506,6 @@ exec function ParseRightClick()
 			FrobTarget = None;
 			return;
 		}
-        //SARGE: Outfit System
-        else if (FrobTarget.IsA('OutfitPickup'))
-        {
-            OutfitPickup(FrobTarget).AddOutfit(outfitManager);
-            FrobTarget.Destroy();
-        }
 		else if (FrobTarget.IsA('Inventory'))
 		{
 			// If this is an item that can be stacked, check to see if 

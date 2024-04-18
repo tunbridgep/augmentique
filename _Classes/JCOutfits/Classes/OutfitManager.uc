@@ -1,4 +1,6 @@
-class OutfitManager extends Object;
+class OutfitManager extends OutfitManagerBase;
+
+#exec OBJ LOAD FILE=DeusEx
 
 struct Outfit
 {
@@ -21,8 +23,6 @@ struct Outfit
     //var travel string firstPersonArmTex;
 };
 
-var Pawn player;
-
 var travel Outfit outfits[99];
 var travel int numOutfits;
 var travel Outfit currentOutfit;
@@ -31,20 +31,20 @@ var travel Outfit currentOutfit;
 var const localized string defaultOutfitName;
 var const localized string defaultOutfitDesc;
 
-//This should be called in ResetPlayerToDefaults, and TravelPostAccept
-function Setup(Pawn newPlayer)
+function Setup(DeusExPlayer newPlayer)
 {
     player = newPlayer;
-    //If we have no outfit #0, create one based on the players current outfit.
+    //If we have no outfit #0, create one based on the players current skin (should be JC's default outfit).
     if (numOutfits == 0)
     {
-        AddOutfit("Default","Default",string(player.MultiSkins[4].name),string(player.MultiSkins[2].name),string(player.MultiSkins[1].name),string(player.MultiSkins[5].name),string(player.MultiSkins[6].name),string(player.MultiSkins[7].name));
+        AddOutfit(defaultOutfitName,defaultOutfitDesc,string(player.MultiSkins[4].name),string(player.MultiSkins[2].name),string(player.MultiSkins[1].name),string(player.MultiSkins[5].name),string(player.MultiSkins[6].name),string(player.MultiSkins[7].name));
         currentOutfit = outfits[0];
     }
 }
 
 function AddOutfit(string n, string d, string shirt, string pants, string trench1, string trench2, optional string frames, optional string lenses)
 {
+    player.ClientMessage("This is the new version of AddOutfit being called");
     outfits[numOutfits].outfitName = n;
     outfits[numOutfits].outfitDesc = d;
     outfits[numOutfits].shirtTex = shirt;
@@ -101,7 +101,7 @@ function ApplyCurrentOutfit()
 function SetTexture(int slot, string tex)
 {
     local Texture t;
-    t = Texture(DynamicLoadObject(tex, class'Texture', false));
+    t = Texture(DynamicLoadObject(tex, class'Texture', true));
 
     if (t != None)
         player.MultiSkins[slot] = t;
@@ -109,6 +109,6 @@ function SetTexture(int slot, string tex)
 
 defaultproperties
 {
-    defaultOutfitName = "JC Denton's Classic Trenchcoat"
-    defaultOutfitDesc = "An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
+    defaultOutfitName="JC Denton's Classic Trenchcoat"
+    defaultOutfitDesc="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
 }
