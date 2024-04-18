@@ -31,7 +31,8 @@ event InitWindow()
 	PopulateOutfitsList();
 	SetFocusWindow(lstOutfits);
 
-	PersonaNavBarWindow(winNavBar).btnImages.SetSensitivity(False);
+    if (PersonaNavBarWindow(winNavBar).btnOutfits != None)
+        PersonaNavBarWindow(winNavBar).btnOutfits.SetSensitivity(False);
 
 	EnableButtons();
 }
