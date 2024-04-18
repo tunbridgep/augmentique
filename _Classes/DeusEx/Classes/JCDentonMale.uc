@@ -21,6 +21,15 @@ event TravelPostAccept()
 		case 3:	MultiSkins[0] = Texture'JCDentonTex6'; break;
 		case 4:	MultiSkins[0] = Texture'JCDentonTex7'; break;
 	}
+		
+    //Change Trenchcoat Tex
+    //MultiSkins[1] = Texture(DynamicLoadObject("JCOutfits.Outfit1F_Tex1", class'Texture', false));
+    //MultiSkins[2] = Texture(DynamicLoadObject("JCOutfits.Outfit1F_Tex1", class'Texture', false));
+    ////MultiSkins[3] = Texture(DynamicLoadObject("JCOutfits.Outfit1F_Tex1", class'Texture', false));
+    //MultiSkins[4] = Texture(DynamicLoadObject("JCOutfits.Outfit1F_Tex1", class'Texture', false));
+    //MultiSkins[5] = Texture(DynamicLoadObject("JCOutfits.Outfit1F_Tex1", class'Texture', false));
+    //MultiSkins[6] = Texture(DynamicLoadObject("JCOutfits.Outfit1F_Tex1", class'Texture', false));
+    //MultiSkins[7] = Texture(DynamicLoadObject("JCOutfits.Outfit1F_Tex1", class'Texture', false));
 }
 
 // ----------------------------------------------------------------------

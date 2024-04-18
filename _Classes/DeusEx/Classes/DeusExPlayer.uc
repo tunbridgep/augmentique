@@ -5,6 +5,7 @@ class DeusExPlayer extends PlayerPawnExt
 	native;
 
 #exec OBJ LOAD FILE=Effects
+#exec OBJ LOAD FILE=JCOutfits
 
 // Name and skin assigned to PC by player on the Character Generation screen
 var travel String	TruePlayerName;
@@ -355,6 +356,9 @@ const			NintendoDelay = 6.0;
 
 // For closing comptuers if the server quits
 var Computers ActiveComputer;
+
+// OUTFIT STUFF
+var OutfitManager outfitManager;
 
 // native Functions
 native(1099) final function string GetDeusExVersion();
@@ -711,6 +715,9 @@ event TravelPostAccept()
 
 	// make sure the player's eye height is correct
 	BaseEyeHeight = CollisionHeight - (GetDefaultCollisionHeight() - Default.BaseEyeHeight);
+
+    //SARGE: Setup outfit manager
+    SetupOutfitManager();
 }
 
 // ----------------------------------------------------------------------
@@ -1248,7 +1255,29 @@ function ResetPlayerToDefaults()
 		NintendoImmunityEffect( True );
       GiveInitialInventory();
 	}
+
+    //Setup outfit manager
+    SetupOutfitManager();
 }
+
+// ----------------------------------------------------------------------
+// SetupOutfitManager()
+// SARGE: Setup the outfit manager and restore current outfit
+// ----------------------------------------------------------------------
+
+function SetupOutfitManager()
+{
+	// create the Outfit Manager if not found
+	if (outfitManager == None)
+    {
+	    outfitManager = new(Self) class'OutfitManager';
+    }
+    outfitManager.Setup(Self);
+
+    //Re-assign current outfit
+    outfitManager.ApplyCurrentOutfit();
+}
+
 
 // ----------------------------------------------------------------------
 // CreateKeyRing()
@@ -4467,6 +4496,12 @@ exec function ParseRightClick()
 			FrobTarget = None;
 			return;
 		}
+        //SARGE: Outfit System
+        else if (FrobTarget.IsA('OutfitPickup'))
+        {
+            OutfitPickup(FrobTarget).AddOutfit(outfitManager);
+            FrobTarget.Destroy();
+        }
 		else if (FrobTarget.IsA('Inventory'))
 		{
 			// If this is an item that can be stacked, check to see if 
