@@ -1,0 +1,345 @@
+//=============================================================================
+// PersonaScreenOutfits. Based off PersonaScreenImages
+//=============================================================================
+
+class PersonaScreenOutfits extends PersonaScreenBaseWindow;
+
+#exec OBJ LOAD FILE=DeusEx
+
+var PersonaActionButtonWindow btnEquip;
+
+var PersonaListWindow         lstOutfits;
+var PersonaScrollAreaWindow   winScroll;
+var PersonaHeaderTextWindow   winOutfitName;
+var PersonaImageWindow        winImage;
+
+var localized String OutfitsTitleText;
+var localized String EquipButtonLabel;
+
+var int selectedRowId;
+
+// ----------------------------------------------------------------------
+// InitWindow()
+//
+// Initialize the Window
+// ----------------------------------------------------------------------
+
+event InitWindow()
+{
+	Super.InitWindow();
+
+	PopulateOutfitsList();
+	SetFocusWindow(lstOutfits);
+
+	PersonaNavBarWindow(winNavBar).btnImages.SetSensitivity(False);
+
+	EnableButtons();
+}
+
+// ----------------------------------------------------------------------
+// CreateControls()
+// ----------------------------------------------------------------------
+
+function CreateControls()
+{
+	Super.CreateControls();
+
+	CreateTitleWindow(9, 5, OutfitsTitleText);
+	CreateImageWindow();
+	CreateOutfitsList();
+	CreateOutfitTitle();
+	CreateButtons();
+	CreateNewLegendLabel();
+}
+
+// ----------------------------------------------------------------------
+// CreateImageWindow()
+// ----------------------------------------------------------------------
+
+function CreateImageWindow()
+{
+	winImage = PersonaImageWindow(winClient.NewChild(Class'PersonaImageWindow'));
+	winImage.SetPos(15, 20);
+}
+
+// ----------------------------------------------------------------------
+// CreateOutfitTitle()
+// ----------------------------------------------------------------------
+
+function CreateOutfitTitle()
+{
+	winOutfitName = PersonaHeaderTextWindow(winClient.NewChild(Class'PersonaHeaderTextWindow'));
+	winOutfitName.SetPos(214, 6);
+	winOutfitName.SetWidth(200);
+	winOutfitName.SetTextAlignments(HALIGN_Right, VALIGN_Center);
+}
+
+// ----------------------------------------------------------------------
+// CreateOutfitsList()
+// ----------------------------------------------------------------------
+
+function CreateOutfitsList()
+{
+	winScroll = CreateScrollAreaWindow(winClient);
+	winScroll.SetPos(417, 21);
+	winScroll.SetSize(184, 398);
+
+	lstOutfits = PersonaListWindow(winScroll.clipWindow.NewChild(Class'PersonaListWindow'));
+	lstOutfits.EnableMultiSelect(False);
+	lstOutfits.EnableAutoExpandColumns(True);
+	lstOutfits.SetNumColumns(3);
+	lstOutfits.HideColumn(2, True);
+	lstOutfits.SetSortColumn(0, True);
+	lstOutfits.EnableAutoSort(False);
+	lstOutfits.SetColumnWidth(0, 150);
+	lstOutfits.SetColumnWidth(1, 34);
+	lstOutfits.SetColumnType(2, COLTYPE_Float);
+	lstOutfits.SetColumnFont(1, Font'FontHUDWingDings');
+}
+
+// ----------------------------------------------------------------------
+// CreateButtons()
+// ----------------------------------------------------------------------
+
+function CreateButtons()
+{
+	local PersonaButtonBarWindow winActionButtons;
+
+	winActionButtons = PersonaButtonBarWindow(winClient.NewChild(Class'PersonaButtonBarWindow'));
+	winActionButtons.SetPos(10, 422);
+	winActionButtons.SetWidth(259);
+	winActionButtons.FillAllSpace(False);
+
+	btnEquip = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
+	btnEquip.SetButtonText(EquipButtonLabel);
+}
+
+// ----------------------------------------------------------------------
+// CreateNewLegendLabel()
+// ----------------------------------------------------------------------
+
+function CreateNewLegendLabel()
+{	
+	local PersonaImageNewLegendLabel newLabel;
+
+	newLabel = PersonaImageNewLegendLabel(winClient.NewChild(Class'PersonaImageNewLegendLabel'));
+	newLabel.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 13, 424);
+}
+
+// ----------------------------------------------------------------------
+// PopulateOutfitsList()
+// ----------------------------------------------------------------------
+
+function PopulateOutfitsList()
+{
+    local string outfit;
+	local int rowId, i;
+    local OutfitManager outfitManager;
+
+    outfitManager = OutfitManager(Player.OutfitManager);
+
+	// First clear the list
+	lstOutfits.DeleteAllRows();
+
+    player.ClientMessage("Populate outfits list");
+
+
+    if (outfitManager == None)
+        return;
+
+	// Loop through all the outfits the player currently has in 
+	// his/her possession
+
+	for(i = 0; i < outfitManager.numOutfits;i++)
+	{
+		outfit = outfitManager.GetOutfitName(i);
+		rowId = lstOutfits.AddRow(outfit);
+
+		// Check to see if we need to display *New* in the second column
+		//if (image.bPlayerViewedImage == False)
+		//	lstOutfits.SetField(rowId, 1, "C");
+
+		// Save the image away
+		//lstOutfits.SetRowClientObject(rowId, outfit);
+		lstOutfits.SetField(rowId, 0, outfit);
+        if (outfitManager.IsEquipped(i))
+    		lstOutfits.SetField(rowId, 1, "C");
+
+        // Set the outfit number to the second column
+        lstOutfits.SetFieldValue(rowId, 2, i);
+	}
+}
+
+// ----------------------------------------------------------------------
+// SetImage()
+// ----------------------------------------------------------------------
+
+function SetImage(DataVaultImage newImage)
+{
+	winImage.SetImage(newImage);
+
+	if ( newImage == None )
+		winOutfitName.SetText("");
+	else
+		winOutfitName.SetText(newImage.imageDescription);
+
+	EnableButtons();
+}
+
+// ----------------------------------------------------------------------
+// ListSelectionChanged() 
+// ----------------------------------------------------------------------
+
+event bool ListSelectionChanged(window list, int numSelections, int focusRowId)
+{
+	SetImage(DataVaultImage(lstOutfits.GetRowClientObject(focusRowId)));
+
+    selectedRowId = focusRowId;
+
+	return True;
+}
+
+// ----------------------------------------------------------------------
+// FocusEnteredDescendant()
+// ----------------------------------------------------------------------
+
+event FocusEnteredDescendant(Window enterWindow)
+{
+	EnableButtons();
+}
+
+// ----------------------------------------------------------------------
+// FocusLeftDescendant()
+// ----------------------------------------------------------------------
+
+event FocusLeftDescendant(Window leaveWindow)
+{
+	EnableButtons();
+}
+
+// ----------------------------------------------------------------------
+// ButtonActivated()
+// ----------------------------------------------------------------------
+
+function bool ButtonActivated( Window buttonPressed )
+{
+	local bool bHandled;
+
+	bHandled = True;
+
+	switch(buttonPressed)
+	{
+		case btnEquip:
+			Equip();
+			break;
+
+		default:
+			bHandled = False;
+			break;
+	}
+
+	if ( !bHandled )
+		bHandled = Super.ButtonActivated(buttonPressed);
+
+	return bHandled;
+}
+
+// ----------------------------------------------------------------------
+// EnableButtons()
+//
+// Sets the state of the Add, Delete, Up and Down buttons
+// ----------------------------------------------------------------------
+
+function EnableButtons()
+{
+    local OutfitManager outfitManager;
+    local int index;
+    outfitManager = OutfitManager(Player.OutfitManager);
+        
+    index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
+
+	btnEquip.SetSensitivity(!outfitManager.IsEquipped(index));
+}
+
+// ----------------------------------------------------------------------
+// Equip()
+// ----------------------------------------------------------------------
+
+function Equip()
+{
+    local OutfitManager outfitManager;
+    local int index;
+    outfitManager = OutfitManager(Player.OutfitManager);
+    
+    index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
+
+    player.ClientMessage("Trying to equip " $ index);
+    outfitManager.EquipOutfit(index);
+
+    EnableButtons();
+}
+
+// ----------------------------------------------------------------------
+// SaveSettings()
+// ----------------------------------------------------------------------
+
+function SaveSettings()
+{
+	DestroyImages();
+}
+
+// ----------------------------------------------------------------------
+// DestroyImages()
+//
+// Unload texture memory used by the images
+// ----------------------------------------------------------------------
+
+function DestroyImages()
+{
+	local DataVaultImage image;
+	local int listIndex;
+	local int rowId;
+
+	for(listIndex=0; listIndex<lstOutfits.GetNumRows(); listIndex++)
+	{
+		rowId = lstOutfits.IndexToRowId(listIndex);
+
+		if (lstOutfits.GetFieldValue(rowId, 2) > 0)
+		{
+			image = DataVaultImage(lstOutfits.GetRowClientObject(rowId));
+
+			if (image != None)
+				image.UnloadTextures(player);
+		}
+	}
+}
+
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+
+defaultproperties
+{
+     OutfitsTitleText="Outfits"
+     EquipButtonLabel="Equip"
+     clientBorderOffsetY=35
+     ClientWidth=617
+     ClientHeight=439
+     clientOffsetX=11
+     clientOffsetY=2
+     clientTextures(0)=Texture'DeusExUI.UserInterface.ImagesBackground_1'
+     clientTextures(1)=Texture'DeusExUI.UserInterface.ImagesBackground_2'
+     clientTextures(2)=Texture'DeusExUI.UserInterface.ImagesBackground_3'
+     clientTextures(3)=Texture'DeusExUI.UserInterface.ImagesBackground_4'
+     clientTextures(4)=Texture'DeusExUI.UserInterface.ImagesBackground_5'
+     clientTextures(5)=Texture'DeusExUI.UserInterface.ImagesBackground_6'
+     clientBorderTextures(0)=Texture'DeusExUI.UserInterface.ImagesBorder_1'
+     clientBorderTextures(1)=Texture'DeusExUI.UserInterface.ImagesBorder_2'
+     clientBorderTextures(2)=Texture'DeusExUI.UserInterface.ImagesBorder_3'
+     clientBorderTextures(3)=Texture'DeusExUI.UserInterface.ImagesBorder_4'
+     clientBorderTextures(4)=Texture'DeusExUI.UserInterface.ImagesBorder_5'
+     clientBorderTextures(5)=Texture'DeusExUI.UserInterface.ImagesBorder_6'
+     clientTextureRows=2
+     clientTextureCols=3
+     clientBorderTextureRows=2
+     clientBorderTextureCols=3
+}

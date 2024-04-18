@@ -23,9 +23,12 @@ struct Outfit
     //var travel string firstPersonArmTex;
 };
 
+var DeusExPlayer player;
+
 var travel Outfit outfits[99];
 var travel int numOutfits;
-var travel Outfit currentOutfit;
+//var travel Outfit currentOutfit;
+var travel int currentOutfitIndex;
 
 //Names for the default JC Denton outfit
 var const localized string defaultOutfitName;
@@ -33,18 +36,25 @@ var const localized string defaultOutfitDesc;
 
 function Setup(DeusExPlayer newPlayer)
 {
+    local string sh, pa, tr1, tr2, fra, len;
+
     player = newPlayer;
     //If we have no outfit #0, create one based on the players current skin (should be JC's default outfit).
     if (numOutfits == 0)
     {
-        AddOutfit(defaultOutfitName,defaultOutfitDesc,string(player.MultiSkins[4].name),string(player.MultiSkins[2].name),string(player.MultiSkins[1].name),string(player.MultiSkins[5].name),string(player.MultiSkins[6].name),string(player.MultiSkins[7].name));
-        currentOutfit = outfits[0];
+        sh = "DeusExCharacters.Skins." $ string(player.MultiSkins[4].name);
+        pa = "DeusExCharacters.Skins." $ string(player.MultiSkins[2].name);
+        tr1 = "DeusExCharacters.Skins." $ string(player.MultiSkins[1].name);
+        tr2 = "DeusExCharacters.Skins." $ string(player.MultiSkins[5].name);
+        fra = "DeusExCharacters.Skins." $ string(player.MultiSkins[6].name);
+        len = "DeusExCharacters.Skins." $ string(player.MultiSkins[7].name);
+
+        AddOutfit(defaultOutfitName,defaultOutfitDesc,sh,pa,tr1,tr2,fra,len);
     }
 }
 
 function AddOutfit(string n, string d, string shirt, string pants, string trench1, string trench2, optional string frames, optional string lenses)
 {
-    player.ClientMessage("This is the new version of AddOutfit being called");
     outfits[numOutfits].outfitName = n;
     outfits[numOutfits].outfitDesc = d;
     outfits[numOutfits].shirtTex = shirt;
@@ -58,13 +68,27 @@ function AddOutfit(string n, string d, string shirt, string pants, string trench
     EquipOutfit(numOutfits-1);
 }
 
+function string GetOutfitName(int index)
+{
+    
+    if (index >= numOutfits)
+        return "";
+
+    return outfits[index].outfitName;
+}
+
 function EquipOutfit(int index)
 {
     local Outfit of;
     
     if (index >= numOutfits)
         return;
+    
+    player.ClientMessage("shirtTex: " $ outfits[index].shirtTex);
+    player.ClientMessage("pantaloons: " $ outfits[index].pantsTex);
 
+    currentOutfitIndex = index;
+    /*
     of = outfits[index];
     currentOutfit.outfitName = of.outfitName;
     currentOutfit.outfitDesc = of.outfitDesc;
@@ -75,12 +99,26 @@ function EquipOutfit(int index)
     currentOutfit.trenchTex2 = of.trenchTex2;
     currentOutfit.framesTex = of.framesTex;
     currentOutfit.lensesTex = of.lensesTex;
+    */
 
     ApplyCurrentOutfit();
 }
 
+function Outfit GetOutfit(int index)
+{
+    return outfits[index];
+}
+
+function bool IsEquipped(int index)
+{
+    return index == currentOutfitIndex;
+}
+
 function ApplyCurrentOutfit()
 {
+    local Outfit currentOutfit;
+    currentOutfit = outfits[currentOutfitIndex];
+
     //Set Shirt Tex
     SetTexture(4,currentOutfit.shirtTex);
 
