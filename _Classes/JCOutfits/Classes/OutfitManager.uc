@@ -65,15 +65,20 @@ function Setup(DeusExPlayer newPlayer)
         defaultTextures[6] = string(player.MultiSkins[6]);
         defaultTextures[7] = string(player.MultiSkins[7]);
         defaultMesh = string(player.Mesh);
-            
+
         //Make sure the default outfit is always unlocked
         Unlock("default");
         Unlock("altfem1");
         Unlock("mechanic");
         Unlock("mechanic2");
+    
+        player.clientmessage(defaultMesh);
     }
-
-    numOutfits = 0;
+        
+    if (numOutfits != 0)
+        return;
+        
+    player.clientmessage("Repopulating outfit list");
 
     //This sucks, but I can't think of a better way to do this
                 //id    //male/female                   //Mesh                  //Textures
@@ -85,7 +90,7 @@ function Setup(DeusExPlayer newPlayer)
     AddOutfit("paul",true,false,,                       ,                       ,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","GrayMaskTex","BlackMaskTex");
     AddOutfit("suit",true,false,,                       ,"GM_Suit"              ,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","GrayMaskTex","BlackMaskTex",);
     AddOutfit("suit2",true,false,,                      ,"GM_Suit"              ,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",);
-    AddOutfit("unatcotroop",true,false,,                ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","skin","GrayMaskTex","UNATCOTroopTex3",);
+    AddOutfit("unatcotroop",true,false,,                ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
     AddOutfit("unatcotroop2",true,false,,               ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","skin","GrayMaskTex",,); //No Helmet
     AddOutfit("mechanic",true,false,,                   ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
     AddOutfit("mechanic2",true,false,,                  ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex",,);
@@ -324,9 +329,9 @@ function bool IsFemale()
 
 defaultproperties
 {
-    defaultOutfitNames(0)="JC Denton's Classic Trenchcoat"
+    defaultOutfitNames(0)="JC Denton's Trenchcoat"
     defaultOutfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
-    defaultOutfitNames(1)="JC Denton's Classic Trenchcoat (Alternate)"
+    defaultOutfitNames(1)="JC Denton's Trenchcoat (Alt)"
     defaultOutfitDescs(1)="JC Denton's Signature Trenchcoat, now with extra jewellery!"
     defaultOutfitNames(2)="100% Black Outfit"
     defaultOutfitDescs(2)="The outfit of choice for malkavians"

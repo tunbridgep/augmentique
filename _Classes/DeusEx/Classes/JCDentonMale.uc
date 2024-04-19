@@ -23,7 +23,29 @@ event TravelPostAccept()
 	}
 
     //SARGE: Setup outfit manager
+    SetTimer(0.5,false);
+}
+
+// ----------------------------------------------------------------------
+// Timer()
+// SARGE: We need to delay slightly before setting models, to allow mods like LDDP to work properly
+// ----------------------------------------------------------------------
+
+function Timer()
+{
     SetupOutfitManager();
+    Super.Timer();
+}
+
+
+// ----------------------------------------------------------------------
+// ResetPlayerToDefaults()
+// SARGE: When we start a new game, throw away our outfit manager
+// ----------------------------------------------------------------------
+function ResetPlayerToDefaults()
+{
+    outfitManager = None;
+    Super.ResetPlayerToDefaults();
 }
 
 // ----------------------------------------------------------------------
