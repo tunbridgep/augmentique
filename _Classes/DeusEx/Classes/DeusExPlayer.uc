@@ -715,9 +715,6 @@ event TravelPostAccept()
 
 	// make sure the player's eye height is correct
 	BaseEyeHeight = CollisionHeight - (GetDefaultCollisionHeight() - Default.BaseEyeHeight);
-
-    //SARGE: Setup outfit manager
-    SetupOutfitManager();
 }
 
 // ----------------------------------------------------------------------
@@ -1256,37 +1253,6 @@ function ResetPlayerToDefaults()
       GiveInitialInventory();
 	}
 }
-
-// ----------------------------------------------------------------------
-// SetupOutfitManager()
-// SARGE: Setup the outfit manager and restore current outfit
-// ----------------------------------------------------------------------
-
-function SetupOutfitManager()
-{
-    local class<OutfitManagerBase> managerBaseClass;
-    local OutfitSpawner S;
-
-	// create the Outfit Manager if not found
-	if (outfitManager == None)
-    {
-	    //outfitManager = new(Self) class'OutfitManager';
-        managerBaseClass = class<OutfitManagerBase>(DynamicLoadObject("JCOutfits.OutfitManager", class'Class'));
-        outfitManager = new(Self) managerBaseClass;
-    }
-
-    if (outfitManager != None)
-    {
-        //ClientMessage("Outfit Manager successfully inited");
-
-        //Call base setup code, required each map load
-        outfitManager.Setup(Self);
-
-        //Re-assign current outfit
-        outfitManager.ApplyCurrentOutfit();
-    }
-}
-
 
 // ----------------------------------------------------------------------
 // CreateKeyRing()

@@ -13,16 +13,16 @@ struct Outfit
     //var bool unlocked;
 
     //Meshes
-    var string mesh;
+    var Mesh mesh;
 
     //Textures
-    var string tex1;
-    var string tex2;
-    var string tex3;
-    var string tex4;
-    var string tex5;
-    var string tex6;
-    var string tex7;
+    var Texture tex1;
+    var Texture tex2;
+    var Texture tex3;
+    var Texture tex4;
+    var Texture tex5;
+    var Texture tex6;
+    var Texture tex7;
     
     //first-person arm tex
     //var travel string firstPersonArmTex;
@@ -42,19 +42,36 @@ var travel int currentOutfitIndex;
 //Names for the default JC Denton outfit
 var const localized string defaultOutfitNames[255];
 var const localized string defaultOutfitDescs[255];
-var travel bool bHasSetDefaults;
-var travel Texture defaultTextures[8];
-var travel Mesh defaultMesh;
+
+//TODO: Replace these with outfit 0
+var travel string defaultTextures[8];
+var travel string defaultMesh;
 
 function Setup(DeusExPlayer newPlayer)
 {
     local string t1, t2, t3, t4, t5, t6, t7, mesh;
 
     player = newPlayer;
-
-    //Make sure the default outfit is always unlocked
-    Unlock("default");
-    Unlock("altfem1");
+    
+    if (defaultMesh == "")
+    {
+        //Set up defaults
+        defaultTextures[0] = string(player.MultiSkins[0]);
+        defaultTextures[1] = string(player.MultiSkins[1]);
+        defaultTextures[2] = string(player.MultiSkins[2]);
+        defaultTextures[3] = string(player.MultiSkins[3]);
+        defaultTextures[4] = string(player.MultiSkins[4]);
+        defaultTextures[5] = string(player.MultiSkins[5]);
+        defaultTextures[6] = string(player.MultiSkins[6]);
+        defaultTextures[7] = string(player.MultiSkins[7]);
+        defaultMesh = string(player.Mesh);
+            
+        //Make sure the default outfit is always unlocked
+        Unlock("default");
+        Unlock("altfem1");
+        Unlock("mechanic");
+        Unlock("mechanic2");
+    }
 
     numOutfits = 0;
 
@@ -68,6 +85,10 @@ function Setup(DeusExPlayer newPlayer)
     AddOutfit("paul",true,false,,                       ,                       ,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","GrayMaskTex","BlackMaskTex");
     AddOutfit("suit",true,false,,                       ,"GM_Suit"              ,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","GrayMaskTex","BlackMaskTex",);
     AddOutfit("suit2",true,false,,                      ,"GM_Suit"              ,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",);
+    AddOutfit("unatcotroop",true,false,,                ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","skin","GrayMaskTex","UNATCOTroopTex3",);
+    AddOutfit("unatcotroop2",true,false,,               ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","skin","GrayMaskTex",,); //No Helmet
+    AddOutfit("mechanic",true,false,,                   ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
+    AddOutfit("mechanic2",true,false,,                  ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex",,);
 }
 
 function AddOutfit(string id, bool male, bool female, optional string n, optional string d, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
@@ -94,14 +115,14 @@ function AddOutfit(string id, bool male, bool female, optional string n, optiona
         outfits[numOutfits].desc = d;
 
     //TODO: Convert these to use actual meshes/textutrs, rather than having to look them up each time we switch
-    outfits[numOutfits].mesh = mesh;
-    outfits[numOutfits].tex1 = t1;
-    outfits[numOutfits].tex2 = t2;
-    outfits[numOutfits].tex3 = t3;
-    outfits[numOutfits].tex4 = t4;
-    outfits[numOutfits].tex5 = t5;
-    outfits[numOutfits].tex6 = t6;
-    outfits[numOutfits].tex7 = t7;
+    outfits[numOutfits].mesh = findMesh(mesh);
+    outfits[numOutfits].tex1 = findTexture(t1);
+    outfits[numOutfits].tex2 = findTexture(t2);
+    outfits[numOutfits].tex3 = findTexture(t3);
+    outfits[numOutfits].tex4 = findTexture(t4);
+    outfits[numOutfits].tex5 = findTexture(t5);
+    outfits[numOutfits].tex6 = findTexture(t6);
+    outfits[numOutfits].tex7 = findTexture(t7);
 
     numOutfits++;
     //EquipOutfit(numOutfits-1);
@@ -142,22 +163,6 @@ function EquipOutfit(int index)
     
     if (index >= numOutfits)
         return;
-
-    //Set up default outfit on our first outfit change
-    if (!bHasSetDefaults)
-    {
-        defaultTextures[0] = player.MultiSkins[0];
-        defaultTextures[1] = player.MultiSkins[1];
-        defaultTextures[2] = player.MultiSkins[2];
-        defaultTextures[3] = player.MultiSkins[3];
-        defaultTextures[4] = player.MultiSkins[4];
-        defaultTextures[5] = player.MultiSkins[5];
-        defaultTextures[6] = player.MultiSkins[6];
-        defaultTextures[7] = player.MultiSkins[7];
-        defaultMesh = player.Mesh;
-        bHasSetDefaults = true;
-        //player.ClientMessage("Setting default mesh: " $ defaultMesh.name);
-    }
 
     currentOutfitIndex = index;
     ApplyCurrentOutfit();
@@ -249,42 +254,30 @@ function ApplyCurrentOutfit()
     //Set Mesh
     SetMesh(currentOutfit.mesh);
 
-    //player.ClientMessage("Equipping " $ currentOutfit.name);
+    //Clear model texture
+    //TODO: Fix this to work properly
+    player.Texture = None;
+
+    //player.ClientMessage("ApplyCurrentOutfit: Equipping " $ currentOutfit.name);
 }
 
-function SetMesh(string mesh)
+function SetMesh(Mesh mesh)
 {
-    local Mesh m;
-
-    m = findMesh(mesh);
-
-    if (m != None && mesh != "")
-        player.Mesh = m;
+    if (mesh != None)
+        player.Mesh = mesh;
     else
-        player.Mesh = defaultMesh;
+    {
+        player.Mesh = findMesh(defaultMesh);
+        //player.ClientMessage("Setting to default mesh: " $ defaultMesh);
+    }
 }
 
-function SetTexture(int slot, string tex)
+function SetTexture(int slot, Texture tex)
 {
-    local Texture t;
-
-    if (tex == "skin") //Special keyword to make our skin texture appear in different slots
-    {
-        player.multiSkins[slot] = player.multiSkins[0];
-        return;
-    }
-    else if (tex == "none" || tex == "")
-    {
-        player.multiSkins[slot] = Texture'DeusExItems.Skins.PinkMaskTex';
-        return;
-    }
-
-    t = FindTexture(tex);
-
-    if (t != None)
-        player.MultiSkins[slot] = t;
+    if (tex != None)
+        player.MultiSkins[slot] = tex;
     else
-        player.MultiSkins[slot] = defaultTextures[slot];
+        player.MultiSkins[slot] = findTexture(defaultTextures[slot]);
 }
 
 function Mesh findMesh(string mesh)
@@ -304,6 +297,11 @@ function Mesh findMesh(string mesh)
 function Texture findTexture(string tex)
 {
     local Texture t;
+    
+    if (tex == "skin") //Special keyword to make our skin texture appear in different slots
+        return player.multiSkins[0];
+    else if (tex == "none" || tex == "")
+        return Texture'DeusExItems.Skins.PinkMaskTex';
 
     t = Texture(DynamicLoadObject("JCOutfits."$tex, class'Texture', true));
     
@@ -342,4 +340,12 @@ defaultproperties
     defaultOutfitDescs(6)="For very special agents!"
     defaultOutfitNames(7)="MIB Black Suit"
     defaultOutfitDescs(7)="For very special agents!"
+    defaultOutfitNames(8)="UNATCO Standard BDU"
+    defaultOutfitDescs(8)=""
+    defaultOutfitNames(9)="UNATCO Standard BDU (No Helmet)"
+    defaultOutfitDescs(9)=""
+    defaultOutfitNames(10)="Mechanics Outfit"
+    defaultOutfitDescs(10)=""
+    defaultOutfitNames(11)="Mechanics Outfit (No Helmet)"
+    defaultOutfitDescs(11)=""
 }
