@@ -42,25 +42,15 @@ var travel int currentOutfitIndex;
 //Names for the default JC Denton outfit
 var const localized string defaultOutfitNames[255];
 var const localized string defaultOutfitDescs[255];
-var Texture defaultTextures[8];
-var Mesh defaultMesh;
+var travel bool bHasSetDefaults;
+var travel Texture defaultTextures[8];
+var travel Mesh defaultMesh;
 
 function Setup(DeusExPlayer newPlayer)
 {
     local string t1, t2, t3, t4, t5, t6, t7, mesh;
 
     player = newPlayer;
-
-    //Set up default outfit
-    defaultTextures[0] = player.default.MultiSkins[0];
-    defaultTextures[1] = player.default.MultiSkins[1];
-    defaultTextures[2] = player.default.MultiSkins[2];
-    defaultTextures[3] = player.default.MultiSkins[3];
-    defaultTextures[4] = player.default.MultiSkins[4];
-    defaultTextures[5] = player.default.MultiSkins[5];
-    defaultTextures[6] = player.default.MultiSkins[6];
-    defaultTextures[7] = player.default.MultiSkins[7];
-    defaultMesh = player.default.Mesh;
 
     //Make sure the default outfit is always unlocked
     Unlock("default");
@@ -71,7 +61,7 @@ function Setup(DeusExPlayer newPlayer)
     //This sucks, but I can't think of a better way to do this
                 //id    //male/female                   //Mesh                  //Textures
     AddOutfit("default",true,true,,                     ,                       ,"default","default","default","default","default","default","default");
-    AddOutfit("altfem1",false,true,,                    ,                       ,"Outfit1F_Tex1","default","default","default","default","default","default");
+    AddOutfit("altfem1",false,true,,                    ,                       ,"default","default","default","Outfit1F_Tex1","default","default","default");
     AddOutfit("100black",true,true,,                    ,                       ,"Outfit100B","Outfit100B","Outfit100B","Outfit100B","Outfit100B","Outfit100B","Outfit100B");
     AddOutfit("ajacobson",true,false,,                  ,"GM_DressShirt_S"      ,,,"AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
     AddOutfit("labcoat",true,false,,                    ,                       ,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
@@ -152,6 +142,22 @@ function EquipOutfit(int index)
     
     if (index >= numOutfits)
         return;
+
+    //Set up default outfit on our first outfit change
+    if (!bHasSetDefaults)
+    {
+        defaultTextures[0] = player.MultiSkins[0];
+        defaultTextures[1] = player.MultiSkins[1];
+        defaultTextures[2] = player.MultiSkins[2];
+        defaultTextures[3] = player.MultiSkins[3];
+        defaultTextures[4] = player.MultiSkins[4];
+        defaultTextures[5] = player.MultiSkins[5];
+        defaultTextures[6] = player.MultiSkins[6];
+        defaultTextures[7] = player.MultiSkins[7];
+        defaultMesh = player.Mesh;
+        bHasSetDefaults = true;
+        //player.ClientMessage("Setting default mesh: " $ defaultMesh.name);
+    }
 
     currentOutfitIndex = index;
     ApplyCurrentOutfit();

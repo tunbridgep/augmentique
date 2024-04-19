@@ -12,18 +12,19 @@ var PersonaNavButtonWindow btnCons;
 var PersonaNavButtonWindow btnImages;
 var PersonaNavButtonWindow btnLogs;
 
-//Sarge: Outfits button
-var PersonaNavButtonWindow btnOutfits;
-
 var localized String InventoryButtonLabel;
 var localized String HealthButtonLabel;
 var localized String AugsButtonLabel;
 var localized String SkillsButtonLabel;
 var localized String GoalsButtonLabel;
 var localized String ConsButtonLabel;
-var localized String ConsButtonLabelShort; //Sarge: Added
 var localized String ImagesButtonLabel;
 var localized String LogsButtonLabel;
+
+//Sarge: Outfits Stuff
+var PersonaNavButtonWindow btnOutfits;
+
+var localized String ConsButtonLabelShort; //Sarge: Added
 var localized String OutfitsButtonLabel;
 
 // ----------------------------------------------------------------------
@@ -141,8 +142,8 @@ defaultproperties
      SkillsButtonLabel="|&Skills"
      GoalsButtonLabel="|&Goals/Notes"
      ConsButtonLabel="|&Conversations"
-     ConsButtonLabelShort="|&Conv."
      ImagesButtonLabel="I|&mages"
      LogsButtonLabel="|&Logs"
      OutfitsButtonLabel="|&Outfits"
+     ConsButtonLabelShort="|&Conv."
 }
