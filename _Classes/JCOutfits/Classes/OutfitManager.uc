@@ -26,6 +26,10 @@ struct Outfit
     
     //first-person arm tex
     //var travel string firstPersonArmTex;
+
+    //LDDP Support
+    var bool allowMale;
+    var bool allowFemale;
 };
 
 var DeusExPlayer player;
@@ -64,17 +68,17 @@ function Setup(DeusExPlayer newPlayer)
     numOutfits = 0;
 
     //This sucks, but I can't think of a better way to do this
-                //id                //Mesh                  //Textures
-    AddOutfit("default",,           ,                       ,"default","default","default","default","default","default","default");
-    AddOutfit("100black",,          ,                       ,"Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1");
-    AddOutfit("ajacobson",,         ,"GM_DressShirt_S"      ,,,"AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
-    AddOutfit("labcoat",,           ,                       ,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
-    AddOutfit("paul",,              ,                       ,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","GrayMaskTex","BlackMaskTex");
-    AddOutfit("suit",,              ,"GM_Suit"              ,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","GrayMaskTex","BlackMaskTex",);
-    AddOutfit("suit2",,             ,"GM_Suit"              ,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",);
+                //id    //male/female                   //Mesh                  //Textures
+    AddOutfit("default",true,true,,                     ,                       ,"default","default","default","default","default","default","default");
+    AddOutfit("100black",true,true,,                    ,                       ,"Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1");
+    AddOutfit("ajacobson",true,false,,                  ,"GM_DressShirt_S"      ,,,"AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
+    AddOutfit("labcoat",true,false,,                    ,                       ,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
+    AddOutfit("paul",true,false,,                       ,                       ,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","GrayMaskTex","BlackMaskTex");
+    AddOutfit("suit",true,false,,                       ,"GM_Suit"              ,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","GrayMaskTex","BlackMaskTex",);
+    AddOutfit("suit2",true,false,,                      ,"GM_Suit"              ,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",);
 }
 
-function AddOutfit(string id, optional string n, optional string d, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
+function AddOutfit(string id, bool male, bool female, optional string n, optional string d, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
 {
     local int i;
     for (i = 0;i < numOutfits;i++)
@@ -82,6 +86,9 @@ function AddOutfit(string id, optional string n, optional string d, optional str
         if (outfits[i].id == id)
             return;
     }
+
+    outfits[numOutfits].allowMale = male;
+    outfits[numOutfits].allowFemale = female;
 
     outfits[numOutfits].id = id;
 
@@ -165,6 +172,14 @@ function bool IsUnlocked(string id)
             return true;
     }
     return false;
+}
+
+function bool IsEquippable(int index)
+{
+    if (index >= numOutfits)
+        return false;
+    
+    return IsUnlocked(outfits[index].id) && ((outfits[index].allowMale && !IsFemale()) || (outfits[index].allowFemale && IsFemale()));
 }
 
 function bool IsUnlockedAt(int index)
@@ -299,9 +314,14 @@ function SetupSpawner(OutfitSpawner S)
         pickup.itemArticle = S.itemArticle;
         pickup.pickupMessage = S.pickupMessage;
         //pickup.Mesh = S.Mesh;
-        player.ClientMessage("Added new pickup with id " $ S.id);
+        //player.ClientMessage("Added new pickup with id " $ S.id);
     }
     S.Destroy();
+}
+
+function bool IsFemale()
+{
+    return player.FlagBase != None && player.FlagBase.GetBool('LDDPJCIsFemale');
 }
 
 defaultproperties

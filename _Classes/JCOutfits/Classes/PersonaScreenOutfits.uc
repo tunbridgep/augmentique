@@ -135,7 +135,7 @@ function CreateNewLegendLabel()
 
 function PopulateOutfitsList()
 {
-    local string outfit, id;
+    local string outfit;
 	local int rowId, i;
     local OutfitManager outfitManager;
 
@@ -154,9 +154,7 @@ function PopulateOutfitsList()
 
 	for(i = 0; i < outfitManager.numOutfits;i++)
 	{
-        id = outfitManager.GetOutfitID(i);
-
-        if (!outfitManager.IsUnlocked(id))
+        if (!outfitManager.IsEquippable(i))
             continue;
 
 		outfit = outfitManager.GetOutfitName(i);
