@@ -3,7 +3,9 @@
 //See the included documentation for more information
 class OutfitManagerBase extends Object abstract;
 
-//This should be called in ResetPlayerToDefaults, and TravelPostAccept
+//This should be called in TravelPostAccept
 function Setup(DeusExPlayer newPlayer) {}
 
 function ApplyCurrentOutfit() {}
+
+function SetupSpawner(OutfitSpawner spawner) {}

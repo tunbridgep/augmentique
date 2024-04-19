@@ -5,20 +5,9 @@ class OutfitPickup extends ClothesRack;
 
 #exec OBJ LOAD FILE=DeusEx
 
-var const localized string outfitName;
-var const localized string outfitDesc;
-
-var const localized string itemArticle;
-var const localized string PickupMessage;
-
-var const string tex1;
-var const string tex2;
-var const string tex3;
-var const string tex4;
-var const string tex5;
-var const string tex6;
-var const string tex7;
-var const string outfitMesh;
+var string PickupMessage;
+var string itemArticle;
+var string id;
 
 function Frob(Actor Frobber, Inventory frobWith)
 {
@@ -33,7 +22,7 @@ function Frob(Actor Frobber, Inventory frobWith)
         if (M != None)
         {
             P.ClientMessage(PickupMessage @ itemArticle @ ItemName, 'Pickup');
-            M.AddOutfit(outfitName,outfitDesc,outfitMesh,tex1,tex2,tex3,tex4,tex5,tex6,tex7);
+            M.Unlock(id);
             Destroy();
         }
     }
@@ -41,11 +30,5 @@ function Frob(Actor Frobber, Inventory frobWith)
 
 defaultproperties
 {
-     outfitName="Cool Outfit"
-     outfitMesh="DeusExCharacters.GM_Trench"
-     PickupMessage="You found"
-     ItemName="Fashionable Outfit"
-     ItemArticle="a"
-     bHighlight=True
-     PickupMessage="You found"
+    bHighlight=true;
 }

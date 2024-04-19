@@ -358,6 +358,7 @@ var Computers ActiveComputer;
 
 // OUTFIT STUFF
 var travel OutfitManagerBase outfitManager;
+var globalconfig string unlockedOutfits[255];
 
 // native Functions
 native(1099) final function string GetDeusExVersion();
@@ -1254,9 +1255,6 @@ function ResetPlayerToDefaults()
 		NintendoImmunityEffect( True );
       GiveInitialInventory();
 	}
-
-    //Setup outfit manager
-    SetupOutfitManager();
 }
 
 // ----------------------------------------------------------------------
@@ -1267,6 +1265,7 @@ function ResetPlayerToDefaults()
 function SetupOutfitManager()
 {
     local class<OutfitManagerBase> managerBaseClass;
+    local OutfitSpawner S;
 
 	// create the Outfit Manager if not found
 	if (outfitManager == None)
@@ -1285,6 +1284,10 @@ function SetupOutfitManager()
 
         //Re-assign current outfit
         outfitManager.ApplyCurrentOutfit();
+
+        //Point all ObjectSpawners to the OutfitManager
+        foreach AllActors(class'OutfitSpawner', S)
+            outfitManager.SetupSpawner(S);
     }
 }
 

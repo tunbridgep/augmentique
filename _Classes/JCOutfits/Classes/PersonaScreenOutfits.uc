@@ -133,7 +133,7 @@ function CreateNewLegendLabel()
 
 function PopulateOutfitsList()
 {
-    local string outfit;
+    local string outfit, id;
 	local int rowId, i;
     local OutfitManager outfitManager;
 
@@ -153,7 +153,13 @@ function PopulateOutfitsList()
 
 	for(i = 0; i < outfitManager.numOutfits;i++)
 	{
+        id = outfitManager.GetOutfitID(i);
+
+        if (!outfitManager.IsUnlocked(id))
+            continue;
+
 		outfit = outfitManager.GetOutfitName(i);
+
 		rowId = lstOutfits.AddRow(outfit);
 
 		// Check to see if we need to display *New* in the second column
@@ -196,6 +202,8 @@ event bool ListSelectionChanged(window list, int numSelections, int focusRowId)
 	SetImage(DataVaultImage(lstOutfits.GetRowClientObject(focusRowId)));
 
     selectedRowId = focusRowId;
+
+    EnableButtons();
 
 	return True;
 }
@@ -242,6 +250,7 @@ function bool ButtonActivated( Window buttonPressed )
 	if ( !bHandled )
 		bHandled = Super.ButtonActivated(buttonPressed);
 
+    //PopulateOutfitsList();
 	return bHandled;
 }
 
@@ -276,7 +285,8 @@ function Equip()
 
     player.ClientMessage("Trying to equip " $ index);
     outfitManager.EquipOutfit(index);
-
+    
+    //PopulateOutfitsList();
     EnableButtons();
 }
 
