@@ -39,6 +39,9 @@ var int numOutfits;
 //var travel Outfit currentOutfit;
 var travel int currentOutfitIndex;
 
+//Set to true to disable hats/glasses/etc
+var travel bool noAccessories;
+
 //Names for the default JC Denton outfit
 var const localized string defaultOutfitNames[255];
 var const localized string defaultOutfitDescs[255];
@@ -91,9 +94,7 @@ function Setup(DeusExPlayer newPlayer)
     AddOutfit("suit",true,false,,                       ,"GM_Suit"              ,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","GrayMaskTex","BlackMaskTex",);
     AddOutfit("suit2",true,false,,                      ,"GM_Suit"              ,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",);
     AddOutfit("unatcotroop",true,false,,                ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
-    AddOutfit("unatcotroop2",true,false,,               ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","skin","GrayMaskTex",,); //No Helmet
     AddOutfit("mechanic",true,false,,                   ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
-    AddOutfit("mechanic2",true,false,,                  ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex",,);
 }
 
 function AddOutfit(string id, bool male, bool female, optional string n, optional string d, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
@@ -253,8 +254,16 @@ function ApplyCurrentOutfit()
     SetTexture(3,currentOutfit.tex3);
     SetTexture(4,currentOutfit.tex4);
     SetTexture(5,currentOutfit.tex5);
-    SetTexture(6,currentOutfit.tex6);
-    SetTexture(7,currentOutfit.tex7);
+    if (noAccessories)
+    {
+        SetTexture(6,findTexture("none"));
+        SetTexture(7,findTexture("none"));
+    }
+    else
+    {
+        SetTexture(6,currentOutfit.tex6);
+        SetTexture(7,currentOutfit.tex7);
+    }
 
     //Set Mesh
     SetMesh(currentOutfit.mesh);
@@ -347,10 +356,6 @@ defaultproperties
     defaultOutfitDescs(7)="For very special agents!"
     defaultOutfitNames(8)="UNATCO Standard BDU"
     defaultOutfitDescs(8)=""
-    defaultOutfitNames(9)="UNATCO Standard BDU (No Helmet)"
+    defaultOutfitNames(9)="Mechanics Outfit"
     defaultOutfitDescs(9)=""
-    defaultOutfitNames(10)="Mechanics Outfit"
-    defaultOutfitDescs(10)=""
-    defaultOutfitNames(11)="Mechanics Outfit (No Helmet)"
-    defaultOutfitDescs(11)=""
 }

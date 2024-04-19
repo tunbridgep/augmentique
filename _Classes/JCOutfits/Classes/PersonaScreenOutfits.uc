@@ -12,11 +12,15 @@ var PersonaListWindow         lstOutfits;
 var PersonaScrollAreaWindow   winScroll;
 var PersonaHeaderTextWindow   winOutfitName;
 var PersonaImageWindow        winImage;
+var PersonaCheckBoxWindow     chkAccessories;
 
+var localized String ShowAccessoriesLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
 
 var int rowIDLastEquipped;
+
+var OutfitManager outfitManager;
 
 var int selectedRowId;
 
@@ -29,6 +33,10 @@ var int selectedRowId;
 event InitWindow()
 {
 	Super.InitWindow();
+
+    outfitManager = OutfitManager(Player.OutfitManager);
+    if (outfitManager == None)
+        return;
 
 	PopulateOutfitsList();
 	SetFocusWindow(lstOutfits);
@@ -52,7 +60,7 @@ function CreateControls()
 	CreateOutfitsList();
 	CreateOutfitTitle();
 	CreateButtons();
-	CreateNewLegendLabel();
+    CreateAccessoriesCheckbox();
 }
 
 // ----------------------------------------------------------------------
@@ -118,15 +126,15 @@ function CreateButtons()
 }
 
 // ----------------------------------------------------------------------
-// CreateNewLegendLabel()
+// CreateShowNotesCheckbox()
 // ----------------------------------------------------------------------
 
-function CreateNewLegendLabel()
-{	
-	local PersonaImageNewLegendLabel newLabel;
+function CreateAccessoriesCheckbox()
+{
+    chkAccessories = PersonaCheckBoxWindow(winClient.NewChild(Class'PersonaCheckBoxWindow'));
 
-	newLabel = PersonaImageNewLegendLabel(winClient.NewChild(Class'PersonaImageNewLegendLabel'));
-	newLabel.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 13, 424);
+    chkAccessories.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 203, 424);
+    chkAccessories.SetText(ShowAccessoriesLabel);
 }
 
 // ----------------------------------------------------------------------
@@ -137,17 +145,11 @@ function PopulateOutfitsList()
 {
     local string outfit;
 	local int rowId, i;
-    local OutfitManager outfitManager;
-
-    outfitManager = OutfitManager(Player.OutfitManager);
 
 	// First clear the list
 	lstOutfits.DeleteAllRows();
 
     //player.ClientMessage("Populate outfits list");
-
-    if (outfitManager == None)
-        return;
 
 	// Loop through all the outfits the player currently has in 
 	// his/her possession
@@ -257,6 +259,22 @@ function bool ButtonActivated( Window buttonPressed )
 }
 
 // ----------------------------------------------------------------------
+// ToggleChanged()
+//
+// Called when the user clicks on the checkbox
+// ----------------------------------------------------------------------
+
+event Bool ToggleChanged(window button, bool bToggleValue)
+{
+    if (button == chkAccessories)
+    {
+        outfitManager.noAccessories = !bToggleValue;
+        outfitManager.ApplyCurrentOutfit();
+    }
+
+}
+
+// ----------------------------------------------------------------------
 // EnableButtons()
 //
 // Sets the state of the Add, Delete, Up and Down buttons
@@ -264,13 +282,13 @@ function bool ButtonActivated( Window buttonPressed )
 
 function EnableButtons()
 {
-    local OutfitManager outfitManager;
     local int index;
-    outfitManager = OutfitManager(Player.OutfitManager);
         
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
 	btnEquip.SetSensitivity(!outfitManager.IsEquipped(index));
+    chkAccessories.SetToggle(!outfitManager.noAccessories);
+	chkAccessories.SetSensitivity(true);
 }
 
 // ----------------------------------------------------------------------
@@ -279,9 +297,7 @@ function EnableButtons()
 
 function Equip()
 {
-    local OutfitManager outfitManager;
     local int index;
-    outfitManager = OutfitManager(Player.OutfitManager);
     
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
@@ -339,6 +355,7 @@ function DestroyImages()
 
 defaultproperties
 {
+     ShowAccessoriesLabel="Show Accessories"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
      clientBorderOffsetY=35
