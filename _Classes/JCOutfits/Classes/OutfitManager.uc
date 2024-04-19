@@ -64,13 +64,15 @@ function Setup(DeusExPlayer newPlayer)
 
     //Make sure the default outfit is always unlocked
     Unlock("default");
+    Unlock("altfem1");
 
     numOutfits = 0;
 
     //This sucks, but I can't think of a better way to do this
                 //id    //male/female                   //Mesh                  //Textures
     AddOutfit("default",true,true,,                     ,                       ,"default","default","default","default","default","default","default");
-    AddOutfit("100black",true,true,,                    ,                       ,"Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1","Outfit1F_Tex1");
+    AddOutfit("altfem1",false,true,,                    ,                       ,"Outfit1F_Tex1","default","default","default","default","default","default");
+    AddOutfit("100black",true,true,,                    ,                       ,"Outfit100B","Outfit100B","Outfit100B","Outfit100B","Outfit100B","Outfit100B","Outfit100B");
     AddOutfit("ajacobson",true,false,,                  ,"GM_DressShirt_S"      ,,,"AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
     AddOutfit("labcoat",true,false,,                    ,                       ,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
     AddOutfit("paul",true,false,,                       ,                       ,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","GrayMaskTex","BlackMaskTex");
@@ -320,16 +322,18 @@ defaultproperties
 {
     defaultOutfitNames(0)="JC Denton's Classic Trenchcoat"
     defaultOutfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
-    defaultOutfitNames(1)="100% Black Outfit"
-    defaultOutfitDescs(1)="The outfit of choice for malkavians"
-    defaultOutfitNames(2)="Alex Jacobson's Outfit"
-    defaultOutfitDescs(2)="Used by hackers everywhere!"
-    defaultOutfitNames(3)="Lab Coat"
-    defaultOutfitDescs(3)="Discovery Awaits!"
-    defaultOutfitNames(4)="Paul Denton's Outfit"
-    defaultOutfitDescs(4)="Seeing Double!"
-    defaultOutfitNames(5)="Fancy Suit"
-    defaultOutfitDescs(5)="For very special agents!"
-    defaultOutfitNames(6)="MIB Black Suit"
+    defaultOutfitNames(1)="JC Denton's Classic Trenchcoat (Alternate)"
+    defaultOutfitDescs(1)="JC Denton's Signature Trenchcoat, now with extra jewellery!"
+    defaultOutfitNames(2)="100% Black Outfit"
+    defaultOutfitDescs(2)="The outfit of choice for malkavians"
+    defaultOutfitNames(3)="Alex Jacobson's Outfit"
+    defaultOutfitDescs(3)="Used by hackers everywhere!"
+    defaultOutfitNames(4)="Lab Coat"
+    defaultOutfitDescs(4)="Discovery Awaits!"
+    defaultOutfitNames(5)="Paul Denton's Outfit"
+    defaultOutfitDescs(5)="Seeing Double!"
+    defaultOutfitNames(6)="Fancy Suit"
     defaultOutfitDescs(6)="For very special agents!"
+    defaultOutfitNames(7)="MIB Black Suit"
+    defaultOutfitDescs(7)="For very special agents!"
 }
