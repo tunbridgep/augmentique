@@ -124,6 +124,17 @@ function string GetOutfitName(int index)
     return outfits[index].name;
 }
 
+function string GetOutfitNameByID(string id)
+{
+    local int index;
+    index = GetOutfitIndexByID(id);
+
+    if (index == -1)
+        return "";
+
+    return outfits[index].name;
+}
+
 function string GetOutfitID(int index)
 {
     
@@ -198,6 +209,7 @@ function bool IsUnlockedAt(int index)
 function Unlock(string id)
 {
     local int i;
+    //player.ClientMessage("Unlocking " $ id);
     if (!IsUnlocked(id))
     {
         //find the first empty spot to put it in
@@ -297,26 +309,6 @@ function Texture findTexture(string tex)
         t = Texture(DynamicLoadObject(tex, class'Texture', true));
 
     return t;
-}
-
-function SetupSpawner(OutfitSpawner S)
-{
-    local OutfitPickup pickup;
-    local int index;
-
-    index = GetOutfitIndexByID(S.id);
-
-    if (index != -1)
-    {
-        pickup = S.Spawn(class'OutfitPickup',,, S.Location);
-        pickup.id = S.id;
-        pickup.itemName = outfits[index].name;
-        pickup.itemArticle = S.itemArticle;
-        pickup.pickupMessage = S.pickupMessage;
-        //pickup.Mesh = S.Mesh;
-        //player.ClientMessage("Added new pickup with id " $ S.id);
-    }
-    S.Destroy();
 }
 
 function bool IsFemale()

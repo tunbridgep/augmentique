@@ -1284,10 +1284,6 @@ function SetupOutfitManager()
 
         //Re-assign current outfit
         outfitManager.ApplyCurrentOutfit();
-
-        //Point all ObjectSpawners to the OutfitManager
-        foreach AllActors(class'OutfitSpawner', S)
-            outfitManager.SetupSpawner(S);
     }
 }
 

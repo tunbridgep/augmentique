@@ -8,4 +8,6 @@ function Setup(DeusExPlayer newPlayer) {}
 
 function ApplyCurrentOutfit() {}
 
-function SetupSpawner(OutfitSpawner spawner) {}
+function Unlock(string id) {}
+
+function string GetOutfitNameByID(string id) {}
