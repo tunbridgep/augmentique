@@ -61,6 +61,8 @@ function Setup(DeusExPlayer newPlayer)
     //Make sure the default outfit is always unlocked
     Unlock("default");
 
+    numOutfits = 0;
+
     //This sucks, but I can't think of a better way to do this
                 //id                //Mesh                  //Textures
     AddOutfit("default",,           ,                       ,"default","default","default","default","default","default","default");
@@ -212,7 +214,7 @@ function ApplyCurrentOutfit()
     //Set Mesh
     SetMesh(currentOutfit.mesh);
 
-    player.ClientMessage("Equipping " $ currentOutfit.name);
+    //player.ClientMessage("Equipping " $ currentOutfit.name);
 }
 
 function SetMesh(string mesh)
@@ -294,8 +296,9 @@ function SetupSpawner(OutfitSpawner S)
         pickup = S.Spawn(class'OutfitPickup',,, S.Location);
         pickup.id = S.id;
         pickup.itemName = outfits[index].name;
+        pickup.itemArticle = S.itemArticle;
         pickup.pickupMessage = S.pickupMessage;
-        pickup.Mesh = S.Mesh;
+        //pickup.Mesh = S.Mesh;
         player.ClientMessage("Added new pickup with id " $ S.id);
     }
     S.Destroy();

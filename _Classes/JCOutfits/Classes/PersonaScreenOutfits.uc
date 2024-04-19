@@ -16,6 +16,8 @@ var PersonaImageWindow        winImage;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
 
+var int rowIDLastEquipped;
+
 var int selectedRowId;
 
 // ----------------------------------------------------------------------
@@ -142,8 +144,7 @@ function PopulateOutfitsList()
 	// First clear the list
 	lstOutfits.DeleteAllRows();
 
-    player.ClientMessage("Populate outfits list");
-
+    //player.ClientMessage("Populate outfits list");
 
     if (outfitManager == None)
         return;
@@ -170,7 +171,10 @@ function PopulateOutfitsList()
 		//lstOutfits.SetRowClientObject(rowId, outfit);
 		lstOutfits.SetField(rowId, 0, outfit);
         if (outfitManager.IsEquipped(i))
+        {
     		lstOutfits.SetField(rowId, 1, "C");
+            rowIDLastEquipped = rowId;
+        }
 
         // Set the outfit number to the second column
         lstOutfits.SetFieldValue(rowId, 2, i);
@@ -283,8 +287,15 @@ function Equip()
     
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
-    player.ClientMessage("Trying to equip " $ index);
     outfitManager.EquipOutfit(index);
+
+    //Clear the chevron on the previously equipped outfit
+    lstOutfits.SetField(rowIDLastEquipped, 1, "");
+
+    //Set chevron on new outfit
+    lstOutfits.SetField(selectedRowId, 1, "C");
+
+    rowIDLastEquipped = selectedRowId;
     
     //PopulateOutfitsList();
     EnableButtons();
