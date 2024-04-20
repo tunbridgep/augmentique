@@ -25,6 +25,6 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex3.dds"                                NAME="Outfit3F_Tex3"               GROUP="Outfits"
 
 //Matrix Outfit
-#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex1.dds"                                 NAME="Outfit4F_Tex1"               GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex2.dds"                                 NAME="Outfit4F_Tex2"               GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex3.dds"                                 NAME="Outfit4F_Tex3"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex1.bmp"                                 NAME="Outfit4F_Tex1"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex2.pcx"                                 NAME="Outfit4F_Tex2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex3.bmp"                                 NAME="Outfit4F_Tex3"               GROUP="Outfits"

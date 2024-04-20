@@ -34,9 +34,6 @@ struct Outfit
     //LDDP Support
     var bool allowMale;
     var bool allowFemale;
-
-    //transparency support
-    var bool masked;
 };
 
 var DeusExPlayer player;
@@ -89,44 +86,45 @@ function Setup(DeusExPlayer newPlayer)
     //player.clientmessage("Repopulating outfit list");
 
     //This sucks, but I can't think of a better way to do this
-                //id        //masked,male,female                   //Mesh                  //Textures
+                //id        //male,female       //Mesh                  //Textures
     //Default Outfits
-    AddOutfitL("default",0,false,true,true            ,                       ,"default","default","default","default","default","default","default");
-    AddOutfitL("altfem1",1,false,false,true           ,                       ,"default","default","default","Outfit1F_Tex1","default","default","default");
+    AddOutfitL("default",0,true,true            ,                       ,"default","default","default","default","default","default","default");
+    AddOutfitL("altfem1",1,false,true           ,                       ,"default","default","default","Outfit1F_Tex1","default","default","default");
 
     //Multi-Gender
-    AddOutfitL("100black",2,false,true,true           ,                       ,"Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1");
-    AddOutfitL("labcoat",4,false,true,false           ,                       ,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
-    AddOutfitL("labcoat",4,false,false,true           ,"GFM_Trench"           ,"ScientistFemaleTex2","ScientistFemaleTex3","skin","TrenchShirtTex3","ScientistFemaleTex2","FramesTex1","LensesTex2");
+    AddOutfitL("100black",2,true,true           ,                       ,"Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1");
+    AddOutfitL("labcoat",4,true,false           ,                       ,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
+    AddOutfitL("labcoat",4,false,true           ,"GFM_Trench"           ,"ScientistFemaleTex2","ScientistFemaleTex3","skin","TrenchShirtTex3","ScientistFemaleTex2","FramesTex1","LensesTex2");
 
     //Male Outfits
-    AddOutfitL("ajacobson",3,false,true,false         ,"GM_DressShirt_S"      ,,,"AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
-    AddOutfitL("paul",5,false,true,false              ,                       ,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","default","default");
-    AddOutfitL("suit",6,false,true,false              ,"GM_Suit"              ,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","FramesTex1","LensesTex2",,5);
-    AddOutfitL("suit2",7,false,true,false             ,"GM_Suit"              ,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",,5);
-    AddOutfitL("unatcotroop",8,false,true,false       ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
-    AddOutfitL("mechanic",9,false,true,false          ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
-    AddOutfitL("chef",11,false,true,false             ,"GM_Suit"              ,"PantsTex10","skin","ChefTex1","ChefTex1","GrayMaskTex","BlackMaskTex","ChefTex3");
+    AddOutfitL("ajacobson",3,true,false         ,"GM_DressShirt_S"      ,,,"AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
+    AddOutfitL("paul",5,true,false              ,                       ,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","default","default");
+    AddOutfitL("suit",6,true,false              ,"GM_Suit"              ,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","FramesTex1","LensesTex2",,5);
+    AddOutfitL("suit2",7,true,false             ,"GM_Suit"              ,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",,5);
+    AddOutfitL("unatcotroop",8,true,false       ,"GM_Jumpsuit"          ,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
+    AddOutfitL("mechanic",9,true,false          ,"GM_Jumpsuit"          ,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
+    AddOutfitL("chef",11,true,false             ,"GM_Suit"              ,"PantsTex10","skin","ChefTex1","ChefTex1","GrayMaskTex","BlackMaskTex","ChefTex3");
 
     //Female Outfits
-    AddOutfitL("goldbrown",13,true,false,true         ,                       ,"Outfit2F_Tex2","Outfit2F_Tex3","skin","Outfit2F_Tex1","Outfit2F_Tex2","default","default");
+    AddOutfitL("goldbrown",13,false,true        ,                       ,"Outfit2F_Tex2","Outfit2F_Tex3","skin","Outfit2F_Tex1","Outfit2F_Tex2","default","default");
+    AddOutfitL("matrix",15,false,true           ,                       ,"Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
 }
 
 //Localised version of AddOutfit.
 //Only used internally
 //Works exactly the same way as AddOutfit, but automatically looks up the default names/descriptions list
 //at the bottom of this file
-function AddOutfitL(string id, int nameIndex, bool mask, bool male, bool female, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+function AddOutfitL(string id, int nameIndex, bool male, bool female, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
 {
     local string n,d;
 
     n = defaultOutfitNames[nameIndex];
     d = defaultOutfitDescs[nameIndex];
 
-    AddOutfit(id,n,d,mask,male,female,mesh,t1,t2,t3,t4,t5,t6,t7,accessoriesOffset);
+    AddOutfit(id,n,d,male,female,mesh,t1,t2,t3,t4,t5,t6,t7,accessoriesOffset);
 }
 
-function AddOutfit(string id, string n, string d, bool mask, bool male, bool female, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+function AddOutfit(string id, string n, string d, bool male, bool female, optional string mesh, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
 {
     local int i;
 
@@ -153,8 +151,6 @@ function AddOutfit(string id, string n, string d, bool mask, bool male, bool fem
     outfits[numOutfits].tex5 = findTexture(t5);
     outfits[numOutfits].tex6 = findTexture(t6);
     outfits[numOutfits].tex7 = findTexture(t7);
-    
-    outfits[numOutfits].masked = mask;
     
     //Set accessories offset
     if (accessoriesOffset == 0)
@@ -318,15 +314,6 @@ function SetMesh()
     }
 }
 
-//This is needed for some outfits with transparency to work
-function SetMask()
-{
-    if (outfits[currentOutfitIndex].masked)
-        player.style = STY_Masked;
-    else
-        player.style = STY_Normal;
-}
-
 function SetTexture(int slot)
 {
     local Texture tex;
@@ -422,7 +409,7 @@ defaultproperties
     defaultOutfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
     defaultOutfitNames(1)="JC Denton's Trenchcoat (Alt)"
     defaultOutfitDescs(1)="JC Denton's Signature Trenchcoat, now with extra jewellery!"
-    defaultOutfitNames(2)="100% Black Outfit"
+    defaultOutfitNames(2)="100% Black"
     defaultOutfitDescs(2)="The outfit of choice for malkavians"
     defaultOutfitNames(3)="Alex Jacobson's Outfit"
     defaultOutfitDescs(3)="Used by hackers everywhere!"
@@ -442,4 +429,8 @@ defaultproperties
     defaultOutfitDescs(11)="Something about cooking, IDK"
     defaultOutfitNames(13)="Gold and Brown Business"
     defaultOutfitDescs(13)=""
+    defaultOutfitNames(14)="Goth GF Outfit"
+    defaultOutfitDescs(14)=""
+    defaultOutfitNames(15)="Matrix Outfit"
+    defaultOutfitDescs(15)="This outfit is considered one of the classic three. From the immortal Trinity, if you will..."
 }
