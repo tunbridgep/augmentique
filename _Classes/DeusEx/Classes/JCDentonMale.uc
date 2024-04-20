@@ -33,8 +33,8 @@ event TravelPostAccept()
 
 function Timer()
 {
-    SetupOutfitManager();
     Super.Timer();
+    SetupOutfitManager();
 }
 
 
