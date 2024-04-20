@@ -108,6 +108,7 @@ function Setup(DeusExPlayer newPlayer)
     //Female Outfits
     AddOutfitL("goldbrown",13,false,true        ,                       ,"Outfit2F_Tex2","Outfit2F_Tex3","skin","Outfit2F_Tex1","Outfit2F_Tex2","default","default");
     AddOutfitL("matrix",15,false,true           ,                       ,"Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
+    AddOutfitL("goth",16,false,true             ,                       ,"Outfit3F_Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Outfit3F_Tex2","FramesTex2","LensesTex3");
 }
 
 //Localised version of AddOutfit.
@@ -383,8 +384,12 @@ function Texture findTexture(string tex)
         return player.multiSkins[0];
     else if (tex == "none" || tex == "")
         return Texture'DeusExItems.Skins.PinkMaskTex';
+    
+    //First, search for a skinned version. See the Readme for more info
+    t = Texture(DynamicLoadObject("JCOutfits."$tex$"_S"$player.PlayerSkin, class'Texture', true));
 
-    t = Texture(DynamicLoadObject("JCOutfits."$tex, class'Texture', true));
+    if (t == None)
+        t = Texture(DynamicLoadObject("JCOutfits."$tex, class'Texture', true));
     
     if (t == None)
         t = Texture(DynamicLoadObject("DeusExCharacters.Skins."$tex, class'Texture', true));
@@ -433,4 +438,6 @@ defaultproperties
     defaultOutfitDescs(14)=""
     defaultOutfitNames(15)="Matrix Outfit"
     defaultOutfitDescs(15)="This outfit is considered one of the classic three. From the immortal Trinity, if you will..."
+    defaultOutfitNames(16)="Goth GF Outfit"
+    defaultOutfitDescs(16)=""
 }
