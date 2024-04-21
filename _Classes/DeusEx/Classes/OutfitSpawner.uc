@@ -7,32 +7,19 @@ class OutfitSpawner extends DeusExDecoration;
 var(JCOutfits) const string id; //IDs of the outfit to spawn
 var(JCOutfits) const string itemArticle;
 var(JCOutfits) const string PickupMessage;
-var(JCOutfits) const string AlternateTexture;
 
 function Timer()
 {
     local DeusExPlayer P;
     P = DeusExPlayer(GetPlayerPawn());
-    //if (P == None || P.OutfitManager == None)
-        //Destroy();
+    if (P == None || P.OutfitManager == None || !P.OutfitManager.ValidateSpawn(id))
+        Destroy();
 }
 
 function PostPostBeginPlay()
 {
-    SetTimer(0.5, True);
+    SetTimer(1.0, False);
     Super.PostPostBeginPlay();
-    SetTexture();
-}
-
-function SetTexture()
-{
-    local Texture tex;
-    if (AlternateTexture != "")
-    {
-        tex = Texture(DynamicLoadObject(AlternateTexture, class'Texture', false));
-        if (tex != None)
-            Texture = tex;
-    }
 }
 
 function Frob(Actor Frobber, Inventory frobWith)

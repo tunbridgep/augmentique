@@ -439,6 +439,12 @@ function bool IsFemale()
     return player.FlagBase != None && player.FlagBase.GetBool('LDDPJCIsFemale');
 }
 
+//Functions called by spawners
+function bool ValidateSpawn(string id)
+{
+    return IsCorrectGender(GetOutfitIndexByID(id)) && !IsUnlocked(id);
+}
+
 defaultproperties
 {
     currentOutfitID="default"
