@@ -20,7 +20,7 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex3.bmp"                         NAME="Outfit2F_Tex3"               GROUP="Outfits"
 
 //Goth GF Outfit
-#exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S0.bmp"                             NAME="Outfit3F_Tex1_S0"            GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1.bmp"                                NAME="Outfit3F_Tex1"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S1.bmp"                             NAME="Outfit3F_Tex1_S1"            GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S2.bmp"                             NAME="Outfit3F_Tex1_S2"            GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S3.bmp"                             NAME="Outfit3F_Tex1_S3"            GROUP="Outfits"

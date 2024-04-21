@@ -170,7 +170,7 @@ function PopulateOutfitsList()
 		// Save the image away
 		//lstOutfits.SetRowClientObject(rowId, outfit);
 		lstOutfits.SetField(rowId, 0, outfit);
-        if (outfitManager.IsEquipped(i))
+        if (outfitManager.IsEquipped(outfitManager.GetOutfitID(i)))
         {
     		lstOutfits.SetField(rowId, 1, "C");
             rowIDLastEquipped = rowId;
@@ -286,7 +286,7 @@ function EnableButtons()
         
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
-	btnEquip.SetSensitivity(!outfitManager.IsEquipped(index));
+	btnEquip.SetSensitivity(!outfitManager.IsEquipped(outfitManager.GetOutfitID(index)));
     chkAccessories.SetToggle(!outfitManager.noAccessories);
 	chkAccessories.SetSensitivity(true);
 }

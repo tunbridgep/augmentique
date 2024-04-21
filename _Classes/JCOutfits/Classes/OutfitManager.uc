@@ -44,7 +44,7 @@ var DeusExPlayer player;
 var Outfit outfits[255];
 var int numOutfits;
 //var travel Outfit currentOutfit;
-var travel int currentOutfitIndex;
+var travel string currentOutfitID;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
@@ -92,47 +92,48 @@ function Setup(DeusExPlayer newPlayer)
     //This sucks, but I can't think of a better way to do this
                 //id        //male,female       //Mesh                  //Textures
     //Default Outfits
-    AddOutfitL("default",0,true,true            ,                       ,,"default","default","default","default","default","default","default");
-    AddOutfitL("altfem1",1,false,true           ,                       ,,"default","default","default","Outfit1F_Tex1","default","default","default");
+    AddOutfitL("default",0,"",true,true            ,                       ,,"default","default","default","default","default","default","default");
+    AddOutfitL("altfem1",1,"",false,true           ,                       ,,"default","default","default","Outfit1F_Tex1","default","default","default");
 
     //Multi-Gender
-    AddOutfitL("100black",2,true,true           ,                       ,,"Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1");
-    AddOutfitL("labcoat",4,true,false           ,                       ,,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
-    AddOutfitL("labcoat",4,false,true           ,"GFM_Trench"           ,,"ScientistFemaleTex2","ScientistFemaleTex3","skin","TrenchShirtTex3","ScientistFemaleTex2","FramesTex1","LensesTex2");
+    AddOutfitL("100black",2,"",true,true           ,                       ,,"Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1");
+    AddOutfitL("labcoat",4,"",true,false           ,                       ,,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
+    AddOutfitL("labcoat",4,"",false,true           ,"GFM_Trench"           ,,"ScientistFemaleTex2","ScientistFemaleTex3","skin","TrenchShirtTex3","ScientistFemaleTex2","FramesTex1","LensesTex2");
 
     //Male Outfits
-    AddOutfitL("ajacobson",3,true,false         ,"GM_DressShirt_S"      ,,,"AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
-    AddOutfitL("paul",5,true,false              ,                       ,,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","default","default");
-    AddOutfitL("suit",6,true,false              ,"GM_Suit"              ,,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","FramesTex1","LensesTex2",,5);
-    AddOutfitL("suit2",7,true,false             ,"GM_Suit"              ,,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",,5);
-    AddOutfitL("unatcotroop",8,true,false       ,"GM_Jumpsuit"          ,,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
-    AddOutfitL("mechanic",9,true,false          ,"GM_Jumpsuit"          ,,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
-    AddOutfitL("chef",11,true,false             ,"GM_Suit"              ,,"PantsTex10","skin","ChefTex1","ChefTex1","GrayMaskTex","BlackMaskTex","ChefTex3");
-    AddOutfitL("soldier",17,true,false          ,"GM_Jumpsuit"          ,,"SoldierTex2","SoldierTex1","skin","none","GrayMaskTex","SoldierTex3",);
-    AddOutfitL("riotcop",18,true,false          ,"GM_Jumpsuit"          ,"VisorTex1","RiotCopTex1","RiotCopTex2","skin","none","GrayMaskTex","RiotCopTex3");
+    AddOutfitL("ajacobson",3,"",true,false         ,"GM_DressShirt_S"      ,,"none","none","AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
+    AddOutfitL("paul",5,"",true,false              ,                       ,,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","default","default");
+    AddOutfitL("suit",6,"",true,false              ,"GM_Suit"              ,,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","FramesTex1","LensesTex2",,5);
+    AddOutfitL("suit2",7,"",true,false             ,"GM_Suit"              ,,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",,5);
+    AddOutfitL("unatcotroop",8,"",true,false       ,"GM_Jumpsuit"          ,,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
+    AddOutfitL("mechanic",9,"",true,false          ,"GM_Jumpsuit"          ,,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
+    AddOutfitL("chef",11,"",true,false             ,"GM_Suit"              ,,"PantsTex10","skin","ChefTex1","ChefTex1","GrayMaskTex","BlackMaskTex","ChefTex3");
+    AddOutfitL("soldier",17,"",true,false          ,"GM_Jumpsuit"          ,,"SoldierTex2","SoldierTex1","skin","none","GrayMaskTex","SoldierTex3",);
+    AddOutfitL("riotcop",18,"",true,false          ,"GM_Jumpsuit"          ,"VisorTex1","RiotCopTex1","RiotCopTex2","skin","none","GrayMaskTex","RiotCopTex3");
+    AddOutfitL("nsf",20,"",true,false              ,"GM_Jumpsuit"          ,,"TerroristTex2","TerroristTex1","skin","none","none","GogglesTex1");
 
     //Female Outfits
-    AddOutfitL("goldbrown",13,false,true        ,                       ,,"Outfit2F_Tex2","Outfit2F_Tex3","skin","Outfit2F_Tex1","Outfit2F_Tex2","default","default");
-    AddOutfitL("matrix",15,false,true           ,                       ,,"Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
-    AddOutfitL("goth",16,false,true             ,                       ,,"Outfit3F_Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Outfit3F_Tex2","FramesTex2","LensesTex3",);
-    AddOutfitL("wib",19,false,true              ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","WIBTex1","WIBTex1","FramesTex2","LensesTex3",);
+    AddOutfitL("goldbrown",13,"",false,true        ,                       ,,"Outfit2F_Tex2","Outfit2F_Tex3","skin","Outfit2F_Tex1","Outfit2F_Tex2","default","default");
+    AddOutfitL("matrix",15,"",false,true           ,                       ,,"Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
+    AddOutfitL("goth",16,"",false,true             ,                       ,,"Outfit3F_Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Outfit3F_Tex2","FramesTex2","LensesTex3",);
+    AddOutfitL("wib",19,"",false,true              ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","WIBTex1","WIBTex1","FramesTex2","LensesTex3",);
 }
 
 //Localised version of AddOutfit.
 //Only used internally
 //Works exactly the same way as AddOutfit, but automatically looks up the default names/descriptions list
 //at the bottom of this file
-function AddOutfitL(string id, int nameIndex, bool male, bool female, optional string mesh, optional string tm, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+function AddOutfitL(string id, int nameIndex, string preview, bool male, bool female, optional string mesh, optional string tm, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
 {
     local string n,d;
 
     n = defaultOutfitNames[nameIndex];
     d = defaultOutfitDescs[nameIndex];
 
-    AddOutfit(id,n,d,male,female,mesh,tm,t1,t2,t3,t4,t5,t6,t7,accessoriesOffset);
+    AddOutfit(id,n,d,preview,male,female,mesh,tm,t1,t2,t3,t4,t5,t6,t7,accessoriesOffset);
 }
 
-function AddOutfit(string id, string n, string d, bool male, bool female, optional string mesh, optional string tm, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+function AddOutfit(string id, string n, string d, string preview, bool male, bool female, optional string mesh, optional string tm, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
 {
     local int i;
 
@@ -208,8 +209,8 @@ function EquipOutfit(int index)
     
     if (index >= numOutfits)
         return;
-
-    currentOutfitIndex = index;
+    
+    currentOutfitID = outfits[index].id;
     ApplyCurrentOutfit();
 }
 
@@ -222,14 +223,14 @@ function int GetOutfitIndexByID(string id)
 {
     local int i;
     for(i = 0;i<numOutfits;i++)
-        if (outfits[i].id == id)
+        if (outfits[i].id == id && IsCorrectGender(i))
             return i;
     return -1;
 }
 
-function bool IsEquipped(int index)
+function bool IsEquipped(string id)
 {
-    return index == currentOutfitIndex;
+    return id == currentOutfitID;
 }
 
 function bool IsUnlocked(string id)
@@ -290,28 +291,34 @@ function Unlock(string id)
 function ApplyCurrentOutfit()
 {
 
+    local int index;
+    index = GetOutfitIndexByID(currentOutfitID);
+
+    if (!IsEquippable(index))
+        return;
+
     //Set Mesh
-    SetMesh();
+    SetMesh(index);
 
     //Set Textures
-    SetTexture(1);
-    SetTexture(2);
-    SetTexture(3);
-    SetTexture(4);
-    SetTexture(5);
-    SetTexture(6);
-    SetTexture(7);
+    SetTexture(index,1);
+    SetTexture(index,2);
+    SetTexture(index,3);
+    SetTexture(index,4);
+    SetTexture(index,5);
+    SetTexture(index,6);
+    SetTexture(index,7);
     
     //Set model texture
-    SetMainTexture();
+    SetMainTexture(index);
 
     //player.ClientMessage("ApplyCurrentOutfit");
 }
 
-function SetMesh()
+function SetMesh(int index)
 {
     local Mesh mesh;
-    mesh = outfits[currentOutfitIndex].mesh;
+    mesh = outfits[index].mesh;
 
     if (mesh != None)
         player.Mesh = mesh;
@@ -322,11 +329,9 @@ function SetMesh()
     }
 }
 
-function SetMainTexture()
+function SetMainTexture(int index)
 {
     local Texture tex;
-    local Outfit currentOutfit;
-    currentOutfit = outfits[currentOutfitIndex];
 
     //If we're hiding accessories, simply set it to the pink tex
     if (noAccessories)
@@ -335,17 +340,17 @@ function SetMainTexture()
         return;
     }
             
-    tex = currentOutfit.texM;
+    tex = outfits[index].texM;
     
     player.Texture = tex;
 }
 
 
-function SetTexture(int slot)
+function SetTexture(int index,int slot)
 {
     local Texture tex;
     local Outfit currentOutfit;
-    currentOutfit = outfits[currentOutfitIndex];
+    currentOutfit = outfits[index];
 
 
     //If we're hiding accessories, simply set it to the pink tex
@@ -436,6 +441,7 @@ function bool IsFemale()
 
 defaultproperties
 {
+    currentOutfitID="default"
     defaultOutfitNames(0)="JC Denton's Trenchcoat"
     defaultOutfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
     defaultOutfitNames(1)="JC Denton's Trenchcoat (Alt)"
@@ -452,7 +458,7 @@ defaultproperties
     defaultOutfitDescs(6)="For very special agents!"
     defaultOutfitNames(7)="MIB Black Suit"
     defaultOutfitDescs(7)="For very special agents!"
-    defaultOutfitNames(8)="UNATCO Standard BDU"
+    defaultOutfitNames(8)="UNATCO Combat Uniform"
     defaultOutfitDescs(8)=""
     defaultOutfitNames(9)="Mechanic Jumpsuit"
     defaultOutfitDescs(9)=""
@@ -472,4 +478,6 @@ defaultproperties
     defaultOutfitDescs(18)=""
     defaultOutfitNames(19)="WIB Suit"
     defaultOutfitDescs(19)="Dressed to Kill"
+    defaultOutfitNames(20)="NSF Sympathiser"
+    defaultOutfitDescs(20)="For the people!"
 }
