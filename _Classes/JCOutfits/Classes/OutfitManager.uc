@@ -113,9 +113,9 @@ function Setup(DeusExPlayer newPlayer)
     AddOutfitL("nsf",20,"",true,false              ,"GM_Jumpsuit"          ,,"TerroristTex2","TerroristTex1","skin","none","none","GogglesTex1");
 
     //Female Outfits
-    AddOutfitL("goldbrown",13,"",false,true        ,                       ,,"Outfit2F_Tex2","Outfit2F_Tex3","skin","Outfit2F_Tex1","Outfit2F_Tex2","default","default");
+    AddOutfitL("goldbrown",13,"",false,true        ,                       ,,"Outfit2F_Tex2","Outfit2F_Tex3","skin","TrenchShirtTex3","Outfit2F_Tex2","default","default");
     AddOutfitL("matrix",15,"",false,true           ,                       ,,"Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
-    AddOutfitL("goth",16,"",false,true             ,                       ,,"Outfit3F_Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Outfit3F_Tex2","FramesTex2","LensesTex3",);
+    AddOutfitL("goth",16,"",false,true             ,                       ,,"Female4Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Female4Tex2","FramesTex2","LensesTex3",);
     AddOutfitL("wib",19,"",false,true              ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","WIBTex1","WIBTex1","FramesTex2","LensesTex3",);
 }
 

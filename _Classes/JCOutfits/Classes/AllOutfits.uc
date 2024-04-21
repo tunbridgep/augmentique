@@ -15,7 +15,7 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Female\Alternate Trenchcoat\Tex1.bmp"                          NAME="Outfit1F_Tex1"               GROUP="Outfits"
 
 //Gold and Brown Business
-#exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex1.bmp"                         NAME="Outfit2F_Tex1"               GROUP="Outfits"
+//#exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex1.pcx"                         NAME="Outfit2F_Tex1"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex2.pcx"                         NAME="Outfit2F_Tex2"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex3.bmp"                         NAME="Outfit2F_Tex3"               GROUP="Outfits"
 
@@ -25,7 +25,7 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S2.bmp"                             NAME="Outfit3F_Tex1_S2"            GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S3.bmp"                             NAME="Outfit3F_Tex1_S3"            GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S4.bmp"                             NAME="Outfit3F_Tex1_S4"            GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex2.pcx"                                NAME="Outfit3F_Tex2"               GROUP="Outfits"
+//#exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex2.pcx"                                NAME="Outfit3F_Tex2"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex3.bmp"                                NAME="Outfit3F_Tex3"               GROUP="Outfits"
 
 //Matrix Outfit
