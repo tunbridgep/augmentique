@@ -43,8 +43,8 @@ var DeusExPlayer player;
 
 var Outfit outfits[255];
 var int numOutfits;
-//var travel Outfit currentOutfit;
-var travel string currentOutfitID;
+
+var travel int currentOutfitIndex;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
@@ -148,12 +148,14 @@ function AddOutfit(string id, string n, string d, string preview, bool male, boo
 {
     local int i;
 
+    /*
     //Disallow adding new outfits with the same ID, unless they are made for a different gender
     for (i = 0;i < numOutfits;i++)
     {
         if (outfits[i].id == id && (outfits[i].allowMale == male || outfits[i].allowFemale == female))
             return;
     }
+    */
 
     outfits[numOutfits].allowMale = male;
     outfits[numOutfits].allowFemale = female;
@@ -205,6 +207,16 @@ function string GetOutfitNameByID(string id)
     return outfits[index].name;
 }
 
+function int GetOutfitIndexByID(string id)
+{
+    local int i;
+    for (i = 0;i < 255 && player.unlockedOutfits[i] != "";i++)
+        if (outfits[i].id == id)
+            return i;
+
+    return -1;
+}
+
 function string GetOutfitID(int index)
 {
     
@@ -223,12 +235,10 @@ function bool HasAccessories(int index)
 
 function EquipOutfit(int index)
 {
-    local Outfit of;
-    
     if (index >= numOutfits)
         return;
     
-    currentOutfitID = outfits[index].id;
+    currentOutfitindex = index;
     ApplyCurrentOutfit();
 }
 
@@ -237,23 +247,9 @@ function Outfit GetOutfit(int index)
     return outfits[index];
 }
 
-function int GetOutfitIndexByID(string id)
+function bool IsEquipped(int index)
 {
-    local int i;
-    for(i = 0;i<numOutfits;i++)
-        if (outfits[i].id == id && IsCorrectGender(i))
-            return i;
-    return -1;
-}
-
-function int GetCurrentOutfitIndex()
-{
-    return GetOutfitIndexByID(currentOutfitID);
-}
-
-function bool IsEquipped(string id)
-{
-    return id == currentOutfitID;
+    return index == currentOutfitIndex;
 }
 
 function bool IsUnlocked(string id)
@@ -314,26 +310,23 @@ function Unlock(string id)
 function ApplyCurrentOutfit()
 {
 
-    local int index;
-    index = GetOutfitIndexByID(currentOutfitID);
-
-    if (!IsEquippable(index))
+    if (!IsEquippable(currentOutfitIndex))
         return;
 
     //Set Mesh
-    SetMesh(index);
+    SetMesh(currentOutfitIndex);
 
     //Set Textures
-    SetTexture(index,1);
-    SetTexture(index,2);
-    SetTexture(index,3);
-    SetTexture(index,4);
-    SetTexture(index,5);
-    SetTexture(index,6);
-    SetTexture(index,7);
+    SetTexture(currentOutfitIndex,1);
+    SetTexture(currentOutfitIndex,2);
+    SetTexture(currentOutfitIndex,3);
+    SetTexture(currentOutfitIndex,4);
+    SetTexture(currentOutfitIndex,5);
+    SetTexture(currentOutfitIndex,6);
+    SetTexture(currentOutfitIndex,7);
     
     //Set model texture
-    SetMainTexture(index);
+    SetMainTexture(currentOutfitIndex);
 
     //player.ClientMessage("ApplyCurrentOutfit");
 }
@@ -472,7 +465,6 @@ function bool ValidateSpawn(string id)
 
 defaultproperties
 {
-    currentOutfitID="default"
     defaultOutfitNames(0)="JC Denton's Trenchcoat"
     defaultOutfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
     defaultOutfitNames(1)="JC Denton's Trenchcoat (Alt)"

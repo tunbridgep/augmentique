@@ -170,7 +170,7 @@ function PopulateOutfitsList()
 		// Save the image away
 		//lstOutfits.SetRowClientObject(rowId, outfit);
 		lstOutfits.SetField(rowId, 0, outfit);
-        if (outfitManager.IsEquipped(outfitManager.GetOutfitID(i)))
+        if (outfitManager.IsEquipped(i))
         {
     		lstOutfits.SetField(rowId, 1, "C");
             rowIDLastEquipped = rowId;
@@ -286,8 +286,8 @@ function EnableButtons()
         
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
-	btnEquip.SetSensitivity(!outfitManager.IsEquipped(outfitManager.GetOutfitID(index)));
-    if (outfitManager.HasAccessories(outfitManager.GetCurrentOutfitIndex()))
+	btnEquip.SetSensitivity(!outfitManager.IsEquipped(index));
+    if (outfitManager.HasAccessories(outfitManager.currentOutfitIndex))
         chkAccessories.Show();
     else
         chkAccessories.Hide();
