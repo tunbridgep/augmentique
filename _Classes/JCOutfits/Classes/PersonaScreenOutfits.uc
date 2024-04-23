@@ -287,6 +287,11 @@ function EnableButtons()
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
 	btnEquip.SetSensitivity(!outfitManager.IsEquipped(outfitManager.GetOutfitID(index)));
+    if (outfitManager.HasAccessories(outfitManager.GetCurrentOutfitIndex()))
+        chkAccessories.Show();
+    else
+        chkAccessories.Hide();
+
     chkAccessories.SetToggle(!outfitManager.noAccessories);
 	chkAccessories.SetSensitivity(true);
 }

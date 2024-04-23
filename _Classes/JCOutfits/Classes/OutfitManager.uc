@@ -79,9 +79,7 @@ function Setup(DeusExPlayer newPlayer)
         //Make sure the default outfit is always unlocked
         Unlock("default");
         Unlock("altfem1");
-        Unlock("unatcotroop");
-    
-        //player.clientmessage(defaultMesh);
+        Unlock("clone");
     }
         
     if (numOutfits != 0)
@@ -94,6 +92,8 @@ function Setup(DeusExPlayer newPlayer)
     //Default Outfits
     AddOutfitL("default",0,"",true,true            ,                       ,,"default","default","default","default","default","default","default");
     AddOutfitL("altfem1",1,"",false,true           ,                       ,,"default","default","default","Outfit1F_Tex1","default","default","default");
+    //AddOutfitL("clone",29,"",true,false            ,"DentonClone"          ,,"DenconCloneTex1","DenconCloneTex2","skin","none","none","none","none");
+    AddOutfitL("diver",33,"",true,true             ,"GM_Scubasuit"         ,"ScubasuitTex1","ScubasuitTex0","ScubasuitTex1","none","none","none","none","none",-1);
 
     //Multi-Gender
     AddOutfitL("100black",2,"",true,true           ,                       ,,"Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1");
@@ -105,18 +105,29 @@ function Setup(DeusExPlayer newPlayer)
     AddOutfitL("paul",5,"",true,false              ,                       ,,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","default","default");
     AddOutfitL("suit",6,"",true,false              ,"GM_Suit"              ,,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","FramesTex1","LensesTex2",,5);
     AddOutfitL("suit2",7,"",true,false             ,"GM_Suit"              ,,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",,5);
+    AddOutfitL("suit3",30,"",true,false            ,"GM_Suit"              ,,"PantsTex5","skin","PhilipMeadTex1","PhilipMeadTex1","FramesTex2","LensesTex3",,5);
     AddOutfitL("unatcotroop",8,"",true,false       ,"GM_Jumpsuit"          ,,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
     AddOutfitL("mechanic",9,"",true,false          ,"GM_Jumpsuit"          ,,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
     AddOutfitL("chef",11,"",true,false             ,"GM_Suit"              ,,"PantsTex10","skin","ChefTex1","ChefTex1","GrayMaskTex","BlackMaskTex","ChefTex3");
     AddOutfitL("soldier",17,"",true,false          ,"GM_Jumpsuit"          ,,"SoldierTex2","SoldierTex1","skin","none","GrayMaskTex","SoldierTex3",);
     AddOutfitL("riotcop",18,"",true,false          ,"GM_Jumpsuit"          ,"VisorTex1","RiotCopTex1","RiotCopTex2","skin","none","GrayMaskTex","RiotCopTex3");
     AddOutfitL("nsf",20,"",true,false              ,"GM_Jumpsuit"          ,,"TerroristTex2","TerroristTex1","skin","none","none","GogglesTex1");
+    AddOutfitL("bum",21,"",true,false              ,"GM_Trench"            ,,"BumMaleTex2","PantsTex4","skin","TrenchShirtTex1","BumMaleTex2","FramesTex1","LensesTex2");
+    AddOutfitL("lebedev",22,"",true,false          ,"GM_Trench"            ,,"JuanLebedevTex2","JuanLebedevTex3","skin","JuanLebedevTex1","JuanLebedevTex2","default","default");
+    AddOutfitL("smug",23,"",true,false             ,"GM_Trench"            ,,"SmugglerTex2","PantsTex5","skin","SmugglerTex1","SmugglerTex2","FramesTex1","LensesTex1");
+    AddOutfitL("simons",24,"",true,false           ,"GM_Trench"            ,,"WaltonSimonsTex2","PantsTex5","skin","WaltonSimonsTex1","WaltonSimonsTex2","FramesTex2","LensesTex3");
+    AddOutfitL("mj12",25,"",true,false             ,"GM_Jumpsuit"          ,,"MJ12TroopTex1","MJ12TroopTex2","skin","none","MJ12TroopTex3","MJ12TroopTex4","none",5);
+    AddOutfitL("jock",26,"",true,false             ,"GM_Trench"            ,,"JockTex2","JockTex3","skin","JockTex1","none","FramesTex2","LensesTex3");
+    //AddOutfitL("sailor",31,"",true,false           ,"GM_Suit"              ,,"SailorTex2","skin","SailorTex1","SailorTex1","FramesTex1","LensesTex1",,5); //Disabled because it's rubbish
+    AddOutfitL("carter",32,"",true,false           ,"GM_Jumpsuit"          ,,"SamCarterTex2","SamCarterTex1","skin","none","none","FramesTex2","FramesTex3");
 
     //Female Outfits
     AddOutfitL("goldbrown",13,"",false,true        ,                       ,,"Outfit2F_Tex2","Outfit2F_Tex3","skin","TrenchShirtTex3","Outfit2F_Tex2","default","default");
     AddOutfitL("matrix",15,"",false,true           ,                       ,,"Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
-    AddOutfitL("goth",16,"",false,true             ,                       ,,"Female4Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Female4Tex2","FramesTex2","LensesTex3",);
-    AddOutfitL("wib",19,"",false,true              ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","WIBTex1","WIBTex1","FramesTex2","LensesTex3",);
+    AddOutfitL("goth",16,"",false,true             ,                       ,,"Female4Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Female4Tex2","FramesTex2","LensesTex3");
+    AddOutfitL("wib",19,"",false,true              ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","WIBTex1","WIBTex1","FramesTex2","LensesTex3");
+    AddOutfitL("maggie",27,"",false,true           ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","MaggieChowTex1","MaggieChowTex1","FramesTex2","LensesTex3");
+    AddOutfitL("nicolette",28,"",false,true        ,"GFM_Dress"            ,,"NicoletteDuClareTex3","NicoletteDuClareTex2","NicoletteDuClareTex1","NicoletteDuClareTex2","skin","FramesTex2","skin",-1);
 }
 
 //Localised version of AddOutfit.
@@ -171,7 +182,7 @@ function AddOutfit(string id, string n, string d, string preview, bool male, boo
     //EquipOutfit(numOutfits-1);
         
     //TEST DEBUG. REMOVE LATER
-    Unlock(id);
+    //Unlock(id);
 }
 
 function string GetOutfitName(int index)
@@ -203,6 +214,13 @@ function string GetOutfitID(int index)
     return outfits[index].id;
 }
 
+function bool HasAccessories(int index)
+{
+    if (index >= numOutfits)
+        return false;
+    return outfits[index].accessoriesOffset != -1;
+}
+
 function EquipOutfit(int index)
 {
     local Outfit of;
@@ -226,6 +244,11 @@ function int GetOutfitIndexByID(string id)
         if (outfits[i].id == id && IsCorrectGender(i))
             return i;
     return -1;
+}
+
+function int GetCurrentOutfitIndex()
+{
+    return GetOutfitIndexByID(currentOutfitID);
 }
 
 function bool IsEquipped(string id)
@@ -334,7 +357,7 @@ function SetMainTexture(int index)
     local Texture tex;
 
     //If we're hiding accessories, simply set it to the pink tex
-    if (noAccessories)
+    if (noAccessories && HasAccessories(index))
     {
         player.Texture = Texture'DeusExItems.Skins.PinkMaskTex';
         return;
@@ -354,7 +377,7 @@ function SetTexture(int index,int slot)
 
 
     //If we're hiding accessories, simply set it to the pink tex
-    if (noAccessories && slot >= currentOutfit.accessoriesOffset && slot < currentOutfit.accessoriesOffset + 2)
+    if (noAccessories && HasAccessories(index) && slot >= currentOutfit.accessoriesOffset && slot < currentOutfit.accessoriesOffset + 2)
     {
         player.MultiSkins[slot] = Texture'DeusExItems.Skins.PinkMaskTex';
         return;
@@ -397,12 +420,12 @@ function Mesh findMesh(string mesh)
 {
     local Mesh m;
     m = Mesh(DynamicLoadObject("JCOutfits."$mesh, class'Mesh', true));
-    
-    if (m == None)
-        m = Mesh(DynamicLoadObject("DeusExCharacters."$mesh, class'Mesh', true));
 
     if (m == None)
         m = Mesh(DynamicLoadObject(mesh, class'Mesh', true));
+    
+    if (m == None)
+        m = Mesh(DynamicLoadObject("DeusExCharacters."$mesh, class'Mesh', true));
 
     return m;
 }
@@ -421,15 +444,15 @@ function Texture findTexture(string tex)
 
     if (t == None)
         t = Texture(DynamicLoadObject("JCOutfits."$tex, class'Texture', true));
+
+    if (t == None)
+        t = Texture(DynamicLoadObject(tex, class'Texture', true));
     
     if (t == None)
         t = Texture(DynamicLoadObject("DeusExCharacters.Skins."$tex, class'Texture', true));
 
     if (t == None)
         t = Texture(DynamicLoadObject("DeusExItems.Skins."$tex, class'Texture', true));
-
-    if (t == None)
-        t = Texture(DynamicLoadObject(tex, class'Texture', true));
 
     return t;
 }
@@ -442,7 +465,9 @@ function bool IsFemale()
 //Functions called by spawners
 function bool ValidateSpawn(string id)
 {
-    return IsCorrectGender(GetOutfitIndexByID(id)) && !IsUnlocked(id);
+    local int index;
+    index = GetOutfitIndexByID(id);
+    return index > -1 && IsCorrectGender(index) && !IsUnlocked(id);
 }
 
 defaultproperties
@@ -486,4 +511,30 @@ defaultproperties
     defaultOutfitDescs(19)="Dressed to Kill"
     defaultOutfitNames(20)="NSF Sympathiser"
     defaultOutfitDescs(20)="For the people!"
+    defaultOutfitNames(21)="Stained Clothes"
+    defaultOutfitDescs(21)="Look for a bum."
+    defaultOutfitNames(22)="Juan Lebedev's Outfit"
+    defaultOutfitDescs(22)="So fine it'll make you want to kill your boss"
+    defaultOutfitNames(23)="Smuggler's Outfit"
+    defaultOutfitDescs(23)="This expensive outfit matches Smuggler's Prices"
+    defaultOutfitNames(24)="FEMA Executive's Outfit"
+    defaultOutfitDescs(24)="Just because you work behind a desk doesn't mean you can't be fashionable"
+    defaultOutfitNames(25)="MJ12 Soldier Outfit"
+    defaultOutfitDescs(25)="The sort of outfit you can take over the world in"
+    defaultOutfitNames(26)="Jock's Outfit"
+    defaultOutfitDescs(26)=""
+    defaultOutfitNames(27)="Maggie's Outfit"
+    defaultOutfitDescs(27)=""
+    defaultOutfitNames(28)="Nicolette's Outfit"
+    defaultOutfitDescs(28)=""
+    defaultOutfitNames(29)="JC Clone Outfit"
+    defaultOutfitDescs(29)=""
+    defaultOutfitNames(30)="Presidential Suit"
+    defaultOutfitDescs(30)=""
+    defaultOutfitNames(31)="Sailor Outfit"
+    defaultOutfitDescs(31)=""
+    defaultOutfitNames(32)="Carter's Outfit"
+    defaultOutfitDescs(32)=""
+    defaultOutfitNames(33)="Scuba Suit"
+    defaultOutfitDescs(33)=""
 }
