@@ -208,6 +208,11 @@ function Setup(DeusExPlayer newPlayer)
     SetOutfitTextures("SamCarterTex2","SamCarterTex1","skin","none","none","none","none");
     SetOutfitDisableAccessories();
     SetOutfitMesh("GM_Jumpsuit");
+    
+    //Prisoner
+    BeginNewOutfitL("prisoner",35,"",true,false);
+    SetOutfitTextures("MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3");
+    SetOutfitMesh("GM_Jumpsuit");
 
     ////Female Outfits
 
@@ -280,7 +285,7 @@ function BeginNewOutfit(string id, string n, string d, string preview, bool male
     numOutfits++;
 
     //TEST DEBUG. REMOVE LATER
-    Unlock(id);
+    //Unlock(id);
 }
 
 function SetOutfitMesh(string mesh)
@@ -717,4 +722,6 @@ defaultproperties
     defaultOutfitDescs(33)=""
     defaultOutfitNames(34)="100% Black (Alt)"
     defaultOutfitDescs(34)="OMG! It's just like the memes!"
+    defaultOutfitNames(35)="Prison Uniform"
+    defaultOutfitDescs(35)=""
 }
