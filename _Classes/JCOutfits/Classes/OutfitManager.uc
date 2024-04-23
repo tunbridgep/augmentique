@@ -105,6 +105,12 @@ function Setup(DeusExPlayer newPlayer)
     //100% Black Alternate
     BeginNewOutfitL("100black",34,"",true,true);
     SetOutfitBodyTex("Outfit1_Tex1");
+    
+    //100% Black Combined
+    //BUT Keep the glasses tex normal, so we get eye glows
+    BeginNewOutfitL("100black",36,"",true,true);
+    SetOutfitTextures("Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","default","default");
+    SetOutfitBodyTex("Outfit1_Tex1");
 
     //Labcoat M & F
     BeginNewOutfitL("labcoat",4,"",true,false);
@@ -724,4 +730,6 @@ defaultproperties
     defaultOutfitDescs(34)="OMG! It's just like the memes!"
     defaultOutfitNames(35)="Prison Uniform"
     defaultOutfitDescs(35)=""
+    defaultOutfitNames(36)="100% Black (Ultimate Edition)"
+    defaultOutfitDescs(36)=""
 }
