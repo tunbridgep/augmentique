@@ -16,6 +16,7 @@ struct Outfit
     var Mesh mesh;
 
     //Textures
+    var Texture tex0;
     var Texture tex1;
     var Texture tex2;
     var Texture tex3;
@@ -30,9 +31,8 @@ struct Outfit
     //first-person arm tex
     //var travel string firstPersonArmTex;
 
-    //Which texture number is the start of the accessories
-    //This determines which textures to toggle.
-    var int accessoriesOffset;
+    //Accessories
+    var int accessorySlots[9]; //bool arrays are not allowed
 
     //LDDP Support
     var bool allowMale;
@@ -43,6 +43,7 @@ var DeusExPlayer player;
 
 var Outfit outfits[255];
 var int numOutfits;
+var int currOutfit;
 
 var travel int currentOutfitIndex;
 
@@ -59,7 +60,7 @@ var travel string defaultMesh;
 
 function Setup(DeusExPlayer newPlayer)
 {
-    local string t1, t2, t3, t4, t5, t6, t7, mesh;
+    local string t0, t1, t2, t3, t4, t5, t6, t7, mesh;
 
     player = newPlayer;
     
@@ -78,114 +79,285 @@ function Setup(DeusExPlayer newPlayer)
 
         //Make sure the default outfit is always unlocked
         Unlock("default");
-        Unlock("altfem1");
-        Unlock("clone");
     }
         
     if (numOutfits != 0)
         return;
-        
+    
+    SetupDefaultOutfit();
+
     //player.clientmessage("Repopulating outfit list");
 
     //This sucks, but I can't think of a better way to do this
-                //id        //male,female       //Mesh                  //Textures
-    //Default Outfits
-    AddOutfitL("default",0,"",true,true            ,                       ,,"default","default","default","default","default","default","default");
-    AddOutfitL("altfem1",1,"",false,true           ,                       ,,"default","default","default","Outfit1F_Tex1","default","default","default");
-    //AddOutfitL("clone",29,"",true,false            ,"DentonClone"          ,,"DenconCloneTex1","DenconCloneTex2","skin","none","none","none","none");
-    AddOutfitL("diver",33,"",true,true             ,"GM_Scubasuit"         ,"ScubasuitTex1","ScubasuitTex0","ScubasuitTex1","none","none","none","none","none",-1);
 
-    //Multi-Gender
-    AddOutfitL("100black",2,"",true,true           ,                       ,,"Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1");
-    AddOutfitL("labcoat",4,"",true,false           ,                       ,,"LabCoatTex1","PantsTex1",,"TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
-    AddOutfitL("labcoat",4,"",false,true           ,"GFM_Trench"           ,,"ScientistFemaleTex2","ScientistFemaleTex3","skin","TrenchShirtTex3","ScientistFemaleTex2","FramesTex1","LensesTex2");
+    ////Default Outfits
+    
+    //Alternate Fem Jewellery
+    BeginNewOutfitL("default",1,"",false,true);
+    SetOutfitTextures("default","default","default","Outfit1F_Tex1","default","default","default");
 
-    //Male Outfits
-    AddOutfitL("ajacobson",3,"",true,false         ,"GM_DressShirt_S"      ,,"none","none","AlexJacobsonTex2","skin","AlexJacobsonTex1","FramesTex1","LensesTex1");
-    AddOutfitL("paul",5,"",true,false              ,                       ,,"PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","default","default");
-    AddOutfitL("suit",6,"",true,false              ,"GM_Suit"              ,,"Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","FramesTex1","LensesTex2",,5);
-    AddOutfitL("suit2",7,"",true,false             ,"GM_Suit"              ,,"PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3",,5);
-    AddOutfitL("suit3",30,"",true,false            ,"GM_Suit"              ,,"PantsTex5","skin","PhilipMeadTex1","PhilipMeadTex1","FramesTex2","LensesTex3",,5);
-    AddOutfitL("unatcotroop",8,"",true,false       ,"GM_Jumpsuit"          ,,"UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3",);
-    AddOutfitL("mechanic",9,"",true,false          ,"GM_Jumpsuit"          ,,"MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3",);
-    AddOutfitL("chef",11,"",true,false             ,"GM_Suit"              ,,"PantsTex10","skin","ChefTex1","ChefTex1","GrayMaskTex","BlackMaskTex","ChefTex3");
-    AddOutfitL("soldier",17,"",true,false          ,"GM_Jumpsuit"          ,,"SoldierTex2","SoldierTex1","skin","none","GrayMaskTex","SoldierTex3",);
-    AddOutfitL("riotcop",18,"",true,false          ,"GM_Jumpsuit"          ,"VisorTex1","RiotCopTex1","RiotCopTex2","skin","none","GrayMaskTex","RiotCopTex3");
-    AddOutfitL("nsf",20,"",true,false              ,"GM_Jumpsuit"          ,,"TerroristTex2","TerroristTex1","skin","none","none","GogglesTex1");
-    AddOutfitL("bum",21,"",true,false              ,"GM_Trench"            ,,"BumMaleTex2","PantsTex4","skin","TrenchShirtTex1","BumMaleTex2","FramesTex1","LensesTex2");
-    AddOutfitL("lebedev",22,"",true,false          ,"GM_Trench"            ,,"JuanLebedevTex2","JuanLebedevTex3","skin","JuanLebedevTex1","JuanLebedevTex2","default","default");
-    AddOutfitL("smug",23,"",true,false             ,"GM_Trench"            ,,"SmugglerTex2","PantsTex5","skin","SmugglerTex1","SmugglerTex2","FramesTex1","LensesTex1");
-    AddOutfitL("simons",24,"",true,false           ,"GM_Trench"            ,,"WaltonSimonsTex2","PantsTex5","skin","WaltonSimonsTex1","WaltonSimonsTex2","FramesTex2","LensesTex3");
-    AddOutfitL("mj12",25,"",true,false             ,"GM_Jumpsuit"          ,,"MJ12TroopTex1","MJ12TroopTex2","skin","none","MJ12TroopTex3","MJ12TroopTex4","none",5);
-    AddOutfitL("jock",26,"",true,false             ,"GM_Trench"            ,,"JockTex2","JockTex3","skin","JockTex1","none","FramesTex2","LensesTex3");
-    //AddOutfitL("sailor",31,"",true,false           ,"GM_Suit"              ,,"SailorTex2","skin","SailorTex1","SailorTex1","FramesTex1","LensesTex1",,5); //Disabled because it's rubbish
-    AddOutfitL("carter",32,"",true,false           ,"GM_Jumpsuit"          ,,"SamCarterTex2","SamCarterTex1","skin","none","none","FramesTex2","FramesTex3");
+    ////Multi-Gender
 
-    //Female Outfits
-    AddOutfitL("goldbrown",13,"",false,true        ,                       ,,"Outfit2F_Tex2","Outfit2F_Tex3","skin","TrenchShirtTex3","Outfit2F_Tex2","default","default");
-    AddOutfitL("matrix",15,"",false,true           ,                       ,,"Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
-    AddOutfitL("goth",16,"",false,true             ,                       ,,"Female4Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Female4Tex2","FramesTex2","LensesTex3");
-    AddOutfitL("wib",19,"",false,true              ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","WIBTex1","WIBTex1","FramesTex2","LensesTex3");
-    AddOutfitL("maggie",27,"",false,true           ,"GFM_SuitSkirt"        ,,"none","skin","LegsTex2","MaggieChowTex1","MaggieChowTex1","FramesTex2","LensesTex3");
-    AddOutfitL("nicolette",28,"",false,true        ,"GFM_Dress"            ,,"NicoletteDuClareTex3","NicoletteDuClareTex2","NicoletteDuClareTex1","NicoletteDuClareTex2","skin","FramesTex2","skin",-1);
+    //100% Black
+    BeginNewOutfitL("100black",2,"",true,true);
+    SetOutfitTextures("Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1","Outfit1_Tex1");
+
+    //100% Black Alternate
+    BeginNewOutfitL("100black",34,"",true,true);
+    SetOutfitBodyTex("Outfit1_Tex1");
+
+    //Labcoat M & F
+    BeginNewOutfitL("labcoat",4,"",true,false);
+    SetOutfitTextures("LabCoatTex1","PantsTex1","skin","TrenchShirtTex3","LabCoatTex1","FramesTex1","LensesTex1");
+    BeginNewOutfitL("labcoat",4,"",false,true);
+    SetOutfitMesh("GFM_Trench");
+    SetOutfitTextures("ScientistFemaleTex2","ScientistFemaleTex3","skin","TrenchShirtTex3","ScientistFemaleTex2","FramesTex1","LensesTex2");
+    
+    //Diver
+    BeginNewOutfitL("diver",33,"",true,true);
+    SetOutfitTextures("ScubasuitTex0","ScubasuitTex1","none","none","none","none","none");
+    SetOutfitMainTex("ScubasuitTex1");
+    SetOutfitMesh("GM_Scubasuit");
+    SetOutfitDisableAccessories();
+    
+    ////Male Outfits
+
+    //Alex Jacobson Outfit
+    BeginNewOutfitL("ajacobson",3,"",true,false);
+    SetOutfitTextures("none","none","AlexJacobsonTex2","skin","AlexJacobsonTex1","FrameTex1","LensesTex1");
+    SetOutfitMesh("GM_DressShirt_S");
+    
+    //Paul Outfit
+    BeginNewOutfitL("paul",5,"",true,false);
+    SetOutfitTextures("PaulDentonTex2","PantsTex8",,"PaulDentonTex1","PaulDentonTex2","default","default");
+
+    //Brown Suit
+    BeginNewOutfitL("suit",6,"",true,false);
+    SetOutfitTextures("Businessman1Tex2","skin","Businessman1Tex1","Businessman1Tex1","FramesTex1","LensesTex2");
+    SetOutfitAccessorySlots(0,1,1,1,1,1,0,0,1);
+    SetOutfitMesh("GM_Suit");
+    
+    //MIB Suit
+    BeginNewOutfitL("suit2",7,"",true,false);
+    SetOutfitTextures("PantsTex5","skin","MIBTex1","MIBTex1","FramesTex2","LensesTex3");
+    SetOutfitAccessorySlots(1,1,1,1,1,1,0,0,1);
+    SetOutfitMesh("GM_Suit");
+    
+    //Presidents Suit
+    BeginNewOutfitL("suit3",30,"",true,false);
+    SetOutfitTextures("PantsTex5","skin","PhilipMeadTex1","PhilipMeadTex1","FramesTex2","LensesTex3");
+    SetOutfitAccessorySlots(1,1,1,1,1,1,0,0,1);
+    SetOutfitMesh("GM_Suit");
+    
+    //Unatco Troop
+    BeginNewOutfitL("unatcotroop",8,"",true,false);
+    SetOutfitTextures("UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3");
+    SetOutfitMesh("GM_Jumpsuit");
+    
+    //Mechanic
+    BeginNewOutfitL("unatcotroop",9,"",true,false);
+    SetOutfitTextures("MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3");
+    SetOutfitMesh("GM_Jumpsuit");
+    
+    //Chef
+    BeginNewOutfitL("chef",11,"",true,false);
+    SetOutfitTextures("PantsTex10","skin","ChefTex1","ChefTex1","GrayMaskTex","BlackMaskTex","ChefTex3");
+    SetOutfitMesh("GM_Suit");
+    
+    //Soldier
+    BeginNewOutfitL("soldier",17,"",true,false);
+    SetOutfitTextures("SoldierTex2","SoldierTex1","skin","none","GrayMaskTex","SoldierTex3");
+    SetOutfitMesh("GM_Jumpsuit");
+    
+    //Riot Cop
+    BeginNewOutfitL("riotcop",18,"",true,false);
+    SetOutfitTextures("RiotCopTex1","RiotCopTex2","skin","none","GrayMaskTex","RiotCopTex3");
+    SetOutfitMainTex("VisorTex1");
+    SetOutfitMesh("GM_Jumpsuit");
+    
+    //NSF Troop
+    BeginNewOutfitL("nsf",20,"",true,false);
+    SetOutfitTextures("TerroristTex2","TerroristTex1","TerroristTex0","none","graymasktex","GogglesTex1");
+    SetOutfitAccessorySlots(0,1,1,1,2,0,0,0,0);
+    SetOutfitMesh("GM_Jumpsuit");
+    
+    //Bum
+    BeginNewOutfitL("bum",21,"",true,false);
+    SetOutfitTextures("BumMaleTex2","PantsTex4","skin","TrenchShirtTex1","BumMaleTex2","FramesTex1","LensesTex2");
+
+    //Lebedev
+    BeginNewOutfitL("lebedev",22,"",true,false);
+    SetOutfitTextures("JuanLebedevTex2","JuanLebedevTex3","skin","JuanLebedevTex1","JuanLebedevTex2","default","default");
+
+    //Smugglers Outfit
+    BeginNewOutfitL("smug",23,"",true,false);
+    SetOutfitTextures("SmugglerTex2","PantsTex5","skin","SmugglerTex1","SmugglerTex2","FramesTex1","LensesTex1");
+
+    //Simons Outfit
+    BeginNewOutfitL("simons",24,"",true,false);
+    SetOutfitTextures("WaltonSimonsTex2","PantsTex5","skin","WaltonSimonsTex1","WaltonSimonsTex2","FramesTex2","LensesTex3");
+
+    //MJ12 Outfit
+    BeginNewOutfitL("mj12",25,"",true,false);
+    SetOutfitTextures("MJ12TroopTex1","MJ12TroopTex2","skin","none","MJ12TroopTex3","MJ12TroopTex4","none");
+    SetOutfitAccessorySlots(1,1,1,1,1,1,0,0,1);
+    SetOutfitMesh("GM_Jumpsuit");
+
+    //MJ12 Outfit
+    BeginNewOutfitL("carter",32,"",true,false);
+    SetOutfitTextures("SamCarterTex2","SamCarterTex1","skin","none","none","none","none");
+    SetOutfitDisableAccessories();
+    SetOutfitMesh("GM_Jumpsuit");
+
+    ////Female Outfits
+
+    //Gold Brown Outfit
+    BeginNewOutfitL("goldbrown",13,"",false,true);
+    SetOutfitTextures("Outfit2F_Tex2","Outfit2F_Tex3","skin","TrenchShirtTex3","Outfit2F_Tex2","default","default");
+    
+    //Matrix Outfit
+    BeginNewOutfitL("matrix",15,"",false,true);
+    SetOutfitTextures("Outfit4F_Tex2","Outfit4F_Tex3","skin","Outfit4F_Tex1","Outfit4F_Tex2","FramesTex2","LensesTex3");
+    
+    //Goth GF Outfit
+    BeginNewOutfitL("goth",16,"",false,true);
+    SetOutfitTextures("Female4Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Female4Tex2","FramesTex2","LensesTex3");
+    
+    //WIB Outfit
+    BeginNewOutfitL("wib",19,"",false,true);
+    SetOutfitTextures("none","skin","LegsTex2","WIBTex1","WIBTex1","FramesTex2","LensesTex3");
+    SetOutfitMesh("GFM_SuitSkirt");
+
+    //Maggie Outfit
+    BeginNewOutfitL("maggie",27,"",false,true);
+    SetOutfitTextures("none","skin","LegsTex2","MaggieChowTex1","MaggieChowTex1","FramesTex2","LensesTex3");
+    SetOutfitMesh("GFM_SuitSkirt");
+
+    //Nicolette Outfit
+    BeginNewOutfitL("nicolette",28,"",false,true);
+    SetOutfitTextures("NicoletteDuClareTex3","NicoletteDuClareTex2","NicoletteDuClareTex1","NicoletteDuClareTex2","skin","FramesTex2","skin");
+    SetOutfitDisableAccessories();
+    SetOutfitMesh("GFM_Dress");
 }
 
-//Localised version of AddOutfit.
+//Localised version of BeginNewOutfit.
 //Only used internally
-//Works exactly the same way as AddOutfit, but automatically looks up the default names/descriptions list
+//Works exactly the same way as BeginOutfit, but automatically looks up the default names/descriptions list
 //at the bottom of this file
-function AddOutfitL(string id, int nameIndex, string preview, bool male, bool female, optional string mesh, optional string tm, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+function BeginNewOutfitL(string id, int nameIndex, string preview, bool male, bool female)
 {
     local string n,d;
 
     n = defaultOutfitNames[nameIndex];
     d = defaultOutfitDescs[nameIndex];
 
-    AddOutfit(id,n,d,preview,male,female,mesh,tm,t1,t2,t3,t4,t5,t6,t7,accessoriesOffset);
+    BeginNewOutfit(id,n,d,preview,male,female);
 }
 
-function AddOutfit(string id, string n, string d, string preview, bool male, bool female, optional string mesh, optional string tm, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+function BeginNewOutfit(string id, string n, string d, string preview, bool male, bool female)
 {
-    local int i;
+    currOutfit = numOutfits;
+    //player.ClientMessage("Starting new outfit with id " $ id);
+    outfits[currOutfit].allowMale = male;
+    outfits[currOutfit].allowFemale = female;
 
-    /*
-    //Disallow adding new outfits with the same ID, unless they are made for a different gender
-    for (i = 0;i < numOutfits;i++)
-    {
-        if (outfits[i].id == id && (outfits[i].allowMale == male || outfits[i].allowFemale == female))
-            return;
-    }
-    */
+    outfits[currOutfit].id = id;
 
-    outfits[numOutfits].allowMale = male;
-    outfits[numOutfits].allowFemale = female;
-
-    outfits[numOutfits].id = id;
-
-    outfits[numOutfits].name = n;
-    outfits[numOutfits].desc = d;
-
-    outfits[numOutfits].mesh = findMesh(mesh);
-    outfits[numOutfits].tex1 = findTexture(t1);
-    outfits[numOutfits].tex2 = findTexture(t2);
-    outfits[numOutfits].tex3 = findTexture(t3);
-    outfits[numOutfits].tex4 = findTexture(t4);
-    outfits[numOutfits].tex5 = findTexture(t5);
-    outfits[numOutfits].tex6 = findTexture(t6);
-    outfits[numOutfits].tex7 = findTexture(t7);
-    outfits[numOutfits].texM = findTexture(tm);
+    outfits[currOutfit].name = n;
+    outfits[currOutfit].desc = d;
     
-    //Set accessories offset
-    if (accessoriesOffset == 0)
-        accessoriesOffset = 6;
-    outfits[numOutfits].accessoriesOffset = accessoriesOffset;
+    outfits[currOutfit].tex0 = findTexture(defaultTextures[0]);
+    outfits[currOutfit].tex1 = findTexture(defaultTextures[1]);
+    outfits[currOutfit].tex2 = findTexture(defaultTextures[2]);
+    outfits[currOutfit].tex3 = findTexture(defaultTextures[3]);
+    outfits[currOutfit].tex4 = findTexture(defaultTextures[4]);
+    outfits[currOutfit].tex5 = findTexture(defaultTextures[5]);
+    outfits[currOutfit].tex6 = findTexture(defaultTextures[6]);
+    outfits[currOutfit].tex7 = findTexture(defaultTextures[7]);
 
+    SetOutfitAccessorySlots(1,1,1,1,1,1,1,0,0);
+    
     numOutfits++;
-    //EquipOutfit(numOutfits-1);
-        
+
     //TEST DEBUG. REMOVE LATER
-    //Unlock(id);
+    Unlock(id);
 }
+
+function SetOutfitMesh(string mesh)
+{
+    outfits[currOutfit].mesh = findMesh(mesh);
+}
+
+function SetOutfitTextures(optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+{
+    outfits[currOutfit].tex1 = findTexture(t1);
+    outfits[currOutfit].tex2 = findTexture(t2);
+    outfits[currOutfit].tex3 = findTexture(t3);
+    outfits[currOutfit].tex4 = findTexture(t4);
+    outfits[currOutfit].tex5 = findTexture(t5);
+    outfits[currOutfit].tex6 = findTexture(t6);
+    outfits[currOutfit].tex7 = findTexture(t7);
+}
+
+//Set slots to 0 to hide them, 1 to show them, and 2 to replace them with our skin tex when we are in "accessories off" mode
+function SetOutfitAccessorySlots(int tm,int t0, int t1, int t2, int t3, int t4, int t5, int t6, int t7)
+{
+    outfits[currOutfit].accessorySlots[0] = t0;
+    outfits[currOutfit].accessorySlots[1] = t1;
+    outfits[currOutfit].accessorySlots[2] = t2;
+    outfits[currOutfit].accessorySlots[3] = t3;
+    outfits[currOutfit].accessorySlots[4] = t4;
+    outfits[currOutfit].accessorySlots[5] = t5;
+    outfits[currOutfit].accessorySlots[6] = t6;
+    outfits[currOutfit].accessorySlots[7] = t7;
+    outfits[currOutfit].accessorySlots[8] = tm;
+}
+
+function SetOutfitDisableAccessories()
+{
+    SetOutfitAccessorySlots(1,1,1,1,1,1,1,1,1);
+}
+
+function SetOutfitMainTex(string tm)
+{
+    outfits[currOutfit].texM = findTexture(tm);
+}
+
+function SetOutfitBodyTex(string t0)
+{
+    //Texture 0 is special and should always default to skin
+    if (t0 == "")
+        t0 = "skin";
+    outfits[currOutfit].tex0 = findTexture(t0);
+}
+
+function SetupDefaultOutfit()
+{
+    outfits[0].allowMale = true;
+    outfits[0].allowFemale = true;
+    outfits[0].id = "default";
+    
+    outfits[0].name = defaultOutfitNames[0];
+    outfits[0].desc = defaultOutfitDescs[0];
+    
+    outfits[0].tex0 = findTexture(defaultTextures[0]);
+    outfits[0].tex1 = findTexture(defaultTextures[1]);
+    outfits[0].tex2 = findTexture(defaultTextures[2]);
+    outfits[0].tex3 = findTexture(defaultTextures[3]);
+    outfits[0].tex4 = findTexture(defaultTextures[4]);
+    outfits[0].tex5 = findTexture(defaultTextures[5]);
+    outfits[0].tex6 = findTexture(defaultTextures[6]);
+    outfits[0].tex7 = findTexture(defaultTextures[7]);
+    outfits[0].texM = None;
+    
+    outfits[0].mesh = findMesh(defaultMesh);
+    
+    SetOutfitAccessorySlots(0,1,1,1,1,1,1,0,0);
+
+    Unlock("default");
+    numOutfits++;
+}
+
 
 function string GetOutfitName(int index)
 {
@@ -228,9 +400,16 @@ function string GetOutfitID(int index)
 
 function bool HasAccessories(int index)
 {
+    local int i;
     if (index >= numOutfits)
         return false;
-    return outfits[index].accessoriesOffset != -1;
+
+    for (i = 0;i < 9;i++)
+    {
+        if (outfits[index].accessorySlots[i] != 1)
+            return true;
+    }
+    return false;
 }
 
 function EquipOutfit(int index)
@@ -317,6 +496,7 @@ function ApplyCurrentOutfit()
     SetMesh(currentOutfitIndex);
 
     //Set Textures
+    SetTexture(currentOutfitIndex,0);
     SetTexture(currentOutfitIndex,1);
     SetTexture(currentOutfitIndex,2);
     SetTexture(currentOutfitIndex,3);
@@ -370,9 +550,12 @@ function SetTexture(int index,int slot)
 
 
     //If we're hiding accessories, simply set it to the pink tex
-    if (noAccessories && HasAccessories(index) && slot >= currentOutfit.accessoriesOffset && slot < currentOutfit.accessoriesOffset + 2)
+    if (noAccessories && currentOutfit.accessorySlots[slot] != 1)
     {
-        player.MultiSkins[slot] = Texture'DeusExItems.Skins.PinkMaskTex';
+        if (currentOutfit.accessorySlots[slot] == 0)
+            player.MultiSkins[slot] = Texture'DeusExItems.Skins.PinkMaskTex';
+        else if (currentOutfit.accessorySlots[slot] == 2)
+            player.MultiSkins[slot] = findTexture(defaultTextures[0]);
         return;
     }
 
@@ -380,6 +563,9 @@ function SetTexture(int index,int slot)
     //TODO: Use an array instead!
     switch (slot)
     {
+        case 0:
+            tex = currentOutfit.tex0;
+            break;
         case 1:
             tex = currentOutfit.tex1;
             break;
@@ -529,4 +715,6 @@ defaultproperties
     defaultOutfitDescs(32)=""
     defaultOutfitNames(33)="Scuba Suit"
     defaultOutfitDescs(33)=""
+    defaultOutfitNames(34)="100% Black (Alt)"
+    defaultOutfitDescs(34)="OMG! It's just like the memes!"
 }
