@@ -112,3 +112,8 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ScientistFemaleTex3_S3.bmp"                    NAME="ScientistFemaleTex3_S3"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ScientistFemaleTex3_S4.bmp"                    NAME="ScientistFemaleTex3_S4"               GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S0.bmp"                          NAME="TerroristTex0"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S1.bmp"                          NAME="TerroristTex0_S1"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S2.bmp"                          NAME="TerroristTex0_S2"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S3.bmp"                          NAME="TerroristTex0_S3"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S4.bmp"                          NAME="TerroristTex0_S4"                     GROUP="Outfits"
