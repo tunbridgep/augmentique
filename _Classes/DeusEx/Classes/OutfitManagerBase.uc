@@ -21,4 +21,4 @@ function SetOutfitBodyTex(string t0) {}
 function SetOutfitDisableAccessories() {}
 
 //Function called by spawners
-function bool ValidateSpawn(string id) {}
+function SpawnerPickup(OutfitSpawner S) {}

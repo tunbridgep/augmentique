@@ -28,8 +28,9 @@ struct Outfit
     //"Main" Texture
     var Texture texM;
     
-    //first-person arm tex
-    //var travel string firstPersonArmTex;
+    //first-person weapon textures
+    var Texture firstPersonHandsTex;
+    var Texture firstPersonSleeveTex;
 
     //Accessories
     var int accessorySlots[9]; //bool arrays are not allowed
@@ -77,16 +78,52 @@ function Setup(DeusExPlayer newPlayer)
         defaultTextures[6] = string(player.MultiSkins[6]);
         defaultTextures[7] = string(player.MultiSkins[7]);
         defaultMesh = string(player.Mesh);
-
-        //Make sure the default outfit is always unlocked
-        Unlock("default");
     }
+
+    //Make sure the default outfit is always unlocked
+    Unlock("default");
         
     if (numOutfits != 0)
         return;
     
     SetupDefaultOutfit();
+    PopulateOutfitsList();
+    SetupOutfitSpawners();
+}
 
+function SetupOutfitSpawners()
+{
+    local OutfitSpawner S;
+
+	foreach player.AllActors(class'OutfitSpawner', S)
+    {
+        player.ClientMessage("Found an outfit spawner");
+        if (ValidateSpawn(S.id))
+        {
+            if (S.PickupName == "")
+                S.ItemName = GetOutfitNameByID(S.id);
+            else
+                S.ItemName = S.PickupName;
+
+            S.outfitManager = self;
+        }
+        else
+        {
+            player.ClientMessage("OutfitManager failed to validate");
+            S.Destroy();
+        }
+    }
+}
+
+function SpawnerPickup(OutfitSpawner S)
+{
+    player.ClientMessage(S.PickupMessage @ S.itemArticle @ S.ItemName , 'Pickup');
+    Unlock(S.id);
+    S.Destroy();
+}
+
+function PopulateOutfitsList()
+{
     //player.clientmessage("Repopulating outfit list");
 
     //This sucks, but I can't think of a better way to do this
@@ -125,6 +162,7 @@ function Setup(DeusExPlayer newPlayer)
     SetOutfitTextures("ScubasuitTex0","ScubasuitTex1","none","none","none","none","none");
     SetOutfitMainTex("ScubasuitTex1");
     SetOutfitMesh("GM_Scubasuit");
+    SetOutfitFirstPersonTextures("ScubasuitTex1");
     SetOutfitDisableAccessories();
     
     ////Male Outfits
@@ -312,6 +350,11 @@ function BeginNewOutfit(string id, string n, string d, string preview, bool male
     //Unlock(id);
 }
 
+function SetOutfitFirstPersonTextures(string handTex)
+{
+    outfits[currOutfit].firstPersonHandsTex = findTexture(handTex);
+}
+
 function SetOutfitMesh(string mesh)
 {
     outfits[currOutfit].mesh = findMesh(mesh);
@@ -411,7 +454,7 @@ function string GetOutfitNameByID(string id)
 function int GetOutfitIndexByID(string id)
 {
     local int i;
-    for (i = 0;i < 255 && player.unlockedOutfits[i] != "";i++)
+    for (i = 0;i < numOutfits;i++)
         if (outfits[i].id == id)
             return i;
 
@@ -463,6 +506,7 @@ function bool IsEquipped(int index)
 function bool IsUnlocked(string id)
 {
     local int i;
+
     for (i = 0;i < 255 && player.unlockedOutfits[i] != "";i++)
     {
         if (player.unlockedOutfits[i] == id)
@@ -484,6 +528,16 @@ function bool IsCorrectGender(int index)
     return (outfits[index].allowMale && !IsFemale()) || (outfits[index].allowFemale && IsFemale());
 }
 
+//Checks if any outfit matching the ID is assigned to the right gender
+function bool IDGenderCheck(string id)
+{
+    local int i;
+    for (i = 0;i<numOutfits;i++)
+        if (IsCorrectGender(i))
+            return true;
+    return false;
+}
+
 function bool IsUnlockedAt(int index)
 {
     local int i;
@@ -500,7 +554,6 @@ function bool IsUnlockedAt(int index)
 function Unlock(string id)
 {
     local int i;
-    //player.ClientMessage("Unlocking " $ id);
     if (!IsUnlocked(id))
     {
         //find the first empty spot to put it in
@@ -508,7 +561,9 @@ function Unlock(string id)
         {
             if (player.unlockedOutfits[i] == "")
             {
+                //player.ClientMessage("Unlocking " $ id);
                 player.unlockedOutfits[i] = id;
+                player.SaveConfig();
                 return;
             }
         }
@@ -561,6 +616,13 @@ function ApplyCurrentOutfitToActor(Actor A)
     
     //Set model texture
     SetMainTexture(A,currentOutfitIndex);
+
+    //Set first person textures
+    if (A.isA('DeusExPlayer') && DeusExPlayer(A).inHand != None && outfits[currentOutfitIndex].firstPersonHandsTex != None)
+    {
+        player.ClientMessage("Setting hand tex");
+        DeusExPlayer(A).inHand.multiskins[0] = outfits[currentOutfitIndex].firstPersonHandsTex;
+    }
 }
 
 function UpdateCarcass(DeusExCarcass C)
@@ -717,12 +779,17 @@ function bool IsFemale()
     return player.FlagBase != None && player.FlagBase.GetBool('LDDPJCIsFemale');
 }
 
-//Functions called by spawners
 function bool ValidateSpawn(string id)
 {
     local int index;
+    local bool unlocked, gender;
     index = GetOutfitIndexByID(id);
-    return index > -1 && IsCorrectGender(index) && !IsUnlocked(id);
+    unlocked = IsUnlocked(id);
+    gender = IDGenderCheck(id);
+
+    //player.ClientMessage("validating id " $ id $ ": index="$index$", gender="$gender$", unlocked=" $ unlocked);
+
+    return index > -1 && gender && !unlocked;
 }
 
 defaultproperties
