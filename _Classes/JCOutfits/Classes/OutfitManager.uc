@@ -201,7 +201,7 @@ function PopulateOutfitsList()
     SetOutfitMesh("GM_Jumpsuit");
     
     //Mechanic
-    BeginNewOutfitL("unatcotroop",9,"",true,false);
+    BeginNewOutfitL("mechanic",9,"",true,false);
     SetOutfitTextures("MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3");
     SetOutfitMesh("GM_Jumpsuit");
     
@@ -302,7 +302,7 @@ function PopulateOutfitsList()
 
     //Nicolette Outfit
     BeginNewOutfitL("nicolette",28,"",false,true);
-    SetOutfitTextures("NicoletteDuClareTex3","NicoletteDuClareTex2","NicoletteDuClareTex1","NicoletteDuClareTex2","skin","FramesTex2","skin");
+    SetOutfitTextures("NicoletteDuClareTex3","NicoletteDuClareTex2","NicoletteDuClareTex1","NicoletteDuClareTex2","skin","none","skin");
     SetOutfitDisableAccessories();
     SetOutfitMesh("GFM_Dress");
 }
@@ -360,7 +360,7 @@ function SetOutfitMesh(string mesh)
     outfits[currOutfit].mesh = findMesh(mesh);
 }
 
-function SetOutfitTextures(optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional int accessoriesOffset)
+function SetOutfitTextures(optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
 {
     outfits[currOutfit].tex1 = findTexture(t1);
     outfits[currOutfit].tex2 = findTexture(t2);
@@ -629,9 +629,9 @@ function UpdateCarcass(DeusExCarcass C)
 {
     local string CName;
 
-    ApplyCurrentOutfitToActor(C);
-
     CName = string(C.Mesh);
+
+    ApplyCurrentOutfitToActor(C);
     
     if (CName == (defaultMesh $ "_Carcass"))
        C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_Carcass");
@@ -639,6 +639,12 @@ function UpdateCarcass(DeusExCarcass C)
         C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_CarcassB");
     else if (CName == (defaultMesh $ "_CarcassC"))
         C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_CarcassC");
+    else //In the absolute worst case, just switch back to JC
+    {
+        EquipOutfit(0); //Default
+        ApplyCurrentOutfitToActor(C);
+        C.Mesh = findMesh(defaultMesh $"_Carcass");
+    }
 
 
 }
@@ -647,9 +653,6 @@ function SetMesh(Actor A, int index)
 {
     local Mesh mesh;
     mesh = outfits[index].mesh;
-    
-    if (A.isA('DeusExCarcass')) //Find carcass version of models
-        mesh = findMesh(mesh $ "_Carcass");
 
     if (mesh != None)
         A.Mesh = mesh;

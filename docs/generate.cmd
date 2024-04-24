@@ -1,0 +1,1 @@
+pandoc --css=style.css -V lang=en -V highlighting-css= --mathjax --to=html5 --toc --embed-resources --standalone --metadata title="Mod Integration Readme" -f markdown+smart mod_integration.md -o mod_integration.html
