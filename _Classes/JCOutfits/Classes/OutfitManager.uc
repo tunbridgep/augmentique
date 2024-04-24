@@ -97,7 +97,7 @@ function SetupOutfitSpawners()
 
 	foreach player.AllActors(class'OutfitSpawner', S)
     {
-        player.ClientMessage("Found an outfit spawner");
+        //player.ClientMessage("Found an outfit spawner");
         if (ValidateSpawn(S.id))
         {
             if (S.PickupName == "")
@@ -109,7 +109,7 @@ function SetupOutfitSpawners()
         }
         else
         {
-            player.ClientMessage("OutfitManager failed to validate");
+            //player.ClientMessage("OutfitManager failed to validate");
             S.Destroy();
         }
     }
@@ -620,7 +620,7 @@ function ApplyCurrentOutfitToActor(Actor A)
     //Set first person textures
     if (A.isA('DeusExPlayer') && DeusExPlayer(A).inHand != None && outfits[currentOutfitIndex].firstPersonHandsTex != None)
     {
-        player.ClientMessage("Setting hand tex");
+        //player.ClientMessage("Setting hand tex");
         DeusExPlayer(A).inHand.multiskins[0] = outfits[currentOutfitIndex].firstPersonHandsTex;
     }
 }
