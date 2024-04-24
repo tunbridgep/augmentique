@@ -158,7 +158,8 @@ function Setup(DeusExPlayer newPlayer)
     
     //Unatco Troop
     BeginNewOutfitL("unatcotroop",8,"",true,false);
-    SetOutfitTextures("UNATCOTroopTex1","UNATCOTroopTex2","skin","none","GrayMaskTex","UNATCOTroopTex3");
+    SetOutfitTextures("UNATCOTroopTex1","UNATCOTroopTex2","MiscTex1JC","MiscTex1JC","GrayMaskTex","UNATCOTroopTex3");
+    SetOutfitAccessorySlots(1,1,1,1,2,0,0,0,1);
     SetOutfitMesh("GM_Jumpsuit");
     
     //Mechanic
@@ -184,7 +185,7 @@ function Setup(DeusExPlayer newPlayer)
     
     //NSF Troop
     BeginNewOutfitL("nsf",20,"",true,false);
-    SetOutfitTextures("TerroristTex2","TerroristTex1","TerroristTex0","none","graymasktex","GogglesTex1");
+    SetOutfitTextures("TerroristTex2","TerroristTex1","TerroristTex0","TerroristTex0","graymasktex","GogglesTex1");
     SetOutfitAccessorySlots(0,1,1,1,2,0,0,0,0);
     SetOutfitMesh("GM_Jumpsuit");
     
@@ -210,16 +211,32 @@ function Setup(DeusExPlayer newPlayer)
     SetOutfitAccessorySlots(1,1,1,1,1,1,0,0,1);
     SetOutfitMesh("GM_Jumpsuit");
 
-    //MJ12 Outfit
+    //Sam Carter Outfit
     BeginNewOutfitL("carter",32,"",true,false);
     SetOutfitTextures("SamCarterTex2","SamCarterTex1","skin","none","none","none","none");
     SetOutfitDisableAccessories();
     SetOutfitMesh("GM_Jumpsuit");
     
-    //Prisoner
+    //Sailor
+    //"Hat" Replaces head tex
+    BeginNewOutfitL("sailor",31,"",true,false);
+    SetOutfitTextures("SailorTex2","skin","SailorTex1","SailorTex1","GrayMaskTex","BlackMaskTex","SailorTex3");
+    SetOutfitBodyTex("SailorSkin");
+    SetOutfitAccessorySlots(1,2,1,1,1,1,0,0,0);
+    SetOutfitMesh("GM_Suit");
+    
+    //Prisoner Outfit
     BeginNewOutfitL("prisoner",35,"",true,false);
     SetOutfitTextures("MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3");
     SetOutfitMesh("GM_Jumpsuit");
+    
+    //Thug
+    //Beanie Replaces head tex
+    BeginNewOutfitL("thug",37,"",true,false);
+    SetOutfitTextures("none","none","ThugMale2Tex2","skin","ThugMale2Tex1","GrayMaskTex","BlackMaskTex");
+    SetOutfitBodyTex("ThugSkin");
+    SetOutfitAccessorySlots(1,2,1,1,1,1,1,1,1);
+    SetOutfitMesh("GM_DressShirt");
 
     ////Female Outfits
 
@@ -780,4 +797,6 @@ defaultproperties
     defaultOutfitDescs(35)=""
     defaultOutfitNames(36)="100% Black (Ultimate Edition)"
     defaultOutfitDescs(36)=""
+    defaultOutfitNames(37)="Thug Outfit"
+    defaultOutfitDescs(37)=""
 }

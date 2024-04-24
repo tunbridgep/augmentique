@@ -117,3 +117,21 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S2.bmp"                          NAME="TerroristTex0_S2"                     GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S3.bmp"                          NAME="TerroristTex0_S3"                     GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TerroristTex0_S4.bmp"                          NAME="TerroristTex0_S4"                     GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S0.bmp"                             NAME="MiscTex1JC"                           GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S1.bmp"                             NAME="MiscTex1JC_S1"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S2.bmp"                             NAME="MiscTex1JC_S2"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S3.bmp"                             NAME="MiscTex1JC_S3"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S3.bmp"                             NAME="MiscTex1JC_S3"                        GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SailorSkin_S0.bmp"                             NAME="SailorSkin"                           GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SailorSkin_S1.bmp"                             NAME="SailorSkin_S1"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SailorSkin_S2.bmp"                             NAME="SailorSkin_S2"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SailorSkin_S3.bmp"                             NAME="SailorSkin_S3"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SailorSkin_S4.bmp"                             NAME="SailorSkin_S4"                        GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugSkin_S0.bmp"                               NAME="ThugSkin"                             GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugSkin_S1.bmp"                               NAME="ThugSkin_S1"                          GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugSkin_S2.bmp"                               NAME="ThugSkin_S2"                          GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugSkin_S3.bmp"                               NAME="ThugSkin_S3"                          GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugSkin_S4.bmp"                               NAME="ThugSkin_S4"                          GROUP="Outfits"
