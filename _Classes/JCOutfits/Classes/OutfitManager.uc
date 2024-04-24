@@ -63,6 +63,7 @@ function Setup(DeusExPlayer newPlayer)
     local string t0, t1, t2, t3, t4, t5, t6, t7, mesh;
 
     player = newPlayer;
+    player.CarcassType=class'JCOutfits.OutfitCarcassReplacer';
     
     if (defaultMesh == "")
     {
@@ -499,61 +500,105 @@ function Unlock(string id)
 
 function ApplyCurrentOutfit()
 {
+	local JCDentonMaleCarcass jcCarcass;
+	local JCDouble jc;
 
+    //player.ClientMessage("ApplyCurrentOutfit");
+    ApplyCurrentOutfitToActor(player);
+    
+    //Also apply to JC Carcasses and JCDoubles
+	// JC Denton Carcass
+	foreach player.AllActors(class'JCDentonMaleCarcass', jcCarcass)
+		break;
+
+	if (jcCarcass != None)
+         UpdateCarcass(jcCarcass);
+
+	// JC's stunt double
+	foreach player.AllActors(class'JCDouble', jc)
+		break;
+
+	if (jc != None)
+        ApplyCurrentOutfitToActor(jc);
+}
+
+//Apply our current outfit
+function ApplyCurrentOutfitToActor(Actor A)
+{
+    local Mesh mesh;
     if (!IsEquippable(currentOutfitIndex))
         return;
 
     //Set Mesh
-    SetMesh(currentOutfitIndex);
+    SetMesh(A,currentOutfitIndex);
 
     //Set Textures
-    SetTexture(currentOutfitIndex,0);
-    SetTexture(currentOutfitIndex,1);
-    SetTexture(currentOutfitIndex,2);
-    SetTexture(currentOutfitIndex,3);
-    SetTexture(currentOutfitIndex,4);
-    SetTexture(currentOutfitIndex,5);
-    SetTexture(currentOutfitIndex,6);
-    SetTexture(currentOutfitIndex,7);
+    SetTexture(A,currentOutfitIndex,0);
+    SetTexture(A,currentOutfitIndex,1);
+    SetTexture(A,currentOutfitIndex,2);
+    SetTexture(A,currentOutfitIndex,3);
+    SetTexture(A,currentOutfitIndex,4);
+    SetTexture(A,currentOutfitIndex,5);
+    SetTexture(A,currentOutfitIndex,6);
+    SetTexture(A,currentOutfitIndex,7);
     
     //Set model texture
-    SetMainTexture(currentOutfitIndex);
-
-    //player.ClientMessage("ApplyCurrentOutfit");
+    SetMainTexture(A,currentOutfitIndex);
 }
 
-function SetMesh(int index)
+function UpdateCarcass(DeusExCarcass C)
+{
+    local string CName;
+
+    ApplyCurrentOutfitToActor(C);
+
+    CName = string(C.Mesh);
+    
+    if (CName == (defaultMesh $ "_Carcass"))
+       C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_Carcass");
+    else if (CName == (defaultMesh $ "_CarcassB"))
+        C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_CarcassB");
+    else if (CName == (defaultMesh $ "_CarcassC"))
+        C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_CarcassC");
+
+
+}
+
+function SetMesh(Actor A, int index)
 {
     local Mesh mesh;
     mesh = outfits[index].mesh;
+    
+    if (A.isA('DeusExCarcass')) //Find carcass version of models
+        mesh = findMesh(mesh $ "_Carcass");
 
     if (mesh != None)
-        player.Mesh = mesh;
+        A.Mesh = mesh;
     else
     {
-        player.Mesh = findMesh(defaultMesh);
+        A.Mesh = findMesh(defaultMesh);
         //player.ClientMessage("Setting to default mesh: " $ defaultMesh);
     }
 }
 
-function SetMainTexture(int index)
+function SetMainTexture(Actor A, int index)
 {
     local Texture tex;
 
     //If we're hiding accessories, simply set it to the pink tex
     if (noAccessories && HasAccessories(index))
     {
-        player.Texture = Texture'DeusExItems.Skins.PinkMaskTex';
+        A.Texture = Texture'DeusExItems.Skins.PinkMaskTex';
         return;
     }
             
     tex = outfits[index].texM;
     
-    player.Texture = tex;
+    A.Texture = tex;
 }
 
 
-function SetTexture(int index,int slot)
+function SetTexture(Actor A, int index,int slot)
 {
     local Texture tex;
     local Outfit currentOutfit;
@@ -564,9 +609,9 @@ function SetTexture(int index,int slot)
     if (noAccessories && currentOutfit.accessorySlots[slot] != 1)
     {
         if (currentOutfit.accessorySlots[slot] == 0)
-            player.MultiSkins[slot] = Texture'DeusExItems.Skins.PinkMaskTex';
+            A.MultiSkins[slot] = Texture'DeusExItems.Skins.PinkMaskTex';
         else if (currentOutfit.accessorySlots[slot] == 2)
-            player.MultiSkins[slot] = findTexture(defaultTextures[0]);
+            A.MultiSkins[slot] = findTexture(defaultTextures[0]);
         return;
     }
 
@@ -601,9 +646,9 @@ function SetTexture(int index,int slot)
     }
 
     if (tex != None)
-        player.MultiSkins[slot] = tex;
+        A.MultiSkins[slot] = tex;
     else
-        player.MultiSkins[slot] = findTexture(defaultTextures[slot]);
+        A.MultiSkins[slot] = findTexture(defaultTextures[slot]);
 }
 
 function Mesh findMesh(string mesh)
@@ -616,6 +661,9 @@ function Mesh findMesh(string mesh)
     
     if (m == None)
         m = Mesh(DynamicLoadObject("DeusExCharacters."$mesh, class'Mesh', true));
+    
+    if (m == None)
+        m = Mesh(DynamicLoadObject("FemJC."$mesh, class'Mesh', true));
 
     return m;
 }
