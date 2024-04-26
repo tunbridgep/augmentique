@@ -77,7 +77,7 @@ function Setup(DeusExPlayer newPlayer)
         defaultTextures[5] = string(player.MultiSkins[5]);
         defaultTextures[6] = string(player.MultiSkins[6]);
         defaultTextures[7] = string(player.MultiSkins[7]);
-        defaultMesh = string(player.Mesh);
+        defaultMesh = string(player.Mesh.name);
     }
 
     //Make sure the default outfit is always unlocked
@@ -212,7 +212,8 @@ function PopulateOutfitsList()
     
     //Soldier
     BeginNewOutfitL("soldier",17,"",true,false);
-    SetOutfitTextures("SoldierTex2","SoldierTex1","skin","none","GrayMaskTex","SoldierTex3");
+    SetOutfitTextures("SoldierTex2","SoldierTex1","SoldierTex0","none","GrayMaskTex","SoldierTex3");
+    SetOutfitAccessorySlots(1,1,1,1,2,0,0,0,1);
     SetOutfitMesh("GM_Jumpsuit");
     
     //Riot Cop
@@ -303,6 +304,36 @@ function PopulateOutfitsList()
     //Nicolette Outfit
     BeginNewOutfitL("nicolette",28,"",false,true);
     SetOutfitTextures("NicoletteDuClareTex3","NicoletteDuClareTex2","NicoletteDuClareTex1","NicoletteDuClareTex2","skin","none","skin");
+    SetOutfitDisableAccessories();
+    SetOutfitMesh("GFM_Dress");
+
+    //Anna Navarre's Outfit
+    BeginNewOutfitL("anna",38,"",false,true);
+    SetOutfitTextures("none","none","GrayMaskTex","BlackMaskTex","skin","PantsTex9","AnnaNavarreTex1");
+    SetOutfitDisableAccessories(); //Note: Possible Ponytail abailable in Slot 2
+    SetOutfitMesh("GFM_TShirtPants");
+    
+    //Tiffany Savage's Outfit
+    BeginNewOutfitL("tiffany",39,"",false,true);
+    SetOutfitTextures("none","none","GrayMaskTex","BlackMaskTex","skin","TiffanySavageTex2","TiffanySavageTex1");
+    SetOutfitDisableAccessories(); //Note: Possible Ponytail abailable in Slot 2
+    SetOutfitMesh("GFM_TShirtPants");
+    
+    //Sarah Mead's Outfit
+    BeginNewOutfitL("sarah",40,"",false,true);
+    SetOutfitTextures("SarahMeadTex3","SarahMeadTex2","SarahMeadTex1","SarahMeadTex2","none","skin","skin");
+    SetOutfitDisableAccessories();
+    SetOutfitMesh("GFM_Dress");
+    
+    //Jordan Shea's Outfit
+    BeginNewOutfitL("jordan",41,"",false,true);
+    SetOutfitTextures("none","none","GrayMaskTex","BlackMaskTex","skin","PantsTex5","JordanSheaTex1");
+    SetOutfitDisableAccessories(); //Note: Possible Ponytail abailable in Slot 2
+    SetOutfitMesh("GFM_TShirtPants");
+    
+    //Hooker Outfit
+    BeginNewOutfitL("hooker2",42,"",false,true);
+    SetOutfitTextures("Hooker2Tex1","Hooker2Tex2","Hooker2Tex3","Hooker2Tex2","none","none","skin");
     SetOutfitDisableAccessories();
     SetOutfitMesh("GFM_Dress");
 }
@@ -873,4 +904,14 @@ defaultproperties
     defaultOutfitDescs(36)=""
     defaultOutfitNames(37)="Thug Outfit"
     defaultOutfitDescs(37)=""
+    defaultOutfitNames(38)="Anna Navarre's Outfit"
+    defaultOutfitDescs(38)=""
+    defaultOutfitNames(39)="Tiffany Savage's Outfit"
+    defaultOutfitDescs(39)=""
+    defaultOutfitNames(40)="Sarah Mead's Outfit"
+    defaultOutfitDescs(40)=""
+    defaultOutfitNames(41)="Jordan Shea's Outfit"
+    defaultOutfitDescs(41)=""
+    defaultOutfitNames(42)="Hooker Outfit"
+    defaultOutfitDescs(42)=""
 }
