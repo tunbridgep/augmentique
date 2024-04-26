@@ -628,24 +628,28 @@ function ApplyCurrentOutfitToActor(Actor A)
 function UpdateCarcass(DeusExCarcass C)
 {
     local string CName;
+    local string M;
 
-    CName = string(C.Mesh);
-
+    CName = string(C.Mesh.name);
     ApplyCurrentOutfitToActor(C);
-    
-    if (CName == (defaultMesh $ "_Carcass"))
-       C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_Carcass");
-    else if (CName == (defaultMesh $ "_CarcassB"))
-        C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_CarcassB");
-    else if (CName == (defaultMesh $ "_CarcassC"))
-        C.Mesh = findMesh(outfits[currentOutfitIndex].mesh $ "_CarcassC");
-    else //In the absolute worst case, just switch back to JC
-    {
-        EquipOutfit(0); //Default
-        ApplyCurrentOutfitToActor(C);
-        C.Mesh = findMesh(defaultMesh $"_Carcass");
-    }
+        
+    M = defaultMesh;
 
+    if (outfits[currentOutfitIndex].mesh != None)
+        M = string(outfits[currentOutfitIndex].mesh.name);
+
+    if (CName == ("GM_Trench_Carcass"))
+       C.Mesh = findMesh(M $ "_Carcass");
+    else if (CName == ("GM_Trench_CarcassB"))
+        C.Mesh = findMesh(M $ "_CarcassB");
+    else if (CName == ("GM_Trench_CarcassC"))
+        C.Mesh = findMesh(M $ "_CarcassC");
+    
+    if (C.Mesh == None) //In the absolute worst case, just switch back to JC
+        C.Mesh = findMesh(defaultMesh $"_Carcass");
+
+    log("CName = " $ CName);
+    log("Looking for carcass " $ outfits[currentOutfitIndex].mesh $ "_Carcass" );
 
 }
 
