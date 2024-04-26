@@ -78,6 +78,8 @@ function Setup(DeusExPlayer newPlayer)
         defaultTextures[6] = string(player.MultiSkins[6]);
         defaultTextures[7] = string(player.MultiSkins[7]);
         defaultMesh = string(player.Mesh.name);
+        //Set flag for default outfit
+        Player.FlagBase.SetBool('JCOutfits_Equipped_default',true,true,0);
     }
 
     //Make sure the default outfit is always unlocked
@@ -517,10 +519,17 @@ function bool HasAccessories(int index)
 
 function EquipOutfit(int index)
 {
+    local Name flag;
+
     if (index >= numOutfits)
         return;
-    
+   
+    flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[currentOutfitIndex].id);
     currentOutfitindex = index;
+
+    //Unset flag for previous outfit
+    Player.FlagBase.SetBool(flag,false,false,0);
+
     ApplyCurrentOutfit();
 }
 
@@ -605,6 +614,11 @@ function ApplyCurrentOutfit()
 {
 	local JCDentonMaleCarcass jcCarcass;
 	local JCDouble jc;
+    local Name flag;
+
+    //Set flag for new outfit
+    flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[currentOutfitIndex].id);
+    Player.FlagBase.SetBool(flag,true,true,0);
 
     //player.ClientMessage("ApplyCurrentOutfit");
     ApplyCurrentOutfitToActor(player);
