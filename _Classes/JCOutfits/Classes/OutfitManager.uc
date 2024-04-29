@@ -291,7 +291,7 @@ function PopulateOutfitsList()
     
     //Goth GF Outfit
     BeginNewOutfitL("goth",16,"",false,true);
-    SetOutfitTextures("Female4Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Female4Tex2","FramesTex2","LensesTex3");
+    SetOutfitTextures("Female4Tex2","Outfit3F_Tex3","skin","Outfit3F_Tex1","Outfit3F_Tex2","FramesTex2","LensesTex3");
     
     //WIB Outfit
     BeginNewOutfitL("wib",19,"",false,true);
