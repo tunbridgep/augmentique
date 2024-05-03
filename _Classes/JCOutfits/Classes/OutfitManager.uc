@@ -14,7 +14,7 @@ var travel int savedOutfitIndex;
 //Some outfits are special
 const DEFAULT_OUTFIT = 0;
 var Outfit currOutfit;
-var Outfit customOutfit;
+var travel Outfit customOutfit;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
@@ -22,6 +22,7 @@ var travel bool noAccessories;
 //Names for the default JC Denton outfit
 var const localized string defaultOutfitNames[255];
 var const localized string defaultOutfitDescs[255];
+var const localized string CustomOutfitName;
 
 //TODO: Replace these with outfit 0
 var travel string defaultTextures[8];
@@ -48,8 +49,9 @@ function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional 
     P = new(Self) class'OutfitPart';
 
     P.partID = id;
+    P.name = name;
     P.bodySlot = slot;
-    p.isAccessory = isAccessory;
+    P.isAccessory = isAccessory;
 
     if (t1 == "default") t1 = defaultTextures[1];
     if (t2 == "default") t2 = defaultTextures[2];
@@ -102,8 +104,23 @@ function Setup(DeusExPlayer newPlayer)
     if (numOutfits != 0)
         return;
     
+    SetupCustomOutfit();
     PopulateOutfitsList();
     SetupOutfitSpawners();
+}
+
+function SetupCustomOutfit()
+{
+    if (customOutfit == None)
+    {
+        customOutfit = new(Self) class'Outfit';
+        customOutfit.id = "custom";
+        customOutfit.name = CustomOutfitName;
+        customOutfit.index = 0;
+        customOutfit.hidden = true;
+    }
+    outfits[0] = customOutfit;
+    numOutfits++;
 }
 
 function SetupOutfitSpawners()
@@ -146,8 +163,8 @@ function PopulateOutfitsList()
     ////Add Parts to the Parts List
     BeginNewPartsGroup("GM_Trench", true, false);
     AddPart(PS_Trench,"JC's Trenchie",false,"default_t","default",,,,"default");
-    AddPart(PS_Legs,"JC's Trenchie",false,"default_p",,"default");
-    AddPart(PS_Torso,"Jc's Trenchie",false,"default_s",,,,"default");
+    AddPart(PS_Legs,"JC's Pantaloons",false,"default_p",,"default");
+    AddPart(PS_Torso,"JC's Shirt",false,"default_s",,,,"default");
     AddPart(PS_Glasses,"JC's Glassies",true,"default_g",,,,,,"default","default");
     AddPart(PS_Trench,"Lab Coat",false,"lab_t","LabCoatTex1",,,,"LabCoatTex1");
     BeginNewOutfit2("default","Default Outfit","");
@@ -395,6 +412,7 @@ function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
     G.mesh = M;
     G.allowMale = allowMale;
     G.allowFemale = allowFemale;
+    G.player = player;
 
     Groups[numPartsGroups] = G;
     currentPartsGroup = G;
@@ -444,27 +462,24 @@ function EquipOutfit(int index)
 
 function EquipCustomOutfit()
 {
-    if (savedOutfitIndex == -1)
+    if (savedOutfitIndex == 0)
         return;
-
-    currOutfit.CopyTo(customOutfit);
-    currOutfit = customOutfit;
-    currOutfit.id = "custom";
-    currOutfit.name = "Custom Outfit";
-    currOutfit.index = -1;
-    currOutfit = customOutfit;
     
-    savedOutfitIndex = -1;
+    currOutfit.CopyPartsListTo(customOutfit);
+    currOutfit = customOutfit;
+    currOutfit.hidden = false;
+    
+    savedOutfitIndex = 0;
     ApplyCurrentOutfit();
 }
 
-function string GetOutfitName(int index)
+function Outfit GetOutfit(int index)
 {
     
     if (index >= numOutfits)
-        return "";
+        return None;
 
-    return outfits[index].name;
+    return outfits[index];
 }
 
 function string GetOutfitNameByID(string id)
@@ -495,11 +510,6 @@ function string GetOutfitID(int index)
         return "";
 
     return outfits[index].id;
-}
-
-function Outfit GetOutfit(int index)
-{
-    return outfits[index];
 }
 
 function bool IsEquipped(int index)
@@ -695,6 +705,7 @@ function bool ValidateSpawn(string id)
 
 defaultproperties
 {
+    CustomOutfitName="Custom Outfit"
     defaultOutfitNames(0)="JC Denton's Trenchcoat"
     defaultOutfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
     defaultOutfitNames(1)="JC Denton's Trenchcoat (Alt)"

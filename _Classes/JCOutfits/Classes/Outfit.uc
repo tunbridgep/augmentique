@@ -11,17 +11,36 @@ var int numParts;
 var DeusExPlayer player;
 
 var int index;                                  //The position in the master outfits list
+var bool hidden;                                //The outfit will not be shown in the list
 
-function CopyTo(Outfit O)
+function ReplacePart(int type, OutfitPart part)
+{
+    local int i;
+    for (i = 0;i < numParts;i++)
+    {
+        if (parts[i].bodySlot == type)
+            parts[i] = part;
+    }
+}
+
+function OutfitPart GetPartOfType(int type)
+{
+    local int i;
+    for (i = 0;i < numParts;i++)
+    {
+        if (parts[i].bodySlot == type)
+            return parts[i];
+    }
+        
+    return None;
+}
+
+function CopyPartsListTo(Outfit O)
 {
     local int i;
 
-    O.id = id;
-    O.name = name;
     O.partsGroup = partsGroup;
     O.numParts = numParts;
-    O.player = player;
-    O.index = index;
 
     for (i = 0;i < numParts;i++)
         O.parts[i] = parts[i];

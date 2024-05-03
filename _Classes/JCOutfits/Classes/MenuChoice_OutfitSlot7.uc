@@ -5,4 +5,5 @@ defaultproperties
      HelpText="Set Outfit Slot 7"
      actionText="Set Slot 7"
      Action=MA_Custom
+     slot=7
 }

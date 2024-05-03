@@ -148,7 +148,7 @@ function CreateAccessoriesCheckbox()
 
 function PopulateOutfitsList()
 {
-    local string outfit;
+    local Outfit O;
 	local int rowId, i;
 
 	// First clear the list
@@ -164,9 +164,13 @@ function PopulateOutfitsList()
         if (!outfitManager.IsEquippable(i))
             continue;
 
-		outfit = outfitManager.GetOutfitName(i);
+		O = outfitManager.GetOutfit(i);
 
-		rowId = lstOutfits.AddRow(outfit);
+        //don't show hidden outfits
+        if (O.hidden)
+            continue;
+
+		rowId = lstOutfits.AddRow(O.name);
 
 		// Check to see if we need to display *New* in the second column
 		//if (image.bPlayerViewedImage == False)
@@ -174,7 +178,7 @@ function PopulateOutfitsList()
 
 		// Save the image away
 		//lstOutfits.SetRowClientObject(rowId, outfit);
-		lstOutfits.SetField(rowId, 0, outfit);
+		lstOutfits.SetField(rowId, 0, O.name);
         if (outfitManager.IsEquipped(i))
         {
     		lstOutfits.SetField(rowId, 1, "C");

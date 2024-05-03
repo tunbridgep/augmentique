@@ -27,7 +27,7 @@ function GoToNextOutfit()
     }
     until (M.IsEquippable(next) || next == M.currOutfit.index);
 
-	actionText = M.GetOutfitName(next);
+	actionText = M.GetOutfit(next).name;
     M.EquipOutfit(next);
 }
 

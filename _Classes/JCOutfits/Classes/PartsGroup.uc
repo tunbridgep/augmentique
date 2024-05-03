@@ -7,9 +7,40 @@ var bool allowFemale;                   //Whether or not females are allowed to 
 var OutfitPart PartsList[300];
 var int numOutfitParts;
 
+var DeusExPlayer player;
+
+function int CountPartType(int type)
+{
+    local int i,c;
+    for (i = 0;i < numOutfitParts;i++)
+    {
+        if (PartsList[i].bodySlot == type)
+            c++;
+    }
+    return c;
+}
+
+function OutfitPart GetNextPartOfType(int type, int start)
+{
+    local int i;
+
+    i = start;
+    do
+    {
+        i++;
+        if (i >= numOutfitParts)
+            i = 0;
+    }
+    until (i == start || PartsList[i].bodySlot == type)
+
+    return PartsList[i];
+}
+
 function AddPart(OutfitPart P)
 {
-    PartsList[numOutfitParts++] = P;
+    PartsList[numOutfitParts] = P;
+    P.index = numOutfitParts;
+    numOutfitParts++;
 }
 
 function OutfitPart GetPartWithID(string ID)
