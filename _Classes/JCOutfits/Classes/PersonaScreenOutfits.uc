@@ -7,6 +7,7 @@ class PersonaScreenOutfits extends PersonaScreenBaseWindow;
 #exec OBJ LOAD FILE=DeusEx
 
 var PersonaActionButtonWindow btnEquip;
+var PersonaActionButtonWindow btnCustom;
 
 var PersonaListWindow         lstOutfits;
 var PersonaScrollAreaWindow   winScroll;
@@ -17,6 +18,7 @@ var PersonaCheckBoxWindow     chkAccessories;
 var localized String ShowAccessoriesLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
+var localized String CustomButtonLabel;
 
 var int rowIDLastEquipped;
 
@@ -120,6 +122,9 @@ function CreateButtons()
 	winActionButtons.SetPos(10, 422);
 	winActionButtons.SetWidth(259);
 	winActionButtons.FillAllSpace(False);
+	
+    btnCustom = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
+	btnCustom.SetButtonText(CustomButtonLabel);
 
 	btnEquip = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
 	btnEquip.SetButtonText(EquipButtonLabel);
@@ -246,6 +251,10 @@ function bool ButtonActivated( Window buttonPressed )
 			Equip();
 			break;
 
+		case btnCustom:
+            player.invokeuiscreen(class'MenuScreenOutfitChanger');
+			break;
+
 		default:
 			bHandled = False;
 			break;
@@ -287,7 +296,7 @@ function EnableButtons()
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
 	btnEquip.SetSensitivity(!outfitManager.IsEquipped(index));
-    if (outfitManager.HasAccessories(outfitManager.currentOutfitIndex))
+    if (outfitManager.currOutfit.HasAccessories())
         chkAccessories.Show();
     else
         chkAccessories.Hide();
@@ -363,6 +372,7 @@ defaultproperties
      ShowAccessoriesLabel="Show Accessories"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
+     CustomButtonLabel="Custom Outfit"
      clientBorderOffsetY=35
      ClientWidth=617
      ClientHeight=439

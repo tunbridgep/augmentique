@@ -2,51 +2,21 @@ class OutfitManager extends OutfitManagerBase;
 
 #exec OBJ LOAD FILE=DeusEx
 
-struct Outfit
-{
-    var string name;
-    var string desc;
-
-    var string id;       //Unique identifier for each outfit
-
-    //TODO: Use this rather than checking the array constantly
-    //var bool unlocked;
-
-    //Meshes
-    var Mesh mesh;
-
-    //Textures
-    var Texture tex0;
-    var Texture tex1;
-    var Texture tex2;
-    var Texture tex3;
-    var Texture tex4;
-    var Texture tex5;
-    var Texture tex6;
-    var Texture tex7;
-    
-    //"Main" Texture
-    var Texture texM;
-    
-    //first-person weapon textures
-    var Texture firstPersonHandsTex;
-    var Texture firstPersonSleeveTex;
-
-    //Accessories
-    var int accessorySlots[9]; //bool arrays are not allowed
-
-    //LDDP Support
-    var bool allowMale;
-    var bool allowFemale;
-};
-
 var DeusExPlayer player;
 
 var Outfit outfits[255];
 var int numOutfits;
-var int currOutfit;
 
-var travel int currentOutfitIndex;
+//Used for saving outfit number between maps
+//This can be used for other purposes, but better to use currOutfit instead
+var travel int savedOutfitIndex;
+
+//Some outfits are special
+const DEFAULT_OUTFIT = 0;
+const CUSTOM_OUTFIT = 0;
+var Outfit defaultOutfit;
+var Outfit customOutfit;
+var Outfit currOutfit;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
@@ -58,6 +28,55 @@ var const localized string defaultOutfitDescs[255];
 //TODO: Replace these with outfit 0
 var travel string defaultTextures[8];
 var travel string defaultMesh;
+
+var PartsGroup Groups[50];
+var int numPartsGroups;
+var PartsGroup currentPartsGroup;
+
+enum PartSlot
+{
+    PS_Body,
+    PS_Trench,
+    PS_Torso,
+    PS_Legs,
+    PS_Glasses,
+    PS_Hat
+};
+
+function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
+{
+    local OutfitPart P;
+
+    P = new(Self) class'OutfitPart';
+
+    P.partID = id;
+    P.bodySlot = slot;
+    p.isAccessory = isAccessory;
+
+    if (t1 == "default") t1 = defaultTextures[1];
+    if (t2 == "default") t2 = defaultTextures[2];
+    if (t3 == "default") t3 = defaultTextures[3];
+    if (t4 == "default") t4 = defaultTextures[4];
+    if (t5 == "default") t5 = defaultTextures[5];
+    if (t6 == "default") t6 = defaultTextures[6];
+    if (t7 == "default") t7 = defaultTextures[7];
+
+    P.textures[1] = findTexture(t1);
+    P.textures[2] = findTexture(t2);
+    P.textures[3] = findTexture(t3);
+    P.textures[4] = findTexture(t4);
+    P.textures[5] = findTexture(t5);
+    P.textures[6] = findTexture(t6);
+    P.textures[7] = findTexture(t7);
+    //P.textures[8] = findTexture(t8);
+
+    currentPartsGroup.AddPart(P);
+}
+
+function OutfitAddPart(string partID)
+{
+    currOutfit.AddPartFromID(partID);
+}
 
 function Setup(DeusExPlayer newPlayer)
 {
@@ -82,13 +101,9 @@ function Setup(DeusExPlayer newPlayer)
         Player.FlagBase.SetBool('JCOutfits_Equipped_default',true,true,0);
     }
 
-    //Make sure the default outfit is always unlocked
-    Unlock("default");
-        
     if (numOutfits != 0)
         return;
     
-    SetupDefaultOutfit();
     PopulateOutfitsList();
     SetupOutfitSpawners();
 }
@@ -129,9 +144,28 @@ function PopulateOutfitsList()
     //player.clientmessage("Repopulating outfit list");
 
     //This sucks, but I can't think of a better way to do this
+    
+    ////Add Parts to the Parts List
+    BeginNewPartsGroup("GM_Trench", true, false);
+    AddPart(PS_Trench,"JC's Trenchie",false,"default_t","default",,,,"default");
+    AddPart(PS_Legs,"JC's Trenchie",false,"default_p",,"default");
+    AddPart(PS_Torso,"Jc's Trenchie",false,"default_s",,,,"default");
+    AddPart(PS_Glasses,"JC's Glassies",true,"default_g",,,,,,"default","default");
+    AddPart(PS_Trench,"Lab Coat",false,"lab_t","LabCoatTex1",,,,"LabCoatTex1");
+    BeginNewOutfit2("default","Default Outfit","");
+    OutfitAddPart("default_t");
+    OutfitAddPart("default_p");
+    OutfitAddPart("default_s");
+    OutfitAddPart("default_g");
+    BeginNewOutfit2("defaultL","Default Outfit w/ Lab Coat","");
+    OutfitAddPart("default_p");
+    OutfitAddPart("default_s");
+    OutfitAddPart("default_g");
+    OutfitAddPart("lab_t");
 
     ////Default Outfits
     
+    /*
     //Alternate Fem Jewellery
     BeginNewOutfitL("default",1,"",false,true);
     SetOutfitTextures("default","default","default","Outfit1F_Tex1","default","default","default");
@@ -338,131 +372,70 @@ function PopulateOutfitsList()
     SetOutfitTextures("Hooker2Tex1","Hooker2Tex2","Hooker2Tex3","Hooker2Tex2","none","none","skin");
     SetOutfitDisableAccessories();
     SetOutfitMesh("GFM_Dress");
+    */
+}
+
+function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
+{
+    local int i;
+    local PartsGroup G;
+    local Mesh M;
+
+    M = findMesh(mesh);
+
+    //If we find a group with this mesh already set, use it.
+    for (i = 0;i < numPartsGroups;i++)
+    {
+        if (M == Groups[i].mesh)
+        {
+            currentPartsGroup = Groups[i];
+            return;
+        }
+    }
+    
+    G = new(Self) class'PartsGroup';
+    G.mesh = M;
+    G.allowMale = allowMale;
+    G.allowFemale = allowFemale;
+
+    Groups[numPartsGroups] = G;
+    currentPartsGroup = G;
+    numPartsGroups++;
 }
 
 //Localised version of BeginNewOutfit.
 //Only used internally
 //Works exactly the same way as BeginOutfit, but automatically looks up the default names/descriptions list
 //at the bottom of this file
-function BeginNewOutfitL(string id, int nameIndex, string preview, bool male, bool female)
+function BeginNewOutfitL(string id, int nameIndex, string preview)
 {
     local string n,d;
 
     n = defaultOutfitNames[nameIndex];
     d = defaultOutfitDescs[nameIndex];
 
-    BeginNewOutfit(id,n,d,preview,male,female);
+    //BeginNewOutfit(id,n,d,preview,male,female);
+    BeginNewOutfit2(id,n,preview);
+}
+
+function BeginNewOutfit2(string id, string name, string preview)
+{
+    local Outfit O;
+    O = new(Self) class'Outfit';
+
+    O.id = id;
+    O.index = numOutfits;
+    O.name = name;
+    O.partsGroup = currentPartsGroup;
+    O.player = player;
+
+    outfits[numOutfits++] = O;
+    currOutfit = O;
 }
 
 function BeginNewOutfit(string id, string n, string d, string preview, bool male, bool female)
 {
-    currOutfit = numOutfits;
-    //player.ClientMessage("Starting new outfit with id " $ id);
-    outfits[currOutfit].allowMale = male;
-    outfits[currOutfit].allowFemale = female;
-
-    outfits[currOutfit].id = id;
-
-    outfits[currOutfit].name = n;
-    outfits[currOutfit].desc = d;
-    
-    outfits[currOutfit].tex0 = findTexture(defaultTextures[0]);
-    outfits[currOutfit].tex1 = findTexture(defaultTextures[1]);
-    outfits[currOutfit].tex2 = findTexture(defaultTextures[2]);
-    outfits[currOutfit].tex3 = findTexture(defaultTextures[3]);
-    outfits[currOutfit].tex4 = findTexture(defaultTextures[4]);
-    outfits[currOutfit].tex5 = findTexture(defaultTextures[5]);
-    outfits[currOutfit].tex6 = findTexture(defaultTextures[6]);
-    outfits[currOutfit].tex7 = findTexture(defaultTextures[7]);
-
-    SetOutfitAccessorySlots(1,1,1,1,1,1,1,0,0);
-    
-    numOutfits++;
-
-    //TEST DEBUG. REMOVE LATER
-    //Unlock(id);
 }
-
-function SetOutfitFirstPersonTextures(string handTex)
-{
-    outfits[currOutfit].firstPersonHandsTex = findTexture(handTex);
-}
-
-function SetOutfitMesh(string mesh)
-{
-    outfits[currOutfit].mesh = findMesh(mesh);
-}
-
-function SetOutfitTextures(optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
-{
-    outfits[currOutfit].tex1 = findTexture(t1);
-    outfits[currOutfit].tex2 = findTexture(t2);
-    outfits[currOutfit].tex3 = findTexture(t3);
-    outfits[currOutfit].tex4 = findTexture(t4);
-    outfits[currOutfit].tex5 = findTexture(t5);
-    outfits[currOutfit].tex6 = findTexture(t6);
-    outfits[currOutfit].tex7 = findTexture(t7);
-}
-
-//Set slots to 0 to hide them, 1 to show them, and 2 to replace them with our skin tex when we are in "accessories off" mode
-function SetOutfitAccessorySlots(int tm,int t0, int t1, int t2, int t3, int t4, int t5, int t6, int t7)
-{
-    outfits[currOutfit].accessorySlots[0] = t0;
-    outfits[currOutfit].accessorySlots[1] = t1;
-    outfits[currOutfit].accessorySlots[2] = t2;
-    outfits[currOutfit].accessorySlots[3] = t3;
-    outfits[currOutfit].accessorySlots[4] = t4;
-    outfits[currOutfit].accessorySlots[5] = t5;
-    outfits[currOutfit].accessorySlots[6] = t6;
-    outfits[currOutfit].accessorySlots[7] = t7;
-    outfits[currOutfit].accessorySlots[8] = tm;
-}
-
-function SetOutfitDisableAccessories()
-{
-    SetOutfitAccessorySlots(1,1,1,1,1,1,1,1,1);
-}
-
-function SetOutfitMainTex(string tm)
-{
-    outfits[currOutfit].texM = findTexture(tm);
-}
-
-function SetOutfitBodyTex(string t0)
-{
-    //Texture 0 is special and should always default to skin
-    if (t0 == "")
-        t0 = "skin";
-    outfits[currOutfit].tex0 = findTexture(t0);
-}
-
-function SetupDefaultOutfit()
-{
-    outfits[0].allowMale = true;
-    outfits[0].allowFemale = true;
-    outfits[0].id = "default";
-    
-    outfits[0].name = defaultOutfitNames[0];
-    outfits[0].desc = defaultOutfitDescs[0];
-    
-    outfits[0].tex0 = findTexture(defaultTextures[0]);
-    outfits[0].tex1 = findTexture(defaultTextures[1]);
-    outfits[0].tex2 = findTexture(defaultTextures[2]);
-    outfits[0].tex3 = findTexture(defaultTextures[3]);
-    outfits[0].tex4 = findTexture(defaultTextures[4]);
-    outfits[0].tex5 = findTexture(defaultTextures[5]);
-    outfits[0].tex6 = findTexture(defaultTextures[6]);
-    outfits[0].tex7 = findTexture(defaultTextures[7]);
-    outfits[0].texM = None;
-    
-    outfits[0].mesh = findMesh(defaultMesh);
-    
-    SetOutfitAccessorySlots(0,1,1,1,1,1,1,0,0);
-
-    Unlock("default");
-    numOutfits++;
-}
-
 
 function string GetOutfitName(int index)
 {
@@ -503,33 +476,10 @@ function string GetOutfitID(int index)
     return outfits[index].id;
 }
 
-function bool HasAccessories(int index)
-{
-    local int i;
-    if (index >= numOutfits)
-        return false;
-
-    for (i = 0;i < 9;i++)
-    {
-        if (outfits[index].accessorySlots[i] != 1)
-            return true;
-    }
-    return false;
-}
-
 function EquipOutfit(int index)
 {
-    local Name flag;
-
-    if (index >= numOutfits)
-        return;
-   
-    flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[currentOutfitIndex].id);
-    currentOutfitindex = index;
-
-    //Unset flag for previous outfit
-    Player.FlagBase.SetBool(flag,false,false,0);
-
+    currOutfit = outfits[index];
+    savedOutfitIndex = index;
     ApplyCurrentOutfit();
 }
 
@@ -540,7 +490,7 @@ function Outfit GetOutfit(int index)
 
 function bool IsEquipped(int index)
 {
-    return index == currentOutfitIndex;
+    return index == currOutfit.index;
 }
 
 function bool IsUnlocked(string id)
@@ -557,38 +507,36 @@ function bool IsUnlocked(string id)
 
 function bool IsEquippable(int index)
 {
+    /*
     if (index >= numOutfits)
         return false;
     
     return IsUnlocked(outfits[index].id) && IsCorrectGender(index);
+    */
+    return true;
 }
 
 function bool IsCorrectGender(int index)
 {
-    return (outfits[index].allowMale && !IsFemale()) || (outfits[index].allowFemale && IsFemale());
+    //return (outfits[index].allowMale && !IsFemale()) || (outfits[index].allowFemale && IsFemale());
+    return true;
 }
 
 //Checks if any outfit matching the ID is assigned to the right gender
 function bool IDGenderCheck(string id)
 {
+    /*
     local int i;
     for (i = 0;i<numOutfits;i++)
         if (IsCorrectGender(i))
             return true;
     return false;
+    */
 }
 
 function bool IsUnlockedAt(int index)
 {
-    local int i;
-    local string id;
-
-    if (index > numOutfits)
-        return false;
-
-    id = outfits[index].id;
-
-    return IsUnlocked(id);
+    return true;
 }
 
 function Unlock(string id)
@@ -617,8 +565,8 @@ function ApplyCurrentOutfit()
     local Name flag;
 
     //Set flag for new outfit
-    flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[currentOutfitIndex].id);
-    Player.FlagBase.SetBool(flag,true,true,0);
+    //flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[currentOutfitIndex].id);
+    //Player.FlagBase.SetBool(flag,true,true,0);
 
     //player.ClientMessage("ApplyCurrentOutfit");
     ApplyCurrentOutfitToActor(player);
@@ -642,36 +590,15 @@ function ApplyCurrentOutfit()
 //Apply our current outfit
 function ApplyCurrentOutfitToActor(Actor A)
 {
-    local Mesh mesh;
-    if (!IsEquippable(currentOutfitIndex))
-        return;
+    //if (!IsEquippable(currOutfit.index))
+    //    return;
 
-    //Set Mesh
-    SetMesh(A,currentOutfitIndex);
-
-    //Set Textures
-    SetTexture(A,currentOutfitIndex,0);
-    SetTexture(A,currentOutfitIndex,1);
-    SetTexture(A,currentOutfitIndex,2);
-    SetTexture(A,currentOutfitIndex,3);
-    SetTexture(A,currentOutfitIndex,4);
-    SetTexture(A,currentOutfitIndex,5);
-    SetTexture(A,currentOutfitIndex,6);
-    SetTexture(A,currentOutfitIndex,7);
-    
-    //Set model texture
-    SetMainTexture(A,currentOutfitIndex);
-
-    //Set first person textures
-    if (A.isA('DeusExPlayer') && DeusExPlayer(A).inHand != None && outfits[currentOutfitIndex].firstPersonHandsTex != None)
-    {
-        //player.ClientMessage("Setting hand tex");
-        DeusExPlayer(A).inHand.multiskins[0] = outfits[currentOutfitIndex].firstPersonHandsTex;
-    }
+    currOutfit.ApplyOutfitToActor(A,!noAccessories);
 }
 
 function UpdateCarcass(DeusExCarcass C)
 {
+    /*
     local string CName;
     local string M;
 
@@ -695,91 +622,7 @@ function UpdateCarcass(DeusExCarcass C)
 
     log("CName = " $ CName);
     log("Looking for carcass " $ outfits[currentOutfitIndex].mesh $ "_Carcass" );
-
-}
-
-function SetMesh(Actor A, int index)
-{
-    local Mesh mesh;
-    mesh = outfits[index].mesh;
-
-    if (mesh != None)
-        A.Mesh = mesh;
-    else
-    {
-        A.Mesh = findMesh(defaultMesh);
-        //player.ClientMessage("Setting to default mesh: " $ defaultMesh);
-    }
-}
-
-function SetMainTexture(Actor A, int index)
-{
-    local Texture tex;
-
-    //If we're hiding accessories, simply set it to the pink tex
-    if (noAccessories && HasAccessories(index))
-    {
-        A.Texture = Texture'DeusExItems.Skins.PinkMaskTex';
-        return;
-    }
-            
-    tex = outfits[index].texM;
-    
-    A.Texture = tex;
-}
-
-
-function SetTexture(Actor A, int index,int slot)
-{
-    local Texture tex;
-    local Outfit currentOutfit;
-    currentOutfit = outfits[index];
-
-
-    //If we're hiding accessories, simply set it to the pink tex
-    if (noAccessories && currentOutfit.accessorySlots[slot] != 1)
-    {
-        if (currentOutfit.accessorySlots[slot] == 0)
-            A.MultiSkins[slot] = Texture'DeusExItems.Skins.PinkMaskTex';
-        else if (currentOutfit.accessorySlots[slot] == 2)
-            A.MultiSkins[slot] = findTexture(defaultTextures[0]);
-        return;
-    }
-
-    //This fucking sucks
-    //TODO: Use an array instead!
-    switch (slot)
-    {
-        case 0:
-            tex = currentOutfit.tex0;
-            break;
-        case 1:
-            tex = currentOutfit.tex1;
-            break;
-        case 2:
-            tex = currentOutfit.tex2;
-            break;
-        case 3:
-            tex = currentOutfit.tex3;
-            break;
-        case 4:
-            tex = currentOutfit.tex4;
-            break;
-        case 5:
-            tex = currentOutfit.tex5;
-            break;
-        case 6:
-            tex = currentOutfit.tex6;
-            break;
-        case 7:
-            tex = currentOutfit.tex7;
-            break;
-    }
-
-    if (tex != None)
-        A.MultiSkins[slot] = tex;
-    else
-        A.MultiSkins[slot] = findTexture(defaultTextures[slot]);
+    */
 }
 
 function Mesh findMesh(string mesh)
@@ -806,7 +649,8 @@ function Texture findTexture(string tex)
     if (tex == "skin") //Special keyword to make our skin texture appear in different slots
         return player.multiSkins[0];
     else if (tex == "none" || tex == "")
-        return Texture'DeusExItems.Skins.PinkMaskTex';
+        //return Texture'DeusExItems.Skins.PinkMaskTex';
+        return None;
     
     //First, search for a skinned version. See the Readme for more info
     t = Texture(DynamicLoadObject("JCOutfits."$tex$"_S"$player.PlayerSkin, class'Texture', true));
@@ -833,15 +677,6 @@ function bool IsFemale()
 
 function bool ValidateSpawn(string id)
 {
-    local int index;
-    local bool unlocked, gender;
-    index = GetOutfitIndexByID(id);
-    unlocked = IsUnlocked(id);
-    gender = IDGenderCheck(id);
-
-    //player.ClientMessage("validating id " $ id $ ": index="$index$", gender="$gender$", unlocked=" $ unlocked);
-
-    return index > -1 && gender && !unlocked;
 }
 
 defaultproperties
