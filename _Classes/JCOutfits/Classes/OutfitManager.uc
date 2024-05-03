@@ -13,10 +13,8 @@ var travel int savedOutfitIndex;
 
 //Some outfits are special
 const DEFAULT_OUTFIT = 0;
-const CUSTOM_OUTFIT = 0;
-var Outfit defaultOutfit;
-var Outfit customOutfit;
 var Outfit currOutfit;
+var Outfit customOutfit;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
@@ -437,6 +435,29 @@ function BeginNewOutfit(string id, string n, string d, string preview, bool male
 {
 }
 
+function EquipOutfit(int index)
+{
+    currOutfit = outfits[index];
+    savedOutfitIndex = index;
+    ApplyCurrentOutfit();
+}
+
+function EquipCustomOutfit()
+{
+    if (savedOutfitIndex == -1)
+        return;
+
+    currOutfit.CopyTo(customOutfit);
+    currOutfit = customOutfit;
+    currOutfit.id = "custom";
+    currOutfit.name = "Custom Outfit";
+    currOutfit.index = -1;
+    currOutfit = customOutfit;
+    
+    savedOutfitIndex = -1;
+    ApplyCurrentOutfit();
+}
+
 function string GetOutfitName(int index)
 {
     
@@ -474,13 +495,6 @@ function string GetOutfitID(int index)
         return "";
 
     return outfits[index].id;
-}
-
-function EquipOutfit(int index)
-{
-    currOutfit = outfits[index];
-    savedOutfitIndex = index;
-    ApplyCurrentOutfit();
 }
 
 function Outfit GetOutfit(int index)

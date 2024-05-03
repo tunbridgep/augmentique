@@ -15,6 +15,7 @@ function bool ButtonActivated( Window buttonPressed )
 
 function SetSlot(OutfitManager M)
 {
+    M.EquipCustomOutfit();
 }
 
 // ----------------------------------------------------------------------

@@ -12,6 +12,21 @@ var DeusExPlayer player;
 
 var int index;                                  //The position in the master outfits list
 
+function CopyTo(Outfit O)
+{
+    local int i;
+
+    O.id = id;
+    O.name = name;
+    O.partsGroup = partsGroup;
+    O.numParts = numParts;
+    O.player = player;
+    O.index = index;
+
+    for (i = 0;i < numParts;i++)
+        O.parts[i] = parts[i];
+}
+
 function AddPartFromID(string partID)
 {
     local OutfitPart P;
