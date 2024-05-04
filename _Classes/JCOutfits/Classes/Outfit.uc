@@ -79,13 +79,13 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
     A.mesh = partsGroup.Mesh;
 
     //Remove existing textures
-    for (i = 1;i < 9;i++)
+    for (i = 0;i < 9;i++)
         A.MultiSkins[i] = Texture'DeusExItems.Skins.PinkMaskTex';
 
     //Apply new textures from each part
     for (i = 0;i < numParts;i++)
     {
-        for (s = 1;s < 8;s++)
+        for (s = 0;s < 9;s++)
         {
             T = parts[i].textures[s];
 

@@ -12,16 +12,18 @@ var int numOutfits;
 var travel int savedOutfitIndex;
 
 //Some outfits are special
-const DEFAULT_OUTFIT = 0;
+const CUSTOM_OUTFIT = 0;
+const DEFAULT_OUTFIT = 1;
 var Outfit currOutfit;
-var travel Outfit customOutfit;
+var Outfit customOutfit;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
 
 //Names for the default JC Denton outfit
-var const localized string defaultOutfitNames[255];
-var const localized string defaultOutfitDescs[255];
+var const localized string partNames[255];
+var const localized string outfitNames[255];
+var const localized string outfitDescs[255];
 var const localized string CustomOutfitName;
 
 //TODO: Replace these with outfit 0
@@ -31,6 +33,12 @@ var travel string defaultMesh;
 var PartsGroup Groups[50];
 var int numPartsGroups;
 var PartsGroup currentPartsGroup;
+
+//custom outfit stuff
+//Horrible hack
+var travel string customPartIDs[20];
+var travel int customPartsNum;
+var travel string customPartsGroupID;
 
 enum PartSlot
 {
@@ -42,7 +50,27 @@ enum PartSlot
     PS_Hat
 };
 
-function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
+
+//Localised version of AddPart.
+//Only used internally
+//Works exactly the same way as AddPart, but automatically looks up the default names/descriptions list
+//at the bottom of this file
+function AddPartL(PartSlot slot,int partNameIndex,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
+{
+    AddPart(slot,partNames[partNameIndex],isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7);
+}
+
+//Localised version of AddPart.
+//Only used internally
+//Works exactly the same way as AddPartL, but automatically looks up the default names/descriptions list
+//at the bottom of this file
+//Uses the outfit names list rather than the parts list
+function AddPartLO(PartSlot slot,int outfitNameIndex,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
+{
+    AddPart(slot,outfitNames[outfitNameIndex],isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7);
+}
+
+function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7)
 {
     local OutfitPart P;
 
@@ -53,6 +81,7 @@ function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional 
     P.bodySlot = slot;
     P.isAccessory = isAccessory;
 
+    if (t0 == "default") t0 = defaultTextures[0];
     if (t1 == "default") t1 = defaultTextures[1];
     if (t2 == "default") t2 = defaultTextures[2];
     if (t3 == "default") t3 = defaultTextures[3];
@@ -61,6 +90,7 @@ function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional 
     if (t6 == "default") t6 = defaultTextures[6];
     if (t7 == "default") t7 = defaultTextures[7];
 
+    P.textures[0] = findTexture(t0);
     P.textures[1] = findTexture(t1);
     P.textures[2] = findTexture(t2);
     P.textures[3] = findTexture(t3);
@@ -115,7 +145,7 @@ function SetupCustomOutfit()
     {
         customOutfit = new(Self) class'Outfit';
         customOutfit.id = "custom";
-        customOutfit.name = CustomOutfitName;
+        customOutfit.name = "Custom";
         customOutfit.index = 0;
         customOutfit.hidden = true;
     }
@@ -162,21 +192,143 @@ function PopulateOutfitsList()
     
     ////Add Parts to the Parts List
     BeginNewPartsGroup("GM_Trench", true, false);
-    AddPart(PS_Trench,"JC's Trenchie",false,"default_t","default",,,,"default");
-    AddPart(PS_Legs,"JC's Pantaloons",false,"default_p",,"default");
-    AddPart(PS_Torso,"JC's Shirt",false,"default_s",,,,"default");
-    AddPart(PS_Glasses,"JC's Glassies",true,"default_g",,,,,,"default","default");
-    AddPart(PS_Trench,"Lab Coat",false,"lab_t","LabCoatTex1",,,,"LabCoatTex1");
-    BeginNewOutfit2("default","Default Outfit","");
+
+    //Pants
+    AddPartL(PS_Legs,3,false,"default_p",,,"default");
+    AddPartLO(PS_Legs,2,false,"100%_p",,,"Outfit1_Tex1");
+    AddPartLO(PS_Legs,4,false,"lab_p",,,"PantsTex1");
+
+    //Shirts
+    AddPartL(PS_Torso,3,false,"default_s",,,,,"default");
+    AddPartLO(PS_Torso,2,false,"100%_s",,,,,"Outfit1_Tex1");
+    AddPartLO(PS_Torso,4,false,"lab_s",,,,,"TrenchShirtTex3");
+
+    //Glasses
+    AddPartL(PS_Glasses,0,true,"default_g",,,,,,,"default","default");
+    AddPartL(PS_Glasses,1,true,"100%_g",,,,,,,"Outfit1_Tex1","Outfit1_Tex1");
+    AddPartL(PS_Glasses,1,true,"sci_g",,,,,,,"FramesTex1","LensesTex1");
+
+    //Trenchcoats
+    AddPartL(PS_Trench,3,false,"default_t",,"default",,,,"default");
+    AddPartLO(PS_Trench,4,false,"lab_t",,"LabCoatTex1",,,,"LabCoatTex1");
+    AddPartLO(PS_Trench,2,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
+
+    //Skin Textures
+    AddPartL(PS_Body,2,false,"default_b","default");
+    AddPartLO(PS_Body,2,false,"100%_b","Outfit1_Tex1");
+
+    //Default
+    BeginNewOutfitL("default",0,"");
+    OutfitAddPart("default_b");
     OutfitAddPart("default_t");
     OutfitAddPart("default_p");
     OutfitAddPart("default_s");
     OutfitAddPart("default_g");
+
+    /*
+    //Default With Lab Coat
     BeginNewOutfit2("defaultL","Default Outfit w/ Lab Coat","");
+    OutfitAddPart("default_b");
     OutfitAddPart("default_p");
     OutfitAddPart("default_s");
     OutfitAddPart("default_g");
     OutfitAddPart("lab_t");
+    */
+
+    //100% Black Outfit
+    BeginNewOutfitL("100%black",2,"");
+    OutfitAddPart("default_b");
+    OutfitAddPart("100%_p");
+    OutfitAddPart("100%_s");
+    OutfitAddPart("100%_g");
+    OutfitAddPart("100%_t");
+
+    //100% Black (alt)
+    BeginNewOutfitL("100%black2",34,"");
+    OutfitAddPart("100%_b");
+    OutfitAddPart("default_p");
+    OutfitAddPart("default_s");
+    OutfitAddPart("default_g");
+    OutfitAddPart("default_t");
+
+    //Labcoat M & F
+    BeginNewOutfitL("labcoat",4,"");
+    OutfitAddPart("default_b");
+    OutfitAddPart("sci_g");
+    OutfitAddPart("lab_p");
+    OutfitAddPart("lab_t");
+    OutfitAddPart("lab_s");
+
+    BeginNewPartsGroup("GFM_Trench", false, true);
+    
+    //Legs
+    AddPartL(PS_Legs,3,false,"default_p",,,"default");
+    AddPartLO(PS_Legs,2,false,"100%_p",,,"Outfit1_Tex1");
+    AddPartLO(PS_Legs,4,false,"lab_p",,,"ScientistFemaleTex3");
+
+    //Shirts
+    AddPartL(PS_Torso,3,false,"default_s",,,,,"default");
+    AddPartLO(PS_Torso,2,false,"100%_s",,,,,"Outfit1_Tex1");
+    AddPartLO(PS_Torso,4,false,"lab_s",,,,,"TrenchShirtTex3");
+
+    //Glasses
+    AddPartL(PS_Glasses,0,true,"default_g",,,,,,,"default","default");
+    AddPartL(PS_Glasses,1,true,"100%_g",,,,,,,"Outfit1_Tex1","Outfit1_Tex1");
+    AddPartL(PS_Glasses,1,true,"sci_g",,,,,,,"FramesTex1","LensesTex1");
+
+    //Trenchcoats
+    AddPartL(PS_Trench,3,false,"default_t",,"default",,,,"default");
+    AddPartLO(PS_Trench,4,false,"lab_t",,"ScientistFemaleTex2",,,,"ScientistFemaleTex2");
+    AddPartLO(PS_Trench,2,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
+
+    //Skin Textures
+    AddPartL(PS_Body,2,false,"default_b","default");
+    AddPartLO(PS_Body,2,false,"100%_b","Outfit1_Tex1");
+
+    //Default
+    BeginNewOutfitL("default",0,"");
+    OutfitAddPart("default_b");
+    OutfitAddPart("default_t");
+    OutfitAddPart("default_p");
+    OutfitAddPart("default_s");
+    OutfitAddPart("default_g");
+
+    /*
+    //Default With Lab Coat
+    BeginNewOutfit2("defaultL","Default Outfit w/ Lab Coat","");
+    OutfitAddPart("default_b");
+    OutfitAddPart("default_p");
+    OutfitAddPart("default_s");
+    OutfitAddPart("default_g");
+    OutfitAddPart("lab_t");
+    */
+
+    //100% Black Outfit
+    BeginNewOutfitL("100%black",2,"");
+    OutfitAddPart("default_b");
+    OutfitAddPart("100%_p");
+    OutfitAddPart("100%_s");
+    OutfitAddPart("100%_g");
+    OutfitAddPart("100%_t");
+
+    //100% Black (alt)
+    BeginNewOutfitL("100%black2",34,"");
+    OutfitAddPart("100%_b");
+    OutfitAddPart("default_p");
+    OutfitAddPart("default_s");
+    OutfitAddPart("default_g");
+    OutfitAddPart("default_t");
+
+    //Lab Coat
+    BeginNewOutfitL("labcoat",4,"");
+    OutfitAddPart("default_b");
+    OutfitAddPart("sci_g");
+    OutfitAddPart("lab_p");
+    OutfitAddPart("lab_t");
+    OutfitAddPart("lab_s");
+
+    //END
+    CompleteSetup();
 
     ////Default Outfits
     
@@ -427,14 +579,14 @@ function BeginNewOutfitL(string id, int nameIndex, string preview)
 {
     local string n,d;
 
-    n = defaultOutfitNames[nameIndex];
-    d = defaultOutfitDescs[nameIndex];
+    n = outfitNames[nameIndex];
+    d = outfitDescs[nameIndex];
 
     //BeginNewOutfit(id,n,d,preview,male,female);
-    BeginNewOutfit2(id,n,preview);
+    BeginNewOutfit2(id,n,d,preview);
 }
 
-function BeginNewOutfit2(string id, string name, string preview)
+function BeginNewOutfit2(string id, string name, string desc, string preview)
 {
     local Outfit O;
     O = new(Self) class'Outfit';
@@ -453,6 +605,21 @@ function BeginNewOutfit(string id, string n, string d, string preview, bool male
 {
 }
 
+function PartsGroup GetPartsGroupByID(string id)
+{
+    local int i;
+    local Mesh M;
+
+    M = findMesh(id);
+
+    for (i = 0;i < numPartsGroups;i++)
+    {
+        if (Groups[i].Mesh == M)
+            return Groups[i];
+    }
+    return None;
+}
+
 function EquipOutfit(int index)
 {
     currOutfit = outfits[index];
@@ -462,12 +629,18 @@ function EquipOutfit(int index)
 
 function EquipCustomOutfit()
 {
+    local int i;
     if (savedOutfitIndex == 0)
         return;
     
     currOutfit.CopyPartsListTo(customOutfit);
+    customOutfit.name = currOutfit.name @ CustomOutfitName;
     currOutfit = customOutfit;
     currOutfit.hidden = false;
+
+    //Save the custom outfit parts
+    for (i = 0;i < customOutfit.numParts;i++)
+        customPartIDs[i] = customOutfit.Parts[i].partId;
     
     savedOutfitIndex = 0;
     ApplyCurrentOutfit();
@@ -580,6 +753,24 @@ function Unlock(string id)
             }
         }
     }
+}
+
+function CompleteSetup()
+{
+    local int i;
+
+    //recreate custom outfit from the saved list of ids
+    customOutfit.hidden = customPartsNum == 0;
+    customOutfit.partsGroup = GetPartsGroupByID(customPartsGroupID);
+
+    for (i = 0;i < customPartsNum;i++)
+        customOutfit.AddPartFromID(customPartIDs[i]);
+    
+    //set current outfit to the outfit that was previously saved
+    currOutfit = outfits[savedOutfitIndex];
+
+    //Apply our current outfit
+    ApplyCurrentOutfit();
 }
 
 function ApplyCurrentOutfit()
@@ -705,87 +896,93 @@ function bool ValidateSpawn(string id)
 
 defaultproperties
 {
-    CustomOutfitName="Custom Outfit"
-    defaultOutfitNames(0)="JC Denton's Trenchcoat"
-    defaultOutfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
-    defaultOutfitNames(1)="JC Denton's Trenchcoat (Alt)"
-    defaultOutfitDescs(1)="JC Denton's Signature Trenchcoat, now with extra jewellery!"
-    defaultOutfitNames(2)="100% Black"
-    defaultOutfitDescs(2)="The outfit of choice for malkavians"
-    defaultOutfitNames(3)="Alex Jacobson's Outfit"
-    defaultOutfitDescs(3)="Used by hackers everywhere!"
-    defaultOutfitNames(4)="Lab Coat"
-    defaultOutfitDescs(4)="Discovery Awaits!"
-    defaultOutfitNames(5)="Paul Denton's Outfit"
-    defaultOutfitDescs(5)="Seeing Double!"
-    defaultOutfitNames(6)="Fancy Suit"
-    defaultOutfitDescs(6)="For very special agents!"
-    defaultOutfitNames(7)="MIB Black Suit"
-    defaultOutfitDescs(7)="For very special agents!"
-    defaultOutfitNames(8)="UNATCO Combat Uniform"
-    defaultOutfitDescs(8)=""
-    defaultOutfitNames(9)="Mechanic Jumpsuit"
-    defaultOutfitDescs(9)=""
-    defaultOutfitNames(11)="Chef Outfit"
-    defaultOutfitDescs(11)="Something about cooking, IDK"
-    defaultOutfitNames(13)="Gold and Brown Business"
-    defaultOutfitDescs(13)=""
-    defaultOutfitNames(14)="Goth GF Outfit"
-    defaultOutfitDescs(14)=""
-    defaultOutfitNames(15)="Matrix Outfit"
-    defaultOutfitDescs(15)="This outfit is considered one of the classic three. From the immortal Trinity, if you will..."
-    defaultOutfitNames(16)="Goth GF Outfit"
-    defaultOutfitDescs(16)=""
-    defaultOutfitNames(17)="Soldier Outfit"
-    defaultOutfitDescs(17)=""
-    defaultOutfitNames(18)="Riot Gear"
-    defaultOutfitDescs(18)=""
-    defaultOutfitNames(19)="WIB Suit"
-    defaultOutfitDescs(19)="Dressed to Kill"
-    defaultOutfitNames(20)="NSF Sympathiser"
-    defaultOutfitDescs(20)="For the people!"
-    defaultOutfitNames(21)="Stained Clothes"
-    defaultOutfitDescs(21)="Look for a bum."
-    defaultOutfitNames(22)="Juan Lebedev's Outfit"
-    defaultOutfitDescs(22)="So fine it'll make you want to kill your boss"
-    defaultOutfitNames(23)="Smuggler's Outfit"
-    defaultOutfitDescs(23)="This expensive outfit matches Smuggler's Prices"
-    defaultOutfitNames(24)="FEMA Executive's Outfit"
-    defaultOutfitDescs(24)="Just because you work behind a desk doesn't mean you can't be fashionable"
-    defaultOutfitNames(25)="MJ12 Soldier Outfit"
-    defaultOutfitDescs(25)="The sort of outfit you can take over the world in"
-    defaultOutfitNames(26)="Jock's Outfit"
-    defaultOutfitDescs(26)=""
-    defaultOutfitNames(27)="Maggie's Outfit"
-    defaultOutfitDescs(27)=""
-    defaultOutfitNames(28)="Nicolette's Outfit"
-    defaultOutfitDescs(28)=""
-    defaultOutfitNames(29)="JC Clone Outfit"
-    defaultOutfitDescs(29)=""
-    defaultOutfitNames(30)="Presidential Suit"
-    defaultOutfitDescs(30)=""
-    defaultOutfitNames(31)="Sailor Outfit"
-    defaultOutfitDescs(31)=""
-    defaultOutfitNames(32)="Carter's Outfit"
-    defaultOutfitDescs(32)=""
-    defaultOutfitNames(33)="Scuba Suit"
-    defaultOutfitDescs(33)=""
-    defaultOutfitNames(34)="100% Black (Alt)"
-    defaultOutfitDescs(34)="OMG! It's just like the memes!"
-    defaultOutfitNames(35)="Prison Uniform"
-    defaultOutfitDescs(35)=""
-    defaultOutfitNames(36)="100% Black (Ultimate Edition)"
-    defaultOutfitDescs(36)=""
-    defaultOutfitNames(37)="Thug Outfit"
-    defaultOutfitDescs(37)=""
-    defaultOutfitNames(38)="Anna Navarre's Outfit"
-    defaultOutfitDescs(38)=""
-    defaultOutfitNames(39)="Tiffany Savage's Outfit"
-    defaultOutfitDescs(39)=""
-    defaultOutfitNames(40)="Sarah Mead's Outfit"
-    defaultOutfitDescs(40)=""
-    defaultOutfitNames(41)="Jordan Shea's Outfit"
-    defaultOutfitDescs(41)=""
-    defaultOutfitNames(42)="Hooker Outfit"
-    defaultOutfitDescs(42)=""
+    partNames(0)="Cool Sunglasses"
+    partNames(1)="Black Bars"
+    partNames(2)="Default Skin"
+    partNames(3)="Default"
+    partNames(4)="Scientist Glasses"
+    savedOutfitIndex=1
+    CustomOutfitName="(Custom)"
+    outfitNames(0)="JC Denton's Trenchcoat"
+    outfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
+    outfitNames(1)="JC Denton's Trenchcoat (Alt)"
+    outfitDescs(1)="JC Denton's Signature Trenchcoat, now with extra jewellery!"
+    outfitNames(2)="100% Black"
+    outfitDescs(2)="The outfit of choice for malkavians"
+    outfitNames(3)="Alex Jacobson's Outfit"
+    outfitDescs(3)="Used by hackers everywhere!"
+    outfitNames(4)="Lab Coat"
+    outfitDescs(4)="Discovery Awaits!"
+    outfitNames(5)="Paul Denton's Outfit"
+    outfitDescs(5)="Seeing Double!"
+    outfitNames(6)="Fancy Suit"
+    outfitDescs(6)="For very special agents!"
+    outfitNames(7)="MIB Black Suit"
+    outfitDescs(7)="For very special agents!"
+    outfitNames(8)="UNATCO Combat Uniform"
+    outfitDescs(8)=""
+    outfitNames(9)="Mechanic Jumpsuit"
+    outfitDescs(9)=""
+    outfitNames(11)="Chef Outfit"
+    outfitDescs(11)="Something about cooking, IDK"
+    outfitNames(13)="Gold and Brown Business"
+    outfitDescs(13)=""
+    outfitNames(14)="Goth GF Outfit"
+    outfitDescs(14)=""
+    outfitNames(15)="Matrix Outfit"
+    outfitDescs(15)="This outfit is considered one of the classic three. From the immortal Trinity, if you will..."
+    outfitNames(16)="Goth GF Outfit"
+    outfitDescs(16)=""
+    outfitNames(17)="Soldier Outfit"
+    outfitDescs(17)=""
+    outfitNames(18)="Riot Gear"
+    outfitDescs(18)=""
+    outfitNames(19)="WIB Suit"
+    outfitDescs(19)="Dressed to Kill"
+    outfitNames(20)="NSF Sympathiser"
+    outfitDescs(20)="For the people!"
+    outfitNames(21)="Stained Clothes"
+    outfitDescs(21)="Look for a bum."
+    outfitNames(22)="Juan Lebedev's Outfit"
+    outfitDescs(22)="So fine it'll make you want to kill your boss"
+    outfitNames(23)="Smuggler's Outfit"
+    outfitDescs(23)="This expensive outfit matches Smuggler's Prices"
+    outfitNames(24)="FEMA Executive's Outfit"
+    outfitDescs(24)="Just because you work behind a desk doesn't mean you can't be fashionable"
+    outfitNames(25)="MJ12 Soldier Outfit"
+    outfitDescs(25)="The sort of outfit you can take over the world in"
+    outfitNames(26)="Jock's Outfit"
+    outfitDescs(26)=""
+    outfitNames(27)="Maggie's Outfit"
+    outfitDescs(27)=""
+    outfitNames(28)="Nicolette's Outfit"
+    outfitDescs(28)=""
+    outfitNames(29)="JC Clone Outfit"
+    outfitDescs(29)=""
+    outfitNames(30)="Presidential Suit"
+    outfitDescs(30)=""
+    outfitNames(31)="Sailor Outfit"
+    outfitDescs(31)=""
+    outfitNames(32)="Carter's Outfit"
+    outfitDescs(32)=""
+    outfitNames(33)="Scuba Suit"
+    outfitDescs(33)=""
+    outfitNames(34)="100% Black (Alt)"
+    outfitDescs(34)="OMG! It's just like the memes!"
+    outfitNames(35)="Prison Uniform"
+    outfitDescs(35)=""
+    outfitNames(36)="100% Black (Ultimate Edition)"
+    outfitDescs(36)=""
+    outfitNames(37)="Thug Outfit"
+    outfitDescs(37)=""
+    outfitNames(38)="Anna Navarre's Outfit"
+    outfitDescs(38)=""
+    outfitNames(39)="Tiffany Savage's Outfit"
+    outfitDescs(39)=""
+    outfitNames(40)="Sarah Mead's Outfit"
+    outfitDescs(40)=""
+    outfitNames(41)="Jordan Shea's Outfit"
+    outfitDescs(41)=""
+    outfitNames(42)="Hooker Outfit"
+    outfitDescs(42)=""
 }

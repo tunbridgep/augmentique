@@ -36,6 +36,22 @@ function OutfitPart GetNextPartOfType(int type, int start)
     return PartsList[i];
 }
 
+function OutfitPart GetPreviousPartOfType(int type, int start)
+{
+    local int i;
+
+    i = start;
+    do
+    {
+        i--;
+        if (i < 0)
+            i = numOutfitParts - 1;
+    }
+    until (i == start || PartsList[i].bodySlot == type)
+
+    return PartsList[i];
+}
+
 function AddPart(OutfitPart P)
 {
     PartsList[numOutfitParts] = P;
