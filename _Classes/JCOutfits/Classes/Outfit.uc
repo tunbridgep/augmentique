@@ -53,6 +53,8 @@ function AddPartFromID(string partID)
 
     if (P != None)
         parts[numParts++] = P;
+    else
+        player.ClientMessage("Warning: Outfit could not find part with id " $ partID);
 }
 
 function bool HasAccessories()
@@ -79,7 +81,8 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
     A.mesh = partsGroup.Mesh;
 
     //Remove existing textures
-    for (i = 0;i < 9;i++)
+    A.Texture = Texture'DeusExItems.Skins.PinkMaskTex';
+    for (i = 0;i < 8;i++)
         A.MultiSkins[i] = Texture'DeusExItems.Skins.PinkMaskTex';
 
     //Apply new textures from each part
@@ -97,7 +100,10 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
             if (IsNullTexture(T))
                 continue;
 
-            A.MultiSkins[s] = T;
+            if (s == 8)
+                A.Texture = T;
+            else
+                A.MultiSkins[s] = T;
         }
     }
 }

@@ -3,6 +3,8 @@ class MenuChoice_OutfitSlot0 extends MenuUIChoiceAction;
 var const int slot;
 var OutfitManager M;
 
+var const localized string NothingText;
+
 // ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 
@@ -37,6 +39,8 @@ function UpdateButtonText()
     P = M.currOutfit.GetPartOfType(slot);
     if (P != None)
         btnAction.SetButtonText(P.name);
+    else
+        btnAction.SetButtonText(NothingText);
 }
 
 // ----------------------------------------------------------------------
@@ -47,4 +51,5 @@ defaultproperties
      HelpText="Set Outfit Slot 0"
      actionText="Set Slot 0"
      Action=MA_Custom
+     NothingText="Nothing"
 }
