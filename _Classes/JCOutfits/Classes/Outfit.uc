@@ -21,7 +21,7 @@ function SetUnlocked()
     unlocked = true;
     for (i = 0;i < numParts;i++)
         parts[i].Unlock();
-    player.ClientMessage("Unlocking " $ name);
+    //player.ClientMessage("Unlocking " $ name);
 }
 
 function ReplacePart(int type, OutfitPart part)

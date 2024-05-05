@@ -303,7 +303,7 @@ function PopulateOutfitsList()
     //GlobalAddPartLO(PS_Legs_M,22,false,"lebedev_p","JuanLebedevTex3");
     GlobalAddPartLO(PS_Legs_M,37,false,"thug_p","ThugMale2Tex2");
     //Female
-    GlobalAddPartL(PS_Legs_F,3,false,"default_p","default");
+    GlobalAddPartL(PS_Legs_F,3,false,"default_p","JCDentonTex3");
     GlobalAddPartLO(PS_Legs_F,4,false,"lab_p","ScientistFemaleTex3");
     GlobalAddPartLO(PS_Legs_F,2,false,"100%_p","Outfit1_Tex1");
     GlobalAddPartLO(PS_Legs_F,13,false,"goldbrown_p","Outfit2F_Tex3");
