@@ -21,6 +21,11 @@ function int CountPartType(int type)
     return c;
 }
 
+function bool CheckUnlock(int i)
+{
+    return PartsList[i].unlocked || (PartsList[i].original != None && PartsList[i].original.unlocked);
+}
+
 function OutfitPart GetNextPartOfType(int type, int start)
 {
     local int i;
@@ -32,7 +37,7 @@ function OutfitPart GetNextPartOfType(int type, int start)
         if (i >= numOutfitParts)
             i = 0;
     }
-    until (i == start || (PartsList[i].bodySlot == type && PartsList[i].unlocked && IsCorrectGender()))
+    until (i == start || (PartsList[i].bodySlot == type && CheckUnlock(i) && IsCorrectGender()))
 
     return PartsList[i];
 }
@@ -48,7 +53,7 @@ function OutfitPart GetPreviousPartOfType(int type, int start)
         if (i < 0)
             i = numOutfitParts - 1;
     }
-    until (i == start || (PartsList[i].bodySlot == type && PartsList[i].unlocked && IsCorrectGender()))
+    until (i == start || (PartsList[i].bodySlot == type && CheckUnlock(i) && IsCorrectGender()))
 
     return PartsList[i];
 }
@@ -97,6 +102,7 @@ function AddTransposePart(OutfitPart P,int slot0, int slot1, int slot2, int slot
     P2.name = P.name;
     P2.bodySlot = P.bodySlot;
     P2.isAccessory = P.isAccessory;
+    P2.original = P;
     
     /*
     for (i = 0;i < 9;i++)

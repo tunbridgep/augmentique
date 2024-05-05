@@ -7,3 +7,11 @@ var int bodySlot;                       //Which area of the body is this part be
 var bool isAccessory;                   //Whether or not this part is an accessory
 var int index;                          //Index in it's Parts Group
 var bool unlocked;                      //Is this part unlocked?
+var OutfitPart original;                //If a new version was created when transposing, link to the older one
+
+function Unlock()
+{
+    unlocked = true;
+    if (original != None)
+        original.unlocked = true;
+}

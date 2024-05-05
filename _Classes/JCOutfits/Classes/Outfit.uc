@@ -20,7 +20,7 @@ function SetUnlocked()
     local int i;
     unlocked = true;
     for (i = 0;i < numParts;i++)
-        parts[i].unlocked = true;
+        parts[i].Unlock();
     player.ClientMessage("Unlocking " $ name);
 }
 
