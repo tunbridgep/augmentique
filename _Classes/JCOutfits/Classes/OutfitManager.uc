@@ -861,19 +861,16 @@ function bool IsUnlocked(string id)
 
 function bool IsEquippable(int index)
 {
-    /*
     if (index >= numOutfits)
         return false;
     
-    return IsUnlocked(outfits[index].id) && IsCorrectGender(index);
-    */
+    return outfits[index].unlocked && IsCorrectGender(index);
     return true;
 }
 
 function bool IsCorrectGender(int index)
 {
-    //return (outfits[index].allowMale && !IsFemale()) || (outfits[index].allowFemale && IsFemale());
-    return true;
+    return (outfits[index].partsGroup.allowMale && !IsFemale()) || (outfits[index].partsGroup.allowFemale && IsFemale());
 }
 
 //Checks if any outfit matching the ID is assigned to the right gender
@@ -890,7 +887,9 @@ function bool IDGenderCheck(string id)
 
 function bool IsUnlockedAt(int index)
 {
-    return true;
+    if (index >= numOutfits)
+        return false;
+    return outfits[index].unlocked;
 }
 
 function Unlock(string id)
@@ -909,12 +908,28 @@ function Unlock(string id)
                 return;
             }
         }
+
+        //Unlock any outfits matching this ID
+        for (i = 2;i<numOutfits;i++)
+        {
+            if (outfits[i].id == id)
+                outfits[i].SetUnlocked();
+        }
     }
 }
 
 function CompleteSetup()
 {
     local int i;
+
+    //Set unlocked on all outfits
+    outfits[0].SetUnlocked();
+    outfits[1].SetUnlocked();
+    for (i = 2;i<numOutfits;i++)
+    {
+        if (IsUnlocked(outfits[i].id))
+            outfits[i].SetUnlocked();
+    }
 
     //recreate custom outfit from the saved list of ids
     customOutfit.hidden = customPartsNum == 0;

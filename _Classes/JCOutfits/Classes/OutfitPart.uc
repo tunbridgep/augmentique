@@ -6,3 +6,4 @@ var Texture textures[9];                //Textures for this part. MultiSkins0-7 
 var int bodySlot;                       //Which area of the body is this part being applied to
 var bool isAccessory;                   //Whether or not this part is an accessory
 var int index;                          //Index in it's Parts Group
+var bool unlocked;                      //Is this part unlocked?

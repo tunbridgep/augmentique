@@ -31,7 +31,7 @@ function OutfitPart GetNextPartOfType(int type, int start)
         if (i >= numOutfitParts)
             i = 0;
     }
-    until (i == start || PartsList[i].bodySlot == type)
+    until (i == start || (PartsList[i].bodySlot == type && PartsList[i].unlocked))
 
     return PartsList[i];
 }

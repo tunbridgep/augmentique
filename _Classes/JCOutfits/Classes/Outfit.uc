@@ -12,6 +12,17 @@ var DeusExPlayer player;
 
 var int index;                                  //The position in the master outfits list
 var bool hidden;                                //The outfit will not be shown in the list
+var bool unlocked;                              //Has this outfit been unlocked?
+
+//Set our outfit unlocked, and unlock all parts
+function SetUnlocked()
+{
+    local int i;
+    unlocked = true;
+    for (i = 0;i < numParts;i++)
+        parts[i].unlocked = true;
+    player.ClientMessage("Unlocking " $ name);
+}
 
 function ReplacePart(int type, OutfitPart part)
 {
