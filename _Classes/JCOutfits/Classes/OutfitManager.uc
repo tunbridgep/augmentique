@@ -285,8 +285,13 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,11,false,"chef_p","PantsTex10");
     GlobalAddPartLO(PS_Legs,9,false,"mechanic_p","MechanicTex2");
     GlobalAddPartLO(PS_Legs,17,false,"soldier_p","SoldierTex2");
-    GlobalAddPartLO(PS_Legs,17,false,"riotcop_p","RiotCopTex1");
+    GlobalAddPartLO(PS_Legs,18,false,"riotcop_p","RiotCopTex1");
     GlobalAddPartLO(PS_Legs,20,false,"nsf_p","TerroristTex2");
+    GlobalAddPartLO(PS_Legs,25,false,"mj12_p","MJ12TroopTex1");
+    GlobalAddPartLO(PS_Legs,32,false,"carter_p","SamCarterTex2");
+    GlobalAddPartLO(PS_Legs,31,false,"sailor_p","SailorTex2");
+    GlobalAddPartLO(PS_Legs,21,false,"bum_p","PantsTex4");
+    //GlobalAddPartLO(PS_Legs,22,false,"lebedev_p","JuanLebedevTex3");
 
     //Shirts etc
     GlobalAddPartLO(PS_Torso,3,false,"ajacobson_s","AlexJacobsonTex1");
@@ -295,10 +300,9 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Torso,17,false,"soldier_s","SoldierTex1");
     GlobalAddPartLO(PS_Torso,18,false,"riotcop_s","RiotCopTex2");
     GlobalAddPartLO(PS_Torso,20,false,"nsf_s","TerroristTex1");
+    GlobalAddPartLO(PS_Torso,25,false,"mj12_s","MJ12TroopTex2");
+    GlobalAddPartLO(PS_Torso,32,false,"carter_s","SamCarterTex1");
 
-    //Hat
-    //EDIT: These should probably be exclusive to GM_Suit
-    GlobalAddPartL(PS_Hat,11,true,"chef_h","ChefTex3");
     
     //========================================================
     //  GM_Trench
@@ -316,12 +320,20 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso,4,false,"lab_s",,,,,"TrenchShirtTex3");
     AddPartLO(PS_Torso,2,false,"100%_s",,,,,"Outfit1_Tex1");
     AddPartLO(PS_Torso,5,false,"paul_s",,,,,"PaulDentonTex1");
+    AddPartLO(PS_Torso,21,false,"bum_s",,,,,"TrenchShirtTex1");
+    AddPartLO(PS_Torso,22,false,"lebedev_s",,,,,"JuanLebedevTex1");
+    AddPartLO(PS_Torso,23,false,"smuggler_s",,,,,"SmugglerTex1");
+    AddPartLO(PS_Torso,24,false,"simons_s",,,,,"WaltonSimonsTex1");
     
     //Trenchcoats
     AddPartL(PS_Trench,3,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
     AddPartLO(PS_Trench,4,false,"lab_t",,"LabCoatTex1",,,,"LabCoatTex1");
     AddPartLO(PS_Trench,2,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
     AddPartLO(PS_Trench,5,false,"paul_t",,"PaulDentonTex2",,,,"PaulDentonTex2");
+    AddPartLO(PS_Trench,21,false,"bum_t",,"BumMaleTex2",,,,"BumMaleTex2");
+    AddPartLO(PS_Trench,22,false,"lebedev_t",,"JuanLebedevTex2",,,,"JuanLebedevTex2");
+    AddPartLO(PS_Trench,23,false,"smuggler_t",,"SmugglerTex2",,,,"SmugglerTex2");
+    AddPartLO(PS_Trench,24,false,"simons_t",,"WaltonSimonsTex2",,,,"WaltonSimonsTex2");
 
     //Default M
     BeginNewOutfitL("default",0,"");
@@ -363,13 +375,45 @@ function PopulateOutfitsList()
     OutfitAddPartReference("paul_t");
     OutfitAddPartReference("paul_s");
 
+    //Bum
+    BeginNewOutfitL("bum",21,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("business_g");
+    OutfitAddPartReference("bum_p");
+    OutfitAddPartReference("bum_t");
+    OutfitAddPartReference("bum_s");
 
-/*
+    //Lebedev
+    BeginNewOutfitL("lebedev",22,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("sunglasses_g");
+    OutfitAddPartReference("nsf_p");
+    OutfitAddPartReference("lebedev_t");
+    OutfitAddPartReference("lebedev_s");
+
+    //Smugglers Outfit
+    BeginNewOutfitL("smug",23,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("mib_p");
+    OutfitAddPartReference("smuggler_t");
+    OutfitAddPartReference("smuggler_s");
+    OutfitAddPartReference("sci_g");
+
+    //Simons Outfit
+    BeginNewOutfitL("simons",24,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("mib_p");
+    OutfitAddPartReference("sunglasses_g");
+    OutfitAddPartReference("simons_s");
+    OutfitAddPartReference("simons_t");
+
     //========================================================
     //  GFM_Trench
     //========================================================
 
     BeginNewPartsGroup("GFM_Trench", false, true);
+    GroupAddParts(PS_Body);
+    GroupTranspose(PS_Glasses,6,7);
     
     //Legs
     AddPartL(PS_Legs,3,false,"default_p",,,"default");
@@ -425,7 +469,6 @@ function PopulateOutfitsList()
     OutfitAddPartReference("lab_p");
     OutfitAddPartReference("lab_t");
     OutfitAddPartReference("lab_s");
-*/
 
     //========================================================
     //  GM_ScubaSuit
@@ -464,13 +507,18 @@ function PopulateOutfitsList()
     GroupAddParts(PS_Body);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Glasses,5,6);
-    GroupTranspose(PS_Hat,7);
 
     //Add Suit-only Torsos because they can't be used on other outfits, and other torsos can't be used here
     AddPartLO(PS_Torso,3,false,"businessman1_s",,,,"BusinessMan1Tex1","BusinessMan1Tex1");
     AddPartLO(PS_Torso,7,false,"mib_s",,,,"MIBTex1","MIBTex1");
     AddPartLO(PS_Torso,30,false,"president_s",,,,"PhilipMeadTex1","PhilipMeadTex1");
     AddPartLO(PS_Torso,11,false,"chef_s",,,,"ChefTex1","ChefTex1");
+    AddPartLO(PS_Torso,31,false,"sailor_s",,,,"SailorTex1");
+    
+    //Hat
+    //EDIT: These should probably be exclusive to GM_Suit
+    AddPartL(PS_Hat,11,true,"chef_h",,,,,,,,"ChefTex3");
+    AddPartL(PS_Hat,18,true,"sailor_h","SailorSkin",,,,,,,"SailorTex3");
 
     //Brown Suit
     BeginNewOutfitL("businessman1",6,"");
@@ -496,10 +544,19 @@ function PopulateOutfitsList()
     //Chef Outfit
     BeginNewOutfitL("chef",11,"");
     OutfitAddPartReference("default_b");
-    //OutfitAddPartReference("business_g");
+    OutfitAddPartReference("default_g");
     OutfitAddPartReference("chef_p");
     OutfitAddPartReference("chef_s");
     OutfitAddPartReference("chef_h");
+    
+    //Sailor
+    //"Hat" Replaces head tex
+    BeginNewOutfitL("sailor",31,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("business_g");
+    OutfitAddPartReference("sailor_p");
+    OutfitAddPartReference("sailor_s");
+    OutfitAddPartReference("sailor_h");
     
     //========================================================
     //  GM_Jumpsuit
@@ -517,8 +574,12 @@ function PopulateOutfitsList()
     //AddPartL(PS_Hat,12,true,"soldier_h",,,,"SoldierTex0",,,"SoldierTex3");
     AddPartL(PS_Hat,12,true,"soldier_h",,,,,,,"SoldierTex3");
     AddPartL(PS_Hat,13,true,"mechanic_h",,,,,,,"MechanicTex3");
-    AddPartL(PS_Hat,18,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
+    AddPartLO(PS_Hat,18,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
     AddPartL(PS_Hat,16,true,"nsf_h",,,,,,,"GogglesTex1");
+    AddPartL(PS_Hat,17,true,"mj12_h",,,,,,"MJ12TroopTex3","MJ12TroopTex4");
+    
+    //test
+    //AddPartLO(PS_Torso,31,false,"sailor_s",,,"SailorTex1");
     
     //Masks
     //Can only realistically be used on this model
@@ -572,6 +633,19 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("nsf_p");
     OutfitAddPartReference("nsf_s");
+    
+    //MJ12
+    BeginNewOutfitL("mj12",25,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("mj12_p");
+    OutfitAddPartReference("mj12_s");
+    OutfitAddPartReference("mj12_h");
+    
+    //Sam Carter Outfit
+    BeginNewOutfitL("carter",32,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("carter_s");
+    OutfitAddPartReference("carter_p");
 
     //END
     CompleteSetup();
@@ -582,48 +656,7 @@ function PopulateOutfitsList()
     
     ////Male Outfits
     
-    //NSF Troop
-    BeginNewOutfitL("nsf",20,"",true,false);
-    SetOutfitTextures("TerroristTex2","TerroristTex1","TerroristTex0","TerroristTex0","graymasktex","GogglesTex1");
-    SetOutfitAccessorySlots(0,1,1,1,2,0,0,0,0);
-    SetOutfitMesh("GM_Jumpsuit");
-    
-    //Bum
-    BeginNewOutfitL("bum",21,"",true,false);
-    SetOutfitTextures("BumMaleTex2","PantsTex4","skin","TrenchShirtTex1","BumMaleTex2","FramesTex1","LensesTex2");
 
-    //Lebedev
-    BeginNewOutfitL("lebedev",22,"",true,false);
-    SetOutfitTextures("JuanLebedevTex2","JuanLebedevTex3","skin","JuanLebedevTex1","JuanLebedevTex2","default","default");
-
-    //Smugglers Outfit
-    BeginNewOutfitL("smug",23,"",true,false);
-    SetOutfitTextures("SmugglerTex2","PantsTex5","skin","SmugglerTex1","SmugglerTex2","FramesTex1","LensesTex1");
-
-    //Simons Outfit
-    BeginNewOutfitL("simons",24,"",true,false);
-    SetOutfitTextures("WaltonSimonsTex2","PantsTex5","skin","WaltonSimonsTex1","WaltonSimonsTex2","FramesTex2","LensesTex3");
-
-    //MJ12 Outfit
-    BeginNewOutfitL("mj12",25,"",true,false);
-    SetOutfitTextures("MJ12TroopTex1","MJ12TroopTex2","skin","none","MJ12TroopTex3","MJ12TroopTex4","none");
-    SetOutfitAccessorySlots(1,1,1,1,1,1,0,0,1);
-    SetOutfitMesh("GM_Jumpsuit");
-
-    //Sam Carter Outfit
-    BeginNewOutfitL("carter",32,"",true,false);
-    SetOutfitTextures("SamCarterTex2","SamCarterTex1","skin","none","none","none","none");
-    SetOutfitDisableAccessories();
-    SetOutfitMesh("GM_Jumpsuit");
-    
-    //Sailor
-    //"Hat" Replaces head tex
-    BeginNewOutfitL("sailor",31,"",true,false);
-    SetOutfitTextures("SailorTex2","skin","SailorTex1","SailorTex1","GrayMaskTex","BlackMaskTex","SailorTex3");
-    SetOutfitBodyTex("SailorSkin");
-    SetOutfitAccessorySlots(1,2,1,1,1,1,0,0,0);
-    SetOutfitMesh("GM_Suit");
-    
     //Prisoner Outfit
     BeginNewOutfitL("prisoner",35,"",true,false);
     SetOutfitTextures("MechanicTex2","MechanicTex1","skin","none","GrayMaskTex","MechanicTex3");
@@ -864,25 +897,8 @@ function bool IsEquippable(int index)
     if (index >= numOutfits)
         return false;
     
-    return outfits[index].unlocked && IsCorrectGender(index);
+    return outfits[index].unlocked && outfits[index].partsGroup.IsCorrectGender();
     return true;
-}
-
-function bool IsCorrectGender(int index)
-{
-    return (outfits[index].partsGroup.allowMale && !IsFemale()) || (outfits[index].partsGroup.allowFemale && IsFemale());
-}
-
-//Checks if any outfit matching the ID is assigned to the right gender
-function bool IDGenderCheck(string id)
-{
-    /*
-    local int i;
-    for (i = 0;i<numOutfits;i++)
-        if (IsCorrectGender(i))
-            return true;
-    return false;
-    */
 }
 
 function bool IsUnlockedAt(int index)
@@ -910,7 +926,7 @@ function Unlock(string id)
         }
 
         //Unlock any outfits matching this ID
-        for (i = 2;i<numOutfits;i++)
+        for (i = 1;i<numOutfits;i++)
         {
             if (outfits[i].id == id)
                 outfits[i].SetUnlocked();
@@ -924,8 +940,8 @@ function CompleteSetup()
 
     //Set unlocked on all outfits
     outfits[0].SetUnlocked();
-    outfits[1].SetUnlocked();
-    for (i = 2;i<numOutfits;i++)
+    Unlock("default");
+    for (i = 1;i<numOutfits;i++)
     {
         if (IsUnlocked(outfits[i].id))
             outfits[i].SetUnlocked();
@@ -1057,11 +1073,6 @@ function Texture findTexture(string tex)
     return t;
 }
 
-function bool IsFemale()
-{
-    return player.FlagBase != None && player.FlagBase.GetBool('LDDPJCIsFemale');
-}
-
 function bool ValidateSpawn(string id)
 {
 }
@@ -1073,9 +1084,9 @@ defaultproperties
     partNames(1)="Black Bars"
     partNames(2)="Default Skin"
     partNames(3)="Default"
-    partNames(4)="Scientist Glasses"
+    partNames(4)="Prescription Glasses"
     partNames(5)="Default w/ Jewellery"
-    partNames(6)="Business Glasses"
+    partNames(6)="Reading Glasses"
     partNames(7)="Black Suit Pants"
     partNames(8)="Cool Shades"
     partNames(9)="UNATCO Combat Mask"
@@ -1086,6 +1097,8 @@ defaultproperties
     partNames(14)="Helmet Strap"
     partNames(15)="Tacticool Gear"
     partNames(16)="Tacticool Goggles"
+    partNames(17)="Majestic 12 Helmet"
+    partNames(18)="Sailor Hat"
     savedOutfitIndex=1
     CustomOutfitName="(Custom)"
     outfitNames(0)="JC Denton's Trenchcoat"

@@ -8,6 +8,7 @@ var OutfitPart PartsList[300];
 var int numOutfitParts;
 
 var DeusExPlayer player;
+var OutfitManager manager;
 
 function int CountPartType(int type)
 {
@@ -31,7 +32,7 @@ function OutfitPart GetNextPartOfType(int type, int start)
         if (i >= numOutfitParts)
             i = 0;
     }
-    until (i == start || (PartsList[i].bodySlot == type && PartsList[i].unlocked))
+    until (i == start || (PartsList[i].bodySlot == type && PartsList[i].unlocked && IsCorrectGender()))
 
     return PartsList[i];
 }
@@ -47,9 +48,19 @@ function OutfitPart GetPreviousPartOfType(int type, int start)
         if (i < 0)
             i = numOutfitParts - 1;
     }
-    until (i == start || PartsList[i].bodySlot == type)
+    until (i == start || (PartsList[i].bodySlot == type && PartsList[i].unlocked && IsCorrectGender()))
 
     return PartsList[i];
+}
+
+function bool IsCorrectGender()
+{
+    return (allowMale && !IsFemale()) || (allowFemale && IsFemale());
+}
+
+function bool IsFemale()
+{
+    return player.FlagBase != None && player.FlagBase.GetBool('LDDPJCIsFemale');
 }
 
 function AddPart(OutfitPart P)

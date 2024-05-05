@@ -65,6 +65,12 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SoldierTex0_S3.bmp"                            NAME="SoldierTex0_S3"                       GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SoldierTex0_S4.bmp"                            NAME="SoldierTex0_S4"                       GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SamCarterTex1_S0.bmp"                          NAME="SamCarterTex1"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SamCarterTex1_S1.bmp"                          NAME="SamCarterTex1_S1"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SamCarterTex1_S2.bmp"                          NAME="SamCarterTex1_S2"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SamCarterTex1_S3.bmp"                          NAME="SamCarterTex1_S3"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SamCarterTex1_S4.bmp"                          NAME="SamCarterTex1_S4"                     GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\AnnaNavarreTex1_S0.bmp"                        NAME="AnnaNavarreTex1"                      GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\AnnaNavarreTex1_S1.bmp"                        NAME="AnnaNavarreTex1_S1"                   GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\AnnaNavarreTex1_S2.bmp"                        NAME="AnnaNavarreTex1_S2"                   GROUP="Outfits"
