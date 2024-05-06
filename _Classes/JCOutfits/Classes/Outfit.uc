@@ -1,7 +1,7 @@
 class Outfit extends Object;
 
 var string id;
-var string name;
+var travel string name;
 
 var PartsGroup partsGroup;
 
@@ -11,7 +11,7 @@ var int numParts;
 var DeusExPlayer player;
 
 var int index;                                  //The position in the master outfits list
-var bool hidden;                                //The outfit will not be shown in the list
+var travel bool hidden;                         //The outfit will not be shown in the list
 var bool unlocked;                              //Has this outfit been unlocked?
 
 //Set our outfit unlocked, and unlock all parts
@@ -50,11 +50,16 @@ function CopyPartsListTo(Outfit O)
 {
     local int i;
 
-    O.partsGroup = partsGroup;
+    O.UpdatePartsGroup(partsGroup);
     O.numParts = numParts;
 
     for (i = 0;i < numParts;i++)
         O.parts[i] = parts[i];
+}
+
+function UpdatePartsGroup(PartsGroup PG)
+{
+    partsGroup = PG;
 }
 
 function AddPartFromID(string partID)

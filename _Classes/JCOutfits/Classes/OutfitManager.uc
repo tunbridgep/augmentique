@@ -15,7 +15,7 @@ var travel int savedOutfitIndex;
 const CUSTOM_OUTFIT = 0;
 const DEFAULT_OUTFIT = 1;
 var Outfit currOutfit;
-var Outfit customOutfit;
+var travel OutfitCustom customOutfit;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
@@ -36,12 +36,6 @@ var int numParts;
 var PartsGroup Groups[50];
 var int numPartsGroups;
 var PartsGroup currentPartsGroup;
-
-//custom outfit stuff
-//Horrible hack
-var travel string customPartIDs[20];
-var travel int customPartsNum;
-var travel string customPartsGroupID;
 
 enum PartSlot
 {
@@ -203,21 +197,25 @@ function Setup(DeusExPlayer newPlayer)
     if (numOutfits != 0)
         return;
     
-    SetupCustomOutfit();
     PopulateOutfitsList();
     SetupOutfitSpawners();
 }
 
 function SetupCustomOutfit()
 {
+    local int i;
     if (customOutfit == None)
     {
-        customOutfit = new(Self) class'Outfit';
-        customOutfit.id = "custom";
-        customOutfit.name = "Custom";
-        customOutfit.index = 0;
+        customOutfit = new(Self) class'OutfitCustom';
         customOutfit.hidden = true;
+        customOutfit.name = "Custom";
     }
+
+    customOutfit.player = player;
+    customOutfit.PopulateFromSaved(GetPartsGroupByID(customOutfit.partsGroupID));
+    customOutfit.id = "custom";
+    customOutfit.index = 0;
+    customOutfit.unlocked = true;
     outfits[0] = customOutfit;
     numOutfits++;
 }
@@ -256,6 +254,9 @@ function SpawnerPickup(OutfitSpawner S)
 function PopulateOutfitsList()
 {
     //player.clientmessage("Repopulating outfit list");
+
+    //Custom is going to take up slot 0
+    numOutfits = 1;
 
     //This sucks, but I can't think of a better way to do this
 
@@ -913,13 +914,10 @@ function EquipCustomOutfit()
     
     currOutfit.CopyPartsListTo(customOutfit);
     customOutfit.name = currOutfit.name @ CustomOutfitName;
-    currOutfit = customOutfit;
-    currOutfit.hidden = false;
-
-    //Save the custom outfit parts
-    for (i = 0;i < customOutfit.numParts;i++)
-        customPartIDs[i] = customOutfit.Parts[i].partId;
+    customOutfit.UpdatePartsGroup(currOutfit.partsGroup);
+    customOutfit.UpdatePartIDsList();
     
+    currOutfit = customOutfit;
     savedOutfitIndex = 0;
     ApplyCurrentOutfit();
 }
@@ -971,6 +969,9 @@ function bool IsEquipped(int index)
 function bool IsUnlocked(string id)
 {
     local int i;
+
+    //debug, remove this
+    return true;
 
     for (i = 0;i < 255 && player.unlockedOutfits[i] != "";i++)
     {
@@ -1034,14 +1035,10 @@ function CompleteSetup()
         if (IsUnlocked(outfits[i].id))
             outfits[i].SetUnlocked();
     }
-
-    //recreate custom outfit from the saved list of ids
-    customOutfit.hidden = customPartsNum == 0;
-    customOutfit.partsGroup = GetPartsGroupByID(customPartsGroupID);
-
-    for (i = 0;i < customPartsNum;i++)
-        customOutfit.AddPartFromID(customPartIDs[i]);
     
+    //Setup Custom Outfit
+    SetupCustomOutfit();
+
     //set current outfit to the outfit that was previously saved
     currOutfit = outfits[savedOutfitIndex];
 
