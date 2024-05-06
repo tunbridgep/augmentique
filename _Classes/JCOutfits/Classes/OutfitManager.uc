@@ -192,6 +192,7 @@ function Setup(DeusExPlayer newPlayer)
         defaultMesh = string(player.Mesh.name);
         //Set flag for default outfit
         Player.FlagBase.SetBool('JCOutfits_Equipped_default',true,true,0);
+        savedOutfitIndex = -1;
     }
 
     if (numOutfits != 0)
@@ -1027,7 +1028,7 @@ function CompleteSetup()
 {
     local int i;
 
-    //Set unlocked on all outfits
+    //Set unlocked on all outfits which are unlocked
     outfits[0].SetUnlocked();
     Unlock("default");
     for (i = 1;i<numOutfits;i++)
@@ -1038,6 +1039,17 @@ function CompleteSetup()
     
     //Setup Custom Outfit
     SetupCustomOutfit();
+
+    //If we have no outfit set, equip the default
+    //This is hacky
+    if (savedOutfitIndex == -1)
+    {
+        for (i = 1;i<numOutfits;i++)
+        {
+            if (outfits[i].id == "default" && IsEquippable(i))
+                EquipOutfit(i);
+        }
+    }
 
     //set current outfit to the outfit that was previously saved
     currOutfit = outfits[savedOutfitIndex];
@@ -1086,7 +1098,6 @@ function ApplyCurrentOutfitToActor(Actor A)
 
 function UpdateCarcass(DeusExCarcass C)
 {
-    /*
     local string CName;
     local string M;
 
@@ -1095,8 +1106,8 @@ function UpdateCarcass(DeusExCarcass C)
         
     M = defaultMesh;
 
-    if (outfits[currentOutfitIndex].mesh != None)
-        M = string(outfits[currentOutfitIndex].mesh.name);
+    if (currOutfit.partsGroup.mesh != None)
+        M = string(currOutfit.partsGroup.mesh.name);
 
     if (CName == ("GM_Trench_Carcass"))
        C.Mesh = findMesh(M $ "_Carcass");
@@ -1109,8 +1120,7 @@ function UpdateCarcass(DeusExCarcass C)
         C.Mesh = findMesh(defaultMesh $"_Carcass");
 
     log("CName = " $ CName);
-    log("Looking for carcass " $ outfits[currentOutfitIndex].mesh $ "_Carcass" );
-    */
+    log("Looking for carcass " $ currOutfit.partsGroup.mesh $ "_Carcass" );
 }
 
 function Mesh findMesh(string mesh)
