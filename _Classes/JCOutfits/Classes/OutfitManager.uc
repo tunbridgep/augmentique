@@ -44,8 +44,8 @@ enum PartSlot
     PS_Trench,
     PS_Torso_M,
     PS_Torso_F,
-    PS_Legs_M,
-    PS_Legs_F,
+    PS_Legs,
+    PS_DressLegs,
     PS_Skirt,
     PS_Glasses,
     PS_Hat,
@@ -156,12 +156,17 @@ function GroupAddParts(PartSlot bodySlot)
 
 function GroupTranspose(PartSlot bodySlot,optional int slot0,optional int slot1,optional int slot2,optional int slot3,optional int slot4,optional int slot5,optional int slot6,optional int slot7,optional int slot8)
 {
+    GroupTranspose2(bodySlot,bodySlot,slot0,slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8);
+}
+
+function GroupTranspose2(PartSlot bodySlot, PartSlot bodySlot2,optional int slot0,optional int slot1,optional int slot2,optional int slot3,optional int slot4,optional int slot5,optional int slot6,optional int slot7,optional int slot8)
+{
     local int i;
     for (i = 0;i < numParts;i++)
     {
         if (PartsList[i].bodySlot == bodySlot)
         {
-            currentPartsGroup.AddTransposePart(PartsList[i],slot0,slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8);
+            currentPartsGroup.AddTransposePart(PartsList[i],bodySlot2,slot0,slot1,slot2,slot3,slot4,slot5,slot6,slot7,slot8);
         }
     }
 }
@@ -285,39 +290,45 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Body_F,2,false,"100%_b","Outfit1_Tex1");
 
     //Pants
-    GlobalAddPartL(PS_Legs_M,3,false,"default_p","JCDentonTex3");
-    GlobalAddPartLO(PS_Legs_M,4,false,"lab_p","PantsTex1");
-    GlobalAddPartLO(PS_Legs_M,2,false,"100%_p","Outfit1_Tex1");
-    GlobalAddPartLO(PS_Legs_M,5,false,"paul_p","PantsTex8");
-    GlobalAddPartLO(PS_Legs_M,6,false,"businessman1_p","Businessman1Tex2");
-    GlobalAddPartLO(PS_Legs_M,3,false,"ajacobson_p","AlexJacobsonTex2");
-    GlobalAddPartL(PS_Legs_M,7,false,"mib_p","PantsTex5");
-    GlobalAddPartLO(PS_Legs_M,8,false,"unatco_p","UnatcoTroopTex1");
-    GlobalAddPartLO(PS_Legs_M,11,false,"chef_p","PantsTex10");
-    GlobalAddPartLO(PS_Legs_M,9,false,"mechanic_p","MechanicTex2");
-    GlobalAddPartLO(PS_Legs_M,17,false,"soldier_p","SoldierTex2");
-    GlobalAddPartLO(PS_Legs_M,18,false,"riotcop_p","RiotCopTex1");
-    GlobalAddPartLO(PS_Legs_M,20,false,"nsf_p","TerroristTex2");
-    GlobalAddPartLO(PS_Legs_M,25,false,"mj12_p","MJ12TroopTex1");
-    GlobalAddPartLO(PS_Legs_M,32,false,"carter_p","SamCarterTex2");
-    GlobalAddPartLO(PS_Legs_M,31,false,"sailor_p","SailorTex2");
-    GlobalAddPartLO(PS_Legs_M,21,false,"bum_p","PantsTex4");
-    //GlobalAddPartLO(PS_Legs_M,22,false,"lebedev_p","JuanLebedevTex3");
-    GlobalAddPartLO(PS_Legs_M,37,false,"thug_p","ThugMale2Tex2");
+    GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
+    GlobalAddPartLO(PS_Legs,4,false,"lab_p","PantsTex1");
+    GlobalAddPartLO(PS_Legs,2,false,"100%_p","Outfit1_Tex1");
+    GlobalAddPartLO(PS_Legs,5,false,"paul_p","PantsTex8");
+    GlobalAddPartLO(PS_Legs,6,false,"businessman1_p","Businessman1Tex2");
+    GlobalAddPartLO(PS_Legs,3,false,"ajacobson_p","AlexJacobsonTex2");
+    GlobalAddPartL(PS_Legs,7,false,"mib_p","PantsTex5");
+    GlobalAddPartLO(PS_Legs,8,false,"unatco_p","UnatcoTroopTex1");
+    GlobalAddPartLO(PS_Legs,11,false,"chef_p","PantsTex10");
+    GlobalAddPartLO(PS_Legs,9,false,"mechanic_p","MechanicTex2");
+    GlobalAddPartLO(PS_Legs,17,false,"soldier_p","SoldierTex2");
+    GlobalAddPartLO(PS_Legs,18,false,"riotcop_p","RiotCopTex1");
+    GlobalAddPartLO(PS_Legs,20,false,"nsf_p","TerroristTex2");
+    GlobalAddPartLO(PS_Legs,25,false,"mj12_p","MJ12TroopTex1");
+    GlobalAddPartLO(PS_Legs,32,false,"carter_p","SamCarterTex2");
+    GlobalAddPartLO(PS_Legs,31,false,"sailor_p","SailorTex2");
+    GlobalAddPartLO(PS_Legs,21,false,"bum_p","PantsTex4");
+    //GlobalAddPartLO(PS_Legs,22,false,"lebedev_p","JuanLebedevTex3");
+    GlobalAddPartLO(PS_Legs,37,false,"thug_p","ThugMale2Tex2");
     //Female
-    GlobalAddPartL(PS_Legs_F,3,false,"default_p","JCDentonTex3");
-    GlobalAddPartLO(PS_Legs_F,4,false,"lab_p","ScientistFemaleTex3");
-    GlobalAddPartLO(PS_Legs_F,2,false,"100%_p","Outfit1_Tex1");
-    GlobalAddPartLO(PS_Legs_F,13,false,"goldbrown_p","Outfit2F_Tex3");
-    GlobalAddPartLO(PS_Legs_F,15,false,"matrix_p","Outfit4F_Tex3");
-    GlobalAddPartLO(PS_Legs_F,16,false,"goth_p","Outfit3F_Tex3");
-    GlobalAddPartLO(PS_Legs_F,19,false,"stockings_p","LegsTex2");
-    GlobalAddPartLO(PS_Legs_F,28,false,"nicolette_p","NicoletteDuClareTex3");
-    GlobalAddPartLO(PS_Legs_F,38,false,"anna_p","PantsTex9");
+    GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
+    GlobalAddPartLO(PS_Legs,4,false,"lab_p","ScientistFemaleTex3");
+    GlobalAddPartLO(PS_Legs,2,false,"100%_p","Outfit1_Tex1");
+    GlobalAddPartLO(PS_Legs,13,false,"goldbrown_p","Outfit2F_Tex3");
+    GlobalAddPartLO(PS_Legs,15,false,"matrix_p","Outfit4F_Tex3");
+    GlobalAddPartLO(PS_Legs,16,false,"goth_p","Outfit3F_Tex3");
+    GlobalAddPartLO(PS_Legs,28,false,"nicolette_p","NicoletteDuClareTex3");
+    GlobalAddPartLO(PS_Legs,38,false,"anna_p","PantsTex9");
+    GlobalAddPartLO(PS_Legs,39,false,"tiffany_p","TiffanySavageTex2");
+    GlobalAddPartLO(PS_Legs,40,false,"sarah_p","SarahMeadTex3");
+    
+    //Dress Pants
+    GlobalAddPartLO(PS_DressLegs,19,false,"stockings_p","LegsTex2");
+    GlobalAddPartLO(PS_DressLegs,42,false,"hooker_p","Hooker2Tex1");
 
     //Skirts
     GlobalAddPartLO(PS_Skirt,28,false,"nicolette_sk","NicoletteDuClareTex2","NicoletteDuClareTex2");
-
+    GlobalAddPartLO(PS_Skirt,40,false,"sarah_sk","SarahMeadTex2","SarahMeadTex2");
+    GlobalAddPartLO(PS_Skirt,42,false,"hooker_sk","Hooker2Tex2","Hooker2Tex2");
 
     //Shirts etc
     GlobalAddPartLO(PS_Torso_M,3,false,"ajacobson_s","AlexJacobsonTex1");
@@ -333,6 +344,10 @@ function PopulateOutfitsList()
     //Female
     GlobalAddPartLO(PS_Torso_F,28,false,"nicolette_s","NicoletteDuClareTex1");
     GlobalAddPartLO(PS_Torso_F,38,false,"anna_s","AnnaNavarreTex1");
+    GlobalAddPartLO(PS_Torso_F,39,false,"tiffany_s","TiffanySavageTex1");
+    GlobalAddPartLO(PS_Torso_F,40,false,"sarah_s","SarahMeadTex1");
+    GlobalAddPartLO(PS_Torso_F,40,false,"jordan_s","JordanSheaTex1");
+    GlobalAddPartLO(PS_Torso_F,42,false,"hooker_s","Hooker2Tex3");
 
 
     
@@ -344,7 +359,7 @@ function PopulateOutfitsList()
     GroupAddParts(PS_Body_M);
     //GroupTranspose(PS_Trench,1,5);
     //GroupTranspose(PS_Torso_M,4);
-    GroupTranspose(PS_Legs_M,2);
+    GroupTranspose(PS_Legs,2);
     GroupTranspose(PS_Glasses,6,7);
     
     //Add Trenchcoat-only Torsos because they can't be used on other outfits, and other torsos can't be used here
@@ -445,7 +460,7 @@ function PopulateOutfitsList()
 
     BeginNewPartsGroup("GFM_Trench", false, true);
     GroupAddParts(PS_Body_F);
-    GroupTranspose(PS_Legs_F,2);
+    GroupTranspose(PS_Legs,2);
     GroupTranspose(PS_Glasses,6,7);
     
     //Add Trenchcoat-only Torsos because they can't be used on other outfits, and other torsos can't be used here
@@ -534,7 +549,8 @@ function PopulateOutfitsList()
 
     BeginNewPartsGroup("GFM_SuitSkirt", false, true);
     GroupAddParts(PS_Body_F);
-    GroupTranspose(PS_Legs_F,3);
+    GroupTranspose(PS_Legs,3);
+    GroupTranspose2(PS_DressLegs,PS_Legs,3);
     GroupTranspose(PS_Glasses,6,7);
     
     AddPartLO(PS_Torso_F,19,false,"wib_s",,,,,"WIBTex1","WIBTex1");
@@ -560,7 +576,8 @@ function PopulateOutfitsList()
 
     BeginNewPartsGroup("GFM_Dress", false, true);
     GroupTranspose(PS_Body_F,7);
-    GroupTranspose(PS_Legs_F,1);
+    GroupTranspose(PS_Legs,1);
+    GroupTranspose2(PS_DressLegs,PS_Legs,1);
     GroupTranspose(PS_Skirt,2,4);
     GroupTranspose(PS_Torso_F,3);
     
@@ -572,6 +589,20 @@ function PopulateOutfitsList()
     OutfitAddPartReference("nicolette_p");
     OutfitAddPartReference("nicolette_s");
     OutfitAddPartReference("nicolette_sk");
+    
+    //Sarah Mead
+    BeginNewOutfitL("sarah",40,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("sarah_p");
+    OutfitAddPartReference("sarah_s");
+    OutfitAddPartReference("sarah_sk");
+    
+    //Hooker2
+    BeginNewOutfitL("hooker2",42,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("hooker_p");
+    OutfitAddPartReference("hooker_s");
+    OutfitAddPartReference("hooker_sk");
 
     //========================================================
     //  GFM_TShirtPants
@@ -579,13 +610,23 @@ function PopulateOutfitsList()
     
     BeginNewPartsGroup("GFM_TShirtPants", false, true);
     GroupAddParts(PS_Body_F);
-    GroupTranspose(PS_Legs_F,6);
+    GroupTranspose(PS_Legs,6);
     GroupTranspose(PS_Torso_F,7);
     
     BeginNewOutfitL("anna",38,"");
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("anna_p");
     OutfitAddPartReference("anna_s");
+    
+    BeginNewOutfitL("tiffany",39,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("tiffany_p");
+    OutfitAddPartReference("tiffany_s");
+    
+    BeginNewOutfitL("jordan",41,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("jordan_s");
+    OutfitAddPartReference("mib_p");
 
     //========================================================
     //  GM_ScubaSuit
@@ -606,7 +647,7 @@ function PopulateOutfitsList()
     BeginNewPartsGroup("GM_DressShirt", true, false);
     GroupAddParts(PS_Body_M);
     GroupTranspose(PS_Torso_M,5);
-    GroupTranspose(PS_Legs_M,3);
+    GroupTranspose(PS_Legs,3);
     GroupTranspose(PS_Glasses,6,7);
     
     //Alex Jacobson Outfit
@@ -629,7 +670,7 @@ function PopulateOutfitsList()
 
     BeginNewPartsGroup("GM_Suit", true, false);
     GroupAddParts(PS_Body_M);
-    GroupTranspose(PS_Legs_M,1);
+    GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Glasses,5,6);
 
     //Add Suit-only Torsos because they can't be used on other outfits, and other torsos can't be used here
@@ -688,7 +729,7 @@ function PopulateOutfitsList()
 
     BeginNewPartsGroup("GM_Jumpsuit", true, false);
     GroupTranspose(PS_Body_M,3);
-    GroupTranspose(PS_Legs_M,1);
+    GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Torso_M,2);
     GroupTranspose(PS_Mask,3,4,5);
     //GroupTranspose(PS_Hat,6);
@@ -780,46 +821,6 @@ function PopulateOutfitsList()
 
     //END
     CompleteSetup();
-
-    ////Default Outfits
-    
-    /*
-    
-    ////Male Outfits
-
-    
-    ////Female Outfits
-
-    //Anna Navarre's Outfit
-    BeginNewOutfitL("anna",38,"",false,true);
-    SetOutfitTextures("none","none","GrayMaskTex","BlackMaskTex","skin","PantsTex9","AnnaNavarreTex1");
-    SetOutfitDisableAccessories(); //Note: Possible Ponytail abailable in Slot 2
-    SetOutfitMesh("GFM_TShirtPants");
-    
-    //Tiffany Savage's Outfit
-    BeginNewOutfitL("tiffany",39,"",false,true);
-    SetOutfitTextures("none","none","GrayMaskTex","BlackMaskTex","skin","TiffanySavageTex2","TiffanySavageTex1");
-    SetOutfitDisableAccessories(); //Note: Possible Ponytail abailable in Slot 2
-    SetOutfitMesh("GFM_TShirtPants");
-    
-    //Sarah Mead's Outfit
-    BeginNewOutfitL("sarah",40,"",false,true);
-    SetOutfitTextures("SarahMeadTex3","SarahMeadTex2","SarahMeadTex1","SarahMeadTex2","none","skin","skin");
-    SetOutfitDisableAccessories();
-    SetOutfitMesh("GFM_Dress");
-    
-    //Jordan Shea's Outfit
-    BeginNewOutfitL("jordan",41,"",false,true);
-    SetOutfitTextures("none","none","GrayMaskTex","BlackMaskTex","skin","PantsTex5","JordanSheaTex1");
-    SetOutfitDisableAccessories(); //Note: Possible Ponytail abailable in Slot 2
-    SetOutfitMesh("GFM_TShirtPants");
-    
-    //Hooker Outfit
-    BeginNewOutfitL("hooker2",42,"",false,true);
-    SetOutfitTextures("Hooker2Tex1","Hooker2Tex2","Hooker2Tex3","Hooker2Tex2","none","none","skin");
-    SetOutfitDisableAccessories();
-    SetOutfitMesh("GFM_Dress");
-    */
 }
 
 function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)

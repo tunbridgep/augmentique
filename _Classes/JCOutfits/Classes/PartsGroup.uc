@@ -82,7 +82,6 @@ function AddPart(OutfitPart P)
             return;
         }
     }
-    
 
     PartsList[numOutfitParts] = P;
     P.index = numOutfitParts;
@@ -90,7 +89,7 @@ function AddPart(OutfitPart P)
 }
 
 //Add a part and move the texture slots around
-function AddTransposePart(OutfitPart P,int slot0, int slot1, int slot2, int slot3, int slot4, int slot5, int slot6, int slot7, int slot8)
+function AddTransposePart(OutfitPart P,int bodySlot,int slot0, int slot1, int slot2, int slot3, int slot4, int slot5, int slot6, int slot7, int slot8)
 {
     local OutfitPart P2;
     local int i;
@@ -100,7 +99,7 @@ function AddTransposePart(OutfitPart P,int slot0, int slot1, int slot2, int slot
 
     P2.partID = P.partID;
     P2.name = P.name;
-    P2.bodySlot = P.bodySlot;
+    P2.bodySlot = bodySlot;
     P2.isAccessory = P.isAccessory;
     P2.original = P;
     
