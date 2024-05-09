@@ -4,6 +4,8 @@
 
 class MenuScreenOutfitChanger expands MenuUIScreenWindow;
 
+var MenuUIChoice createdChoices[10];
+
 // ----------------------------------------------------------------------
 // CreateChoices()
 // ----------------------------------------------------------------------
@@ -12,23 +14,49 @@ function CreateChoices()
 {
 	local int choiceIndex;
 	local MenuUIChoice newChoice;
-    local OutfitManager M;
-    
-    M = OutfitManager(player.outfitManager);
 
 	// Loop through the Menu Choices and create the appropriate buttons
 	for(choiceIndex=0; choiceIndex<arrayCount(choices); choiceIndex++)
 	{
 		if (choices[choiceIndex] != None)
 		{
-            if (choiceCount < 2 || M.currOutfit.partsGroup.CountPartType(choiceCount-2) > 0)
-            {
-                newChoice = MenuUIChoice(winClient.NewChild(choices[choiceIndex]));
-                newChoice.SetPos(choiceStartX, choiceStartY + (choiceCount * choiceVerticalGap) - newChoice.buttonVerticalOffset);
-            }
+            newChoice = MenuUIChoice(winClient.NewChild(choices[choiceIndex]));
+            createdChoices[choiceCount] = newChoice;
 			choiceCount++;
 		}
 	}
+    
+    UpdateChoices();
+}
+
+function UpdateChoices()
+{
+	local int choiceIndex, positionedChoices;
+	local MenuUIChoice Choice;
+    local OutfitManager M;
+    
+    M = OutfitManager(player.outfitManager);
+
+	for(choiceIndex=0; choiceIndex<arrayCount(createdChoices); choiceIndex++)
+    {
+        choice = createdChoices[choiceIndex];
+        if (choiceIndex < 2 || M.currOutfit.partsGroup.CountPartType(choiceIndex-2) > 0)
+        {
+            choice.Show();
+            choice.ConfigurationChanged();
+            choice.SetPos(choiceStartX, choiceStartY + (positionedChoices * choiceVerticalGap) - choice.buttonVerticalOffset);
+            positionedChoices++;
+        }
+        else
+            choice.Hide();
+
+    }
+}
+
+function ConfigurationChanged()
+{
+    UpdateChoices();
+    super.ConfigurationChanged();
 }
 
 function SaveSettings()

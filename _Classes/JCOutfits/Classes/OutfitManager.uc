@@ -972,9 +972,6 @@ function bool IsUnlocked(string id)
 {
     local int i;
 
-    //debug, remove this
-    return true;
-
     for (i = 0;i < 255 && player.unlockedOutfits[i] != "";i++)
     {
         if (player.unlockedOutfits[i] == id)

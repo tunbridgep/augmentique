@@ -8,6 +8,7 @@ function bool ButtonActivated( Window buttonPressed )
     local OutfitManager M;
     M = OutfitManager(player.outfitManager);
     GoToPrevOutfit();
+    AskParentForReconfigure();
 	return True;
 }
 

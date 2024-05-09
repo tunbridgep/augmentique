@@ -23,6 +23,7 @@ function bool ButtonActivated( Window buttonPressed )
         UpdateButtonText();
     }
     M.ApplyCurrentOutfit();
+    AskParentForReconfigure();
 	return True;
 }
 
@@ -31,6 +32,12 @@ function InitWindow()
     Super.initWindow();
     M = OutfitManager(player.outfitManager);
     UpdateButtonText();
+}
+
+function ConfigurationChanged()
+{
+    UpdateButtonText();
+    Super.ConfigurationChanged();
 }
 
 function UpdateButtonText()
