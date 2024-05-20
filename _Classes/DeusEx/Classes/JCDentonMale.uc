@@ -78,8 +78,8 @@ function SetupOutfitManager()
         //See docs/mod_integration.pdf for more info
         //---------------------------------------
 
-        //Re-assign current outfit
-        outfitManager.ApplyCurrentOutfit();
+        //Finish Setup outfit
+        outfitManager.CompleteSetup();
     }
 }
 

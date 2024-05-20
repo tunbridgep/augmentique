@@ -37,22 +37,6 @@ var PartsGroup Groups[50];
 var int numPartsGroups;
 var PartsGroup currentPartsGroup;
 
-enum PartSlot
-{
-    PS_Body_M,
-    PS_Body_F,
-    PS_Trench,
-    PS_Torso_M,
-    PS_Torso_F,
-    PS_Legs,
-    PS_DressLegs,
-    PS_Skirt,
-    PS_Glasses,
-    PS_Hat,
-    PS_Main,             //Main model texture
-    PS_Mask
-};
-
 function OutfitPart CreateNewOutfitPart(PartSlot slot,string name,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
     local OutfitPart P;
@@ -820,7 +804,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mechanic_s");
 
     //END
-    CompleteSetup();
+    //CompleteSetup();
 }
 
 function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
@@ -1045,7 +1029,10 @@ function CompleteSetup()
         for (i = 1;i<numOutfits;i++)
         {
             if (outfits[i].id == "default" && IsEquippable(i))
+            {
                 EquipOutfit(i);
+                break;
+            }
         }
     }
 
