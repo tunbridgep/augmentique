@@ -60,16 +60,16 @@ function SetupOutfitManager()
 	// create the Outfit Manager if not found
 	if (outfitManager == None)
     {
-        //ClientMessage("Outfit Manager successfully created");
-	    //outfitManager = new(Self) class'OutfitManager';
         managerBaseClass = class<OutfitManagerBase>(DynamicLoadObject("JCOutfits.OutfitManager", class'Class'));
-        outfitManager = new(Self) managerBaseClass;
+        
+        if (managerBaseClass == None)
+            outfitManager = new(Self) class'OutfitManagerBase';
+        else
+            outfitManager = new(Self) managerBaseClass;
     }
 
     if (outfitManager != None)
     {
-        //ClientMessage("Outfit Manager successfully inited");
-
         //Call base setup code, required each map load
         outfitManager.Setup(Self);
         
@@ -78,7 +78,7 @@ function SetupOutfitManager()
         //See docs/mod_integration.pdf for more info
         //---------------------------------------
 
-        //Finish Setup outfit
+        //Finish Outfit Setup
         outfitManager.CompleteSetup();
     }
 }

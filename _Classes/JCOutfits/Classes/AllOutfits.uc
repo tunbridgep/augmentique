@@ -4,6 +4,12 @@ class AllOutfits expands Object abstract;
 // Import Textures used by the JC Outfits Mod
 // ===========================================================================================================
 
+////Boxes
+#exec TEXTURE IMPORT FILE="Textures\Boxes\BoxTex1.pcx"                                             NAME="BoxTex1"                     GROUP="Boxes"
+#exec TEXTURE IMPORT FILE="Textures\Boxes\AccBoxTex1.pcx"                                          NAME="AccBoxTex1"                  GROUP="Boxes"
+
+////Outfits
+
 //Multi-Gender
 
 //100% Black outfit

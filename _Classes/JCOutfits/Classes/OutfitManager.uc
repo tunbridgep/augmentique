@@ -188,7 +188,6 @@ function Setup(DeusExPlayer newPlayer)
         return;
     
     PopulateOutfitsList();
-    SetupOutfitSpawners();
 }
 
 function SetupCustomOutfit()
@@ -213,18 +212,26 @@ function SetupCustomOutfit()
 function SetupOutfitSpawners()
 {
     local OutfitSpawner S;
+    local Texture T;
 
 	foreach player.AllActors(class'OutfitSpawner', S)
     {
         //player.ClientMessage("Found an outfit spawner");
         if (ValidateSpawn(S.id))
         {
-            if (S.PickupName == "")
-                S.ItemName = GetOutfitNameByID(S.id);
-            else
-                S.ItemName = S.PickupName;
-
             S.outfitManager = self;
+
+            //Set Frob Label
+            S.ItemName = sprintf(S.PickupName,GetOutfitNameByID(S.id));
+
+            //Set up texture
+            T = findTexture(S.LookupTexture);
+            //player.ClientMessage("Setting Skin and Texture to " $ T $ " ("$S.LookupTexture$")");
+            if (T != None)
+            {
+                S.Skin = T;
+                S.Texture = T;
+            }
         }
         else
         {
@@ -236,7 +243,7 @@ function SetupOutfitSpawners()
 
 function SpawnerPickup(OutfitSpawner S)
 {
-    player.ClientMessage(S.PickupMessage @ S.itemArticle @ S.ItemName , 'Pickup');
+    player.ClientMessage(sprintf(S.PickupMessage,GetOutfitNameByID(S.id)), 'Pickup');
     Unlock(S.id);
     S.Destroy();
 }
@@ -293,6 +300,8 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,21,false,"bum_p","PantsTex4");
     //GlobalAddPartLO(PS_Legs,22,false,"lebedev_p","JuanLebedevTex3");
     GlobalAddPartLO(PS_Legs,37,false,"thug_p","ThugMale2Tex2");
+    GlobalAddPartL(PS_Legs,7,false,"mib_p","PantsTex5");
+    GlobalAddPartL(PS_Legs,20,false,"brown_p","PantsTex7");
     //Female
     GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
     GlobalAddPartLO(PS_Legs,4,false,"lab_p","ScientistFemaleTex3");
@@ -352,6 +361,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_M,2,false,"100%_s",,,,,"Outfit1_Tex1");
     AddPartLO(PS_Torso_M,5,false,"paul_s",,,,,"PaulDentonTex1");
     AddPartLO(PS_Torso_M,21,false,"bum_s",,,,,"TrenchShirtTex1");
+    AddPartLO(PS_Torso_M,44,false,"bum2_s",,,,,"TrenchShirtTex2");
     AddPartLO(PS_Torso_M,22,false,"lebedev_s",,,,,"JuanLebedevTex1");
     AddPartLO(PS_Torso_M,23,false,"smuggler_s",,,,,"SmugglerTex1");
     AddPartLO(PS_Torso_M,24,false,"simons_s",,,,,"WaltonSimonsTex1");
@@ -362,9 +372,11 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,2,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
     AddPartLO(PS_Trench,5,false,"paul_t",,"PaulDentonTex2",,,,"PaulDentonTex2");
     AddPartLO(PS_Trench,21,false,"bum_t",,"BumMaleTex2",,,,"BumMaleTex2");
+    AddPartLO(PS_Trench,44,false,"bum2_t",,"BumMale2Tex2",,,,"BumMale2Tex2");
     AddPartLO(PS_Trench,22,false,"lebedev_t",,"JuanLebedevTex2",,,,"JuanLebedevTex2");
     AddPartLO(PS_Trench,23,false,"smuggler_t",,"SmugglerTex2",,,,"SmugglerTex2");
     AddPartLO(PS_Trench,24,false,"simons_t",,"WaltonSimonsTex2",,,,"WaltonSimonsTex2");
+    AddPartLO(PS_Trench,45,false,"harleyfilben_t",,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
 
     //Default M
     BeginNewOutfitL("default",0,"");
@@ -375,7 +387,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_g");
 
     //100% Black Outfit M
-    BeginNewOutfitL("100%black",2,"");
+    BeginNewOutfitL("100black",2,"");
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("100%_p");
     OutfitAddPartReference("100%_s");
@@ -383,7 +395,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("100%_t");
 
     //100% Black (alt) M
-    BeginNewOutfitL("100%black2",34,"");
+    BeginNewOutfitL("100black",34,"");
     OutfitAddPartReference("100%_b");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
@@ -413,6 +425,14 @@ function PopulateOutfitsList()
     OutfitAddPartReference("bum_p");
     OutfitAddPartReference("bum_t");
     OutfitAddPartReference("bum_s");
+    
+    //Bum2
+    BeginNewOutfitL("bum2",44,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("business_g");
+    OutfitAddPartReference("bum_p");
+    OutfitAddPartReference("bum2_t");
+    OutfitAddPartReference("bum2_s");
 
     //Lebedev
     BeginNewOutfitL("lebedev",22,"");
@@ -437,6 +457,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("sunglasses_g");
     OutfitAddPartReference("simons_s");
     OutfitAddPartReference("simons_t");
+    
+    //Harley Filben Outfit
+    BeginNewOutfitL("harleyfilben",45,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("brown_p");
+    OutfitAddPartReference("bum_s");
+    OutfitAddPartReference("harleyfilben_t");
 
     //========================================================
     //  GFM_Trench
@@ -480,7 +507,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_g");
 
     //100% Black Outfit
-    BeginNewOutfitL("100%black",2,"");
+    BeginNewOutfitL("100black",2,"");
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("100%_p");
     OutfitAddPartReference("100%_s");
@@ -488,7 +515,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("100%_t");
 
     //100% Black (alt)
-    BeginNewOutfitL("100%black2",34,"");
+    BeginNewOutfitL("100black",34,"");
     OutfitAddPartReference("100%_b");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
@@ -964,13 +991,17 @@ function bool IsUnlocked(string id)
     return false;
 }
 
+function bool IsCorrectGender(int index)
+{
+    return outfits[index].partsGroup.IsCorrectGender();
+}
+
 function bool IsEquippable(int index)
 {
     if (index >= numOutfits)
         return false;
     
-    return outfits[index].unlocked && outfits[index].partsGroup.IsCorrectGender();
-    return true;
+    return outfits[index].unlocked && IsCorrectGender(index);
 }
 
 function bool IsUnlockedAt(int index)
@@ -1021,6 +1052,9 @@ function CompleteSetup()
     
     //Setup Custom Outfit
     SetupCustomOutfit();
+    
+    //Setup Spawners
+    SetupOutfitSpawners();
 
     //If we have no outfit set, equip the default
     //This is hacky
@@ -1135,15 +1169,20 @@ function Texture findTexture(string tex)
         //return Texture'DeusExItems.Skins.PinkMaskTex';
         return None;
     
-    //First, search for a skinned version. See the Readme for more info
+    //Find a texture in JCOutfits, to allow overriding skins from DX and other mods
     t = Texture(DynamicLoadObject("JCOutfits."$tex$"_S"$player.PlayerSkin, class'Texture', true));
 
     if (t == None)
         t = Texture(DynamicLoadObject("JCOutfits."$tex, class'Texture', true));
 
+    //Otherwise look for exact texture name
+    if (t == None)
+        t = Texture(DynamicLoadObject(tex$"_S"$player.PlayerSkin, class'Texture', true));
+    
     if (t == None)
         t = Texture(DynamicLoadObject(tex, class'Texture', true));
     
+    //Fallback to looking in DeusEx Textures
     if (t == None)
         t = Texture(DynamicLoadObject("DeusExCharacters.Skins."$tex, class'Texture', true));
 
@@ -1155,6 +1194,11 @@ function Texture findTexture(string tex)
 
 function bool ValidateSpawn(string id)
 {
+    local int index;
+
+    index = GetOutfitIndexByID(id);
+
+    return index > 0 && !outfits[index].unlocked && IsCorrectGender(index);
 }
 
 defaultproperties
@@ -1180,6 +1224,7 @@ defaultproperties
     partNames(17)="Majestic 12 Helmet"
     partNames(18)="Sailor Hat"
     partNames(19)="Beanie"
+    partNames(20)="Dirty Brown Pants"
     savedOutfitIndex=1
     CustomOutfitName="(Custom)"
     outfitNames(0)="JC Denton's Trenchcoat"
@@ -1266,4 +1311,8 @@ defaultproperties
     outfitDescs(42)=""
     outfitNames(43)="NSF Sympathiser (Alt)"
     outfitDescs(43)=""
+    outfitNames(44)="Unwashed Clothes"
+    outfitDescs(44)="Look for a bum."
+    outfitNames(45)="Harley Filben's Outfit"
+    outfitDescs(45)=""
 }
