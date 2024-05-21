@@ -282,8 +282,8 @@ function PopulateOutfitsList()
 
     //Pants
     GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
-    GlobalAddPartLO(PS_Legs,4,false,"lab_p","PantsTex1");
-    GlobalAddPartLO(PS_Legs,50,false,"gilbertrenton_p","PantsTex3");
+    GlobalAddPartL(PS_Legs,22,false,"lab_p","PantsTex1");
+    GlobalAddPartL(PS_Legs,21,false,"gilbertrenton_p","PantsTex3"); //Also used by Ford Schick
     GlobalAddPartLO(PS_Legs,2,false,"100%_p","Outfit1_Tex1");
     GlobalAddPartLO(PS_Legs,5,false,"paul_p","PantsTex8");
     GlobalAddPartLO(PS_Legs,6,false,"businessman1_p","Businessman1Tex2");
@@ -339,6 +339,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Torso_M,25,false,"mj12_s","MJ12TroopTex2");
     GlobalAddPartLO(PS_Torso_M,32,false,"carter_s","SamCarterTex1");
     GlobalAddPartLO(PS_Torso_M,37,false,"thug_s","ThugMale2Tex1");
+    GlobalAddPartLO(PS_Torso_M,53,false,"joegreene_s","JoeGreeneTex1");
 
     //Female
     GlobalAddPartLO(PS_Torso_F,28,false,"nicolette_s","NicoletteDuClareTex1");
@@ -374,6 +375,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_M,24,false,"simons_s",,,,,"WaltonSimonsTex1");
     AddPartLO(PS_Torso_M,48,false,"doctor_s",,,,,"DoctorTex1");
     AddPartLO(PS_Torso_M,50,false,"gilbertrenton_s",,,,,"GilbertRentonTex1");
+    AddPartLO(PS_Torso_M,52,false,"ford_s",,,,,"FordSchickTex1");
     
     //Trenchcoats
     AddPartL(PS_Trench,3,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
@@ -387,6 +389,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,24,false,"simons_t",,"WaltonSimonsTex2",,,,"WaltonSimonsTex2");
     AddPartLO(PS_Trench,45,false,"harleyfilben_t",,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
     AddPartLO(PS_Trench,50,false,"gilbertrenton_t",,"GilbertRentonTex2",,,,"GilbertRentonTex2");
+    AddPartLO(PS_Trench,52,false,"ford_t",,"FordSchickTex2",,,,"FordSchickTex2");
 
     //Default M
     BeginNewOutfitL("default",0,"");
@@ -436,7 +439,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("paul_t");
     OutfitAddPartReference("paul_s");
     
-    //Paul Outfit
+    //Gilbert Renton Outfit
     BeginNewOutfitL("gilbertrenton",50,"");
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("gilbertrenton_p");
@@ -489,6 +492,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("brown_p");
     OutfitAddPartReference("bum_s");
     OutfitAddPartReference("harleyfilben_t");
+    
+    //Ford Schick Outfit
+    BeginNewOutfitL("ford",52,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("gilbertrenton_p");
+    OutfitAddPartReference("ford_s");
+    OutfitAddPartReference("ford_t");
 
     //========================================================
     //  GFM_Trench
@@ -714,6 +724,12 @@ function PopulateOutfitsList()
     OutfitAddPartReference("beanie_b");
     OutfitAddPartReference("thug_p");
     OutfitAddPartReference("thug_s");
+    
+    //Joe Greene Outfit
+    BeginNewOutfitL("joegreene",53,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("joegreene_s");
+    OutfitAddPartReference("lab_p");
     
     //========================================================
     //  GM_Suit
@@ -1281,6 +1297,8 @@ defaultproperties
     partNames(18)="Sailor Hat"
     partNames(19)="Beanie"
     partNames(20)="Dirty Brown Pants"
+    partNames(21)="Blue Business Pants"
+    partNames(22)="Black Business Pants"
     savedOutfitIndex=1
     CustomOutfitName="(Custom)"
     outfitNames(0)="JC Denton's Trenchcoat"
@@ -1383,4 +1401,8 @@ defaultproperties
     outfitDescs(50)=""
     outfitNames(51)="Hooker Outfit (Alt)"
     outfitDescs(51)=""
+    outfitNames(52)="Ford Schick's Outfit"
+    outfitDescs(52)=""
+    outfitNames(53)="Joe Greene's Outfit"
+    outfitDescs(53)=""
 }
