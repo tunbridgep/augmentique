@@ -235,7 +235,7 @@ function SetupOutfitSpawners()
         }
         else
         {
-            //player.ClientMessage("OutfitManager failed to validate");
+            //player.ClientMessage("OutfitManager failed to validate " $ S.id);
             S.Destroy();
         }
     }
@@ -302,9 +302,11 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,21,false,"bum_p","PantsTex4");
     //GlobalAddPartLO(PS_Legs,22,false,"lebedev_p","JuanLebedevTex3");
     GlobalAddPartLO(PS_Legs,37,false,"thug_p","ThugMale2Tex2");
+    GlobalAddPartLO(PS_Legs,55,false,"thug2_p","ThugMaleTex3");
     GlobalAddPartL(PS_Legs,7,false,"mib_p","PantsTex5");
     GlobalAddPartL(PS_Legs,20,false,"brown_p","PantsTex7");
     GlobalAddPartL(PS_Legs,20,false,"secretservice_p","SecretServiceTex2");
+    GlobalAddPartL(PS_Legs,23,false,"junkie_p","JunkieMaleTex2");
     //Female
     GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
     GlobalAddPartLO(PS_Legs,4,false,"lab_p","ScientistFemaleTex3");
@@ -316,6 +318,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,38,false,"anna_p","PantsTex9");
     GlobalAddPartLO(PS_Legs,39,false,"tiffany_p","TiffanySavageTex2");
     GlobalAddPartLO(PS_Legs,40,false,"sarah_p","SarahMeadTex3");
+    GlobalAddPartL(PS_Legs,24,false,"junkie_p2","JunkieFemaleTex2");
     
     //Dress Pants
     GlobalAddPartLO(PS_DressLegs,49,false,"nurse_p","LegsTex1");
@@ -340,6 +343,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Torso_M,32,false,"carter_s","SamCarterTex1");
     GlobalAddPartLO(PS_Torso_M,37,false,"thug_s","ThugMale2Tex1");
     GlobalAddPartLO(PS_Torso_M,53,false,"joegreene_s","JoeGreeneTex1");
+    GlobalAddPartLO(PS_Torso_M,54,false,"junkie_s","JunkieMaleTex1");
 
     //Female
     GlobalAddPartLO(PS_Torso_F,28,false,"nicolette_s","NicoletteDuClareTex1");
@@ -349,6 +353,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Torso_F,40,false,"shea_s","JordanSheaTex1");
     GlobalAddPartLO(PS_Torso_F,42,false,"hooker_s","Hooker1Tex3");
     GlobalAddPartLO(PS_Torso_F,51,false,"hooker2_s","Hooker2Tex3");
+    GlobalAddPartLO(PS_Torso_F,54,false,"junkie_s","JunkieFemaleTex1");
 
 
     
@@ -376,6 +381,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_M,48,false,"doctor_s",,,,,"DoctorTex1");
     AddPartLO(PS_Torso_M,50,false,"gilbertrenton_s",,,,,"GilbertRentonTex1");
     AddPartLO(PS_Torso_M,52,false,"ford_s",,,,,"FordSchickTex1");
+    AddPartLO(PS_Torso_M,55,false,"thug2_s",,,,,"ThugMaleTex1");
     
     //Trenchcoats
     AddPartL(PS_Trench,3,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
@@ -390,6 +396,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,45,false,"harleyfilben_t",,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
     AddPartLO(PS_Trench,50,false,"gilbertrenton_t",,"GilbertRentonTex2",,,,"GilbertRentonTex2");
     AddPartLO(PS_Trench,52,false,"ford_t",,"FordSchickTex2",,,,"FordSchickTex2");
+    AddPartLO(PS_Trench,55,false,"thug2_t",,"ThugMaleTex2");
 
     //Default M
     BeginNewOutfitL("default",0,"");
@@ -499,6 +506,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("gilbertrenton_p");
     OutfitAddPartReference("ford_s");
     OutfitAddPartReference("ford_t");
+    
+    //Rook Member Outfit
+    BeginNewOutfitL("thug2",55,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("thug2_p");
+    OutfitAddPartReference("thug2_s");
+    OutfitAddPartReference("thug2_t");
 
     //========================================================
     //  GFM_Trench
@@ -688,6 +702,11 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("shea_s");
     OutfitAddPartReference("mib_p");
+    
+    BeginNewOutfitL("junkie",54,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("junkie_s");
+    OutfitAddPartReference("junkie_p2");
 
     //========================================================
     //  GM_ScubaSuit
@@ -730,6 +749,12 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("joegreene_s");
     OutfitAddPartReference("lab_p");
+   
+    //Junkie
+    BeginNewOutfitL("junkie",54,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("junkie_s");
+    OutfitAddPartReference("junkie_p");
     
     //========================================================
     //  GM_Suit
@@ -1031,7 +1056,7 @@ function int GetOutfitIndexByID(string id)
 {
     local int i;
     for (i = 0;i < numOutfits;i++)
-        if (outfits[i].id == id)
+        if (outfits[i].id == id && IsCorrectGender(i))
             return i;
 
     return -1;
@@ -1270,7 +1295,7 @@ function bool ValidateSpawn(string id)
 
     index = GetOutfitIndexByID(id);
 
-    return index > 0 && !outfits[index].unlocked && IsCorrectGender(index);
+    return index > 0 && !outfits[index].unlocked;
 }
 
 defaultproperties
@@ -1299,6 +1324,8 @@ defaultproperties
     partNames(20)="Dirty Brown Pants"
     partNames(21)="Blue Business Pants"
     partNames(22)="Black Business Pants"
+    partNames(23)="Soiled Pants (Brown)"
+    partNames(24)="Soiled Pants (Blue)"
     savedOutfitIndex=1
     CustomOutfitName="(Custom)"
     outfitNames(0)="JC Denton's Trenchcoat"
@@ -1405,4 +1432,8 @@ defaultproperties
     outfitDescs(52)=""
     outfitNames(53)="Joe Greene's Outfit"
     outfitDescs(53)=""
+    outfitNames(54)="Soiled Junkie Clothes"
+    outfitDescs(54)=""
+    outfitNames(55)="Rook Member Outfit"
+    outfitDescs(55)=""
 }
