@@ -283,9 +283,11 @@ function PopulateOutfitsList()
     //Pants
     GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
     GlobalAddPartLO(PS_Legs,4,false,"lab_p","PantsTex1");
+    GlobalAddPartLO(PS_Legs,50,false,"gilbertrenton_p","PantsTex3");
     GlobalAddPartLO(PS_Legs,2,false,"100%_p","Outfit1_Tex1");
     GlobalAddPartLO(PS_Legs,5,false,"paul_p","PantsTex8");
     GlobalAddPartLO(PS_Legs,6,false,"businessman1_p","Businessman1Tex2");
+    GlobalAddPartLO(PS_Legs,46,false,"businessman2_p","Businessman2Tex2");
     GlobalAddPartLO(PS_Legs,3,false,"ajacobson_p","AlexJacobsonTex2");
     GlobalAddPartL(PS_Legs,7,false,"mib_p","PantsTex5");
     GlobalAddPartLO(PS_Legs,8,false,"unatco_p","UnatcoTroopTex1");
@@ -302,6 +304,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,37,false,"thug_p","ThugMale2Tex2");
     GlobalAddPartL(PS_Legs,7,false,"mib_p","PantsTex5");
     GlobalAddPartL(PS_Legs,20,false,"brown_p","PantsTex7");
+    GlobalAddPartL(PS_Legs,20,false,"secretservice_p","SecretServiceTex2");
     //Female
     GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
     GlobalAddPartLO(PS_Legs,4,false,"lab_p","ScientistFemaleTex3");
@@ -315,13 +318,16 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,40,false,"sarah_p","SarahMeadTex3");
     
     //Dress Pants
+    GlobalAddPartLO(PS_DressLegs,49,false,"nurse_p","LegsTex1");
     GlobalAddPartLO(PS_DressLegs,19,false,"stockings_p","LegsTex2");
-    GlobalAddPartLO(PS_DressLegs,42,false,"hooker_p","Hooker2Tex1");
+    GlobalAddPartLO(PS_DressLegs,42,false,"hooker_p","Hooker1Tex1");
+    GlobalAddPartLO(PS_DressLegs,51,false,"hooker2_p","Hooker2Tex1");
 
     //Skirts
     GlobalAddPartLO(PS_Skirt,28,false,"nicolette_sk","NicoletteDuClareTex2","NicoletteDuClareTex2");
     GlobalAddPartLO(PS_Skirt,40,false,"sarah_sk","SarahMeadTex2","SarahMeadTex2");
-    GlobalAddPartLO(PS_Skirt,42,false,"hooker_sk","Hooker2Tex2","Hooker2Tex2");
+    GlobalAddPartLO(PS_Skirt,42,false,"hooker_sk","Hooker1Tex2","Hooker1Tex2");
+    GlobalAddPartLO(PS_Skirt,51,false,"hooker2_sk","Hooker2Tex2","Hooker2Tex2");
 
     //Shirts etc
     GlobalAddPartLO(PS_Torso_M,3,false,"ajacobson_s","AlexJacobsonTex1");
@@ -339,8 +345,9 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Torso_F,38,false,"anna_s","AnnaNavarreTex1");
     GlobalAddPartLO(PS_Torso_F,39,false,"tiffany_s","TiffanySavageTex1");
     GlobalAddPartLO(PS_Torso_F,40,false,"sarah_s","SarahMeadTex1");
-    GlobalAddPartLO(PS_Torso_F,40,false,"jordan_s","JordanSheaTex1");
-    GlobalAddPartLO(PS_Torso_F,42,false,"hooker_s","Hooker2Tex3");
+    GlobalAddPartLO(PS_Torso_F,40,false,"shea_s","JordanSheaTex1");
+    GlobalAddPartLO(PS_Torso_F,42,false,"hooker_s","Hooker1Tex3");
+    GlobalAddPartLO(PS_Torso_F,51,false,"hooker2_s","Hooker2Tex3");
 
 
     
@@ -365,6 +372,8 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_M,22,false,"lebedev_s",,,,,"JuanLebedevTex1");
     AddPartLO(PS_Torso_M,23,false,"smuggler_s",,,,,"SmugglerTex1");
     AddPartLO(PS_Torso_M,24,false,"simons_s",,,,,"WaltonSimonsTex1");
+    AddPartLO(PS_Torso_M,48,false,"doctor_s",,,,,"DoctorTex1");
+    AddPartLO(PS_Torso_M,50,false,"gilbertrenton_s",,,,,"GilbertRentonTex1");
     
     //Trenchcoats
     AddPartL(PS_Trench,3,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
@@ -377,6 +386,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,23,false,"smuggler_t",,"SmugglerTex2",,,,"SmugglerTex2");
     AddPartLO(PS_Trench,24,false,"simons_t",,"WaltonSimonsTex2",,,,"WaltonSimonsTex2");
     AddPartLO(PS_Trench,45,false,"harleyfilben_t",,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
+    AddPartLO(PS_Trench,50,false,"gilbertrenton_t",,"GilbertRentonTex2",,,,"GilbertRentonTex2");
 
     //Default M
     BeginNewOutfitL("default",0,"");
@@ -410,6 +420,14 @@ function PopulateOutfitsList()
     OutfitAddPartReference("lab_t");
     OutfitAddPartReference("lab_s");
     
+    //Doctor Outfit
+    BeginNewOutfitL("doctor",48,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("business_g");
+    OutfitAddPartReference("lab_t");
+    OutfitAddPartReference("lab_p");
+    OutfitAddPartReference("doctor_s");
+    
     //Paul Outfit
     BeginNewOutfitL("paul",5,"");
     OutfitAddPartReference("default_b");
@@ -417,6 +435,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("paul_p");
     OutfitAddPartReference("paul_t");
     OutfitAddPartReference("paul_s");
+    
+    //Paul Outfit
+    BeginNewOutfitL("gilbertrenton",50,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("gilbertrenton_p");
+    OutfitAddPartReference("gilbertrenton_t");
+    OutfitAddPartReference("gilbertrenton_s");
 
     //Bum
     BeginNewOutfitL("bum",21,"");
@@ -566,6 +591,7 @@ function PopulateOutfitsList()
     
     AddPartLO(PS_Torso_F,19,false,"wib_s",,,,,"WIBTex1","WIBTex1");
     AddPartLO(PS_Torso_F,27,false,"maggie_s",,,,,"MaggieChowTex1","MaggieChowTex1");
+    AddPartLO(PS_Torso_F,49,false,"nurse_s",,,,,"NurseTex1","NurseTex1");
     
     //WIB Outfit
     BeginNewOutfitL("wib",19,"");
@@ -580,6 +606,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("stockings_p");
     OutfitAddPartReference("maggie_s");
     OutfitAddPartReference("sunglasses_g");
+
+    //Nurse Outfit
+    BeginNewOutfitL("nurse",49,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("nurse_p");
+    OutfitAddPartReference("nurse_s");
+
 
     //========================================================
     //  GFM_Dress
@@ -608,12 +641,19 @@ function PopulateOutfitsList()
     OutfitAddPartReference("sarah_s");
     OutfitAddPartReference("sarah_sk");
     
-    //Hooker2
-    BeginNewOutfitL("hooker2",42,"");
+    //Hooker
+    BeginNewOutfitL("hooker",42,"");
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("hooker_p");
     OutfitAddPartReference("hooker_s");
     OutfitAddPartReference("hooker_sk");
+    
+    //Hooker2
+    BeginNewOutfitL("hooker2",51,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("hooker2_p");
+    OutfitAddPartReference("hooker2_s");
+    OutfitAddPartReference("hooker2_sk");
 
     //========================================================
     //  GFM_TShirtPants
@@ -634,9 +674,9 @@ function PopulateOutfitsList()
     OutfitAddPartReference("tiffany_p");
     OutfitAddPartReference("tiffany_s");
     
-    BeginNewOutfitL("jordan",41,"");
+    BeginNewOutfitL("shea",41,"");
     OutfitAddPartReference("default_b");
-    OutfitAddPartReference("jordan_s");
+    OutfitAddPartReference("shea_s");
     OutfitAddPartReference("mib_p");
 
     //========================================================
@@ -685,11 +725,13 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Glasses,5,6);
 
     //Add Suit-only Torsos because they can't be used on other outfits, and other torsos can't be used here
-    AddPartLO(PS_Torso_M,3,false,"businessman1_s",,,,"BusinessMan1Tex1","BusinessMan1Tex1");
+    AddPartLO(PS_Torso_M,6,false,"businessman1_s",,,,"BusinessMan1Tex1","BusinessMan1Tex1");
+    AddPartLO(PS_Torso_M,46,false,"businessman2_s",,,,"BusinessMan2Tex1","BusinessMan2Tex1");
     AddPartLO(PS_Torso_M,7,false,"mib_s",,,,"MIBTex1","MIBTex1");
     AddPartLO(PS_Torso_M,30,false,"president_s",,,,"PhilipMeadTex1","PhilipMeadTex1");
     AddPartLO(PS_Torso_M,11,false,"chef_s",,,,"ChefTex1","ChefTex1");
     AddPartLO(PS_Torso_M,31,false,"sailor_s",,,,"SailorTex1","SailorTex1");
+    AddPartLO(PS_Torso_M,47,false,"secretservice_s",,,,"SecretServiceTex1","SecretServiceTex1");
     
     //Hat
     //EDIT: These should probably be exclusive to GM_Suit
@@ -702,6 +744,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("businessman1_p");
     OutfitAddPartReference("businessman1_s");
+    
+    //White Business Suit
+    BeginNewOutfitL("businessman2",46,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("business_g");
+    OutfitAddPartReference("businessman2_p");
+    OutfitAddPartReference("businessman2_s");
     
     //MIB Suit
     BeginNewOutfitL("mib",7,"");
@@ -733,6 +782,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("sailor_p");
     OutfitAddPartReference("sailor_s");
     OutfitAddPartReference("sailor_h");
+    
+    //Secret Service
+    BeginNewOutfitL("secretservice",47,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("sunglasses_g");
+    OutfitAddPartReference("secretservice_p");
+    OutfitAddPartReference("secretservice_s");
     
     //========================================================
     //  GM_Jumpsuit
@@ -1315,4 +1371,16 @@ defaultproperties
     outfitDescs(44)="Look for a bum."
     outfitNames(45)="Harley Filben's Outfit"
     outfitDescs(45)=""
+    outfitNames(46)="White Business Suit"
+    outfitDescs(46)="Requiem for a Dream"
+    outfitNames(47)="Secret Service Suit"
+    outfitDescs(47)=""
+    outfitNames(48)="Doctor's Outfit"
+    outfitDescs(48)=""
+    outfitNames(49)="Nurse Outfit"
+    outfitDescs(49)=""
+    outfitNames(50)="Gilbert Renton's Outfit"
+    outfitDescs(50)=""
+    outfitNames(51)="Hooker Outfit (Alt)"
+    outfitDescs(51)=""
 }
