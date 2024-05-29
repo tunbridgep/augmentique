@@ -26,6 +26,7 @@ enum PartSlot
 //By default, all we want to do is destroy any spawners.
 function Setup(DeusExPlayer newPlayer)
 {
+    local int i;
     local OutfitSpawner S;
     local Actor a;
 	foreach newPlayer.AllActors(class'OutfitSpawner', S)
