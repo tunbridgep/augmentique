@@ -32,7 +32,7 @@ Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner9
     Level=LevelInfo'MyLevel.LevelInfo0'
     Tag=OutfitSpawner2
     Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=268,ZoneNumber=2)
-    Location=(X=396.529938,Y=-585.275024,Z=-313.901276)
+    Location=(X=396.529938,Y=-594.275024,Z=-313.901276)
     Rotation=(Yaw=1500)
     OldLocation=(X=386.529938,Y=-603.275024,Z=-313.901276)
     bSelected=True

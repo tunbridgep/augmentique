@@ -213,6 +213,8 @@ function SetupOutfitSpawners()
 {
     local OutfitSpawner S;
     local Texture T;
+    local Actor a;
+    local int i;
 
 	foreach player.AllActors(class'OutfitSpawner', S)
     {
@@ -236,6 +238,19 @@ function SetupOutfitSpawners()
         else
         {
             //player.ClientMessage("OutfitManager failed to validate " $ S.id);
+
+            //Destroy objects linked to spawner
+            foreach player.AllActors(class'Actor', a)
+            {
+                for(i = 0;i < 5;i++)
+                {
+                    if (S.LinkedObjects[i] != "" && S.LinkedObjects[i] == string(a.Name))
+                        a.Destroy();
+                }
+            }
+
+
+            //Destroy Spawner
             S.Destroy();
         }
     }
