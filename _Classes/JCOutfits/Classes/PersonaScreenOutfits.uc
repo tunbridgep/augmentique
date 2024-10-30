@@ -252,7 +252,7 @@ function bool ButtonActivated( Window buttonPressed )
 	switch(buttonPressed)
 	{
 		case btnEquip:
-			Equip(selectedRowId);
+			Equip(int(lstOutfits.GetFieldValue(selectedRowId, 2)));
 			break;
 
 		case btnCustom:
@@ -281,7 +281,7 @@ function bool ButtonActivated( Window buttonPressed )
 
 event bool ListRowActivated(window list, int rowId)
 {
-    Equip(rowId);
+    Equip(int(lstOutfits.GetFieldValue(rowId, 2)));
 }
 
 // ----------------------------------------------------------------------
@@ -326,12 +326,8 @@ function EnableButtons()
 // Equip()
 // ----------------------------------------------------------------------
 
-function Equip(int rowID)
+function Equip(int index)
 {
-    local int index;
-    
-    index = int(lstOutfits.GetFieldValue(rowID, 2));
-
     outfitManager.EquipOutfit(index);
 
     //Clear the chevron on the previously equipped outfit

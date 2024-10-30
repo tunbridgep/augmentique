@@ -1136,7 +1136,7 @@ function Unlock(string id)
         {
             if (player.unlockedOutfits[i] == "")
             {
-                player.ClientMessage("Unlocking " $ id);
+                //player.ClientMessage("Unlocking " $ id);
                 player.unlockedOutfits[i] = id;
                 player.SaveConfig();
                 break;
