@@ -234,6 +234,9 @@ function SetupOutfitSpawners()
                 S.Skin = T;
                 S.Texture = T;
             }
+
+            //Set Collision
+            S.SetCollision( true, true, false );
         }
         else
         {
@@ -1133,10 +1136,10 @@ function Unlock(string id)
         {
             if (player.unlockedOutfits[i] == "")
             {
-                //player.ClientMessage("Unlocking " $ id);
+                player.ClientMessage("Unlocking " $ id);
                 player.unlockedOutfits[i] = id;
                 player.SaveConfig();
-                return;
+                break;
             }
         }
 

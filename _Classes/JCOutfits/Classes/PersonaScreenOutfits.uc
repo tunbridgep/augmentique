@@ -252,7 +252,7 @@ function bool ButtonActivated( Window buttonPressed )
 	switch(buttonPressed)
 	{
 		case btnEquip:
-			Equip();
+			Equip(selectedRowId);
 			break;
 
 		case btnCustom:
@@ -269,6 +269,19 @@ function bool ButtonActivated( Window buttonPressed )
 
     //PopulateOutfitsList();
 	return bHandled;
+}
+
+
+// ----------------------------------------------------------------------
+// ListRowActivated()
+//
+// User double-clicked on one of the rows, meaning he/she/it wants
+// to redefine one of the functions
+// ----------------------------------------------------------------------
+
+event bool ListRowActivated(window list, int rowId)
+{
+    Equip(rowId);
 }
 
 // ----------------------------------------------------------------------
@@ -313,11 +326,11 @@ function EnableButtons()
 // Equip()
 // ----------------------------------------------------------------------
 
-function Equip()
+function Equip(int rowID)
 {
     local int index;
     
-    index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
+    index = int(lstOutfits.GetFieldValue(rowID, 2));
 
     outfitManager.EquipOutfit(index);
 
