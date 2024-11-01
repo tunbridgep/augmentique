@@ -327,7 +327,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Legs,23,false,"junkie_p","JunkieMaleTex2");
     //Female
     GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
-    GlobalAddPartLO(PS_Legs,4,false,"lab_p","ScientistFemaleTex3");
+    GlobalAddPartLO(PS_Legs,4,false,"lab_pf","ScientistFemaleTex3");
     GlobalAddPartLO(PS_Legs,2,false,"100%_p","Outfit1_Tex1");
     GlobalAddPartLO(PS_Legs,13,false,"goldbrown_p","Outfit2F_Tex3");
     GlobalAddPartLO(PS_Legs,15,false,"matrix_p","Outfit4F_Tex3");
@@ -593,7 +593,7 @@ function PopulateOutfitsList()
     BeginNewOutfitL("labcoat",4,"");
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sci_g");
-    OutfitAddPartReference("lab_p");
+    OutfitAddPartReference("lab_pf");
     OutfitAddPartReference("lab_t");
     OutfitAddPartReference("lab_s");
     
