@@ -93,8 +93,17 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
 {
     local int i,s;
     local Texture T;
+    local DeusExCarcass C;
     
-    A.mesh = partsGroup.Mesh;
+    if (A.IsA('DeusExCarcass'))
+    {
+        C = DeusExCarcass(A);
+        DeusExCarcass(A).mesh = LodMesh(DynamicLoadObject(partsGroup.Mesh $ "_Carcass", class'LodMesh', true));
+        DeusExCarcass(A).mesh2 = LodMesh(DynamicLoadObject(partsGroup.Mesh $ "_CarcassB", class'LodMesh', true));
+        DeusExCarcass(A).mesh3 = LodMesh(DynamicLoadObject(partsGroup.Mesh $ "_CarcassC", class'LodMesh', true));
+    }
+    else
+        A.mesh = partsGroup.Mesh;
 
     //Remove existing textures
     A.Texture = Texture'DeusExItems.Skins.PinkMaskTex';

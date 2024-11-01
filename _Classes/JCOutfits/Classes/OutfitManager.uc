@@ -1208,10 +1208,10 @@ function ApplyCurrentOutfit()
     //Also apply to JC Carcasses and JCDoubles
 	// JC Denton Carcass
 	foreach player.AllActors(class'JCDentonMaleCarcass', jcCarcass)
-		break;
-
-	if (jcCarcass != None)
-         UpdateCarcass(jcCarcass);
+    {
+        if (jcCarcass != None)
+            ApplyCurrentOutfitToActor(jcCarcass);
+    }
 
 	// JC's stunt double
 	foreach player.AllActors(class'JCDouble', jc)
@@ -1228,33 +1228,6 @@ function ApplyCurrentOutfitToActor(Actor A)
     //    return;
 
     currOutfit.ApplyOutfitToActor(A,!noAccessories);
-}
-
-function UpdateCarcass(DeusExCarcass C)
-{
-    local string CName;
-    local string M;
-
-    CName = string(C.Mesh.name);
-    ApplyCurrentOutfitToActor(C);
-        
-    M = defaultMesh;
-
-    if (currOutfit.partsGroup.mesh != None)
-        M = string(currOutfit.partsGroup.mesh.name);
-
-    if (CName == ("GM_Trench_Carcass"))
-       C.Mesh = findMesh(M $ "_Carcass");
-    else if (CName == ("GM_Trench_CarcassB"))
-        C.Mesh = findMesh(M $ "_CarcassB");
-    else if (CName == ("GM_Trench_CarcassC"))
-        C.Mesh = findMesh(M $ "_CarcassC");
-    
-    if (C.Mesh == None) //In the absolute worst case, just switch back to JC
-        C.Mesh = findMesh(defaultMesh $"_Carcass");
-
-    log("CName = " $ CName);
-    log("Looking for carcass " $ currOutfit.partsGroup.mesh $ "_Carcass" );
 }
 
 function Mesh findMesh(string mesh)
