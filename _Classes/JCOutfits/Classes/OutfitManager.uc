@@ -178,7 +178,7 @@ function Setup(DeusExPlayer newPlayer)
         defaultTextures[5] = string(player.MultiSkins[5]);
         defaultTextures[6] = string(player.MultiSkins[6]);
         defaultTextures[7] = string(player.MultiSkins[7]);
-        defaultMesh = string(player.Mesh.name);
+        defaultMesh = string(player.Mesh);
         //Set flag for default outfit
         Player.FlagBase.SetBool('JCOutfits_Equipped_default',true,true,0);
         savedOutfitIndex = -1;
@@ -1029,6 +1029,23 @@ function PartsGroup GetPartsGroupByID(string id)
 
 function EquipOutfit(int index)
 {
+    local Name flag;
+
+    if (outfits[index].index == 0 || outfits[index].index == currOutfit.index)
+        return;
+
+    //Set Flags
+    if (player != None && player.rootWindow != None)
+    {
+        //Set flag for new outfit
+        flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[index].id);
+        Player.FlagBase.SetBool(flag,true,true,0);
+        
+        //Set flag for old outfit
+        flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ currOutfit.id);
+        Player.FlagBase.DeleteFlag(flag,FLAG_Bool);
+    }
+
     currOutfit = outfits[index];
     savedOutfitIndex = index;
     ApplyCurrentOutfit();
@@ -1116,7 +1133,7 @@ function bool IsEquippable(int index)
     if (index >= numOutfits)
         return false;
     
-    return outfits[index].unlocked && IsCorrectGender(index);
+    return outfits[index] != None && outfits[index].unlocked && IsCorrectGender(index);
 }
 
 function bool IsUnlockedAt(int index)
@@ -1161,6 +1178,9 @@ function CompleteSetup()
     Unlock("default");
     for (i = 1;i<numOutfits;i++)
     {
+        if (outfits[i] == None)
+            continue;
+
         if (IsUnlocked(outfits[i].id))
             outfits[i].SetUnlocked();
     }
@@ -1177,7 +1197,7 @@ function CompleteSetup()
     {
         for (i = 1;i<numOutfits;i++)
         {
-            if (outfits[i].id == "default" && IsEquippable(i))
+            if (outfits[i] != None && outfits[i].id == "default" && IsEquippable(i))
             {
                 EquipOutfit(i);
                 break;
@@ -1196,11 +1216,6 @@ function ApplyCurrentOutfit()
 {
 	local JCDentonMaleCarcass jcCarcass;
 	local JCDouble jc;
-    local Name flag;
-
-    //Set flag for new outfit
-    //flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[currentOutfitIndex].id);
-    //Player.FlagBase.SetBool(flag,true,true,0);
 
     //player.ClientMessage("ApplyCurrentOutfit");
     ApplyCurrentOutfitToActor(player);
