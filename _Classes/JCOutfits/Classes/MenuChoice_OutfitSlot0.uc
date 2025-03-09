@@ -55,8 +55,8 @@ function UpdateButtonText()
 
 defaultproperties
 {
+     NothingText="Nothing"
+     Action=MA_Custom
      HelpText="Set Outfit Slot 0"
      actionText="Set Slot 0"
-     Action=MA_Custom
-     NothingText="Nothing"
 }

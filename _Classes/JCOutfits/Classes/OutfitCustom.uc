@@ -58,3 +58,7 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
     hidden = false;
     Super.ApplyOutfitToActor(A,allowAccessories);
 }
+
+defaultproperties
+{
+}

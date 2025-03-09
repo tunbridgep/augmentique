@@ -136,3 +136,7 @@ function OutfitPart GetPartWithID(string ID)
     }
     return None;
 }
+
+defaultproperties
+{
+}

@@ -132,3 +132,7 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
         }
     }
 }
+
+defaultproperties
+{
+}

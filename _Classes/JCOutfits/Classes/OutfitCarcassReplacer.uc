@@ -8,3 +8,7 @@ function SetSkin(DeusExPlayer player)
     OM = OutfitManager(player.outfitManager);
     OM.ApplyCurrentOutfitToActor(self);
 }
+
+defaultproperties
+{
+}

@@ -15,3 +15,7 @@ function Unlock()
     if (original != None)
         original.unlocked = true;
 }
+
+defaultproperties
+{
+}

@@ -37,7 +37,7 @@ function GoToPrevOutfit()
 
 defaultproperties
 {
+     Action=MA_Custom
      HelpText="Set your Current Outfit"
      actionText="Prev Outfit"
-     Action=MA_Custom
 }

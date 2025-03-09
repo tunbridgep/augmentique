@@ -220,3 +220,7 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S2.bmp"                      NAME="TiffanySavageTex1_S2"                 GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S3.bmp"                      NAME="TiffanySavageTex1_S3"                 GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S4.bmp"                      NAME="TiffanySavageTex1_S4"                 GROUP="Outfits"
+
+defaultproperties
+{
+}

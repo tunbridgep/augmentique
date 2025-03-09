@@ -37,13 +37,13 @@ function PlayTurning()
 {
 //	ClientMessage("PlayTurning()");
 	if (bForceDuck || bCrouchOn || IsLeaning())
-		TweenAnim('CrouchWalk', 0.1);
+		DoTweenAnim('CrouchWalk', 0.1);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			TweenAnim('Walk2H', 0.1);
+			DoTweenAnim('Walk2H', 0.1);
 		else
-			TweenAnim('Walk', 0.1);
+			DoTweenAnim('Walk', 0.1);
 	}
 }
 
@@ -51,13 +51,13 @@ function TweenToWalking(float tweentime)
 {
 //	ClientMessage("TweenToWalking()");
 	if (bForceDuck || bCrouchOn)
-		TweenAnim('CrouchWalk', tweentime);
+		DoTweenAnim('CrouchWalk', tweentime);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			TweenAnim('Walk2H', tweentime);
+			DoTweenAnim('Walk2H', tweentime);
 		else
-			TweenAnim('Walk', tweentime);
+			DoTweenAnim('Walk', tweentime);
 	}
 }
 
@@ -73,13 +73,13 @@ function PlayWalking()
 
 	//	ClientMessage("PlayWalking()");
 	if (bForceDuck || bCrouchOn)
-		LoopAnim('CrouchWalk', newhumanAnimRate);
+		DoLoopAnim('CrouchWalk', newhumanAnimRate);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			LoopAnim('Walk2H', newhumanAnimRate);
+			DoLoopAnim('Walk2H', newhumanAnimRate);
 		else
-			LoopAnim('Walk', newhumanAnimRate);
+			DoLoopAnim('Walk', newhumanAnimRate);
 	}
 }
 
@@ -128,26 +128,26 @@ function PlayRunning()
 		if (aStrafe != 0)
 		{
 			if (HasTwoHandedWeapon())
-				LoopAnim('Strafe2H', humanAnimRate);
+				DoLoopAnim('Strafe2H', humanAnimRate);
 			else
-				LoopAnim('Strafe', humanAnimRate);
+				DoLoopAnim('Strafe', humanAnimRate);
 		}
 		else
 		{
 			if (HasTwoHandedWeapon())
-				LoopAnim('RunShoot2H', humanAnimRate);
+				DoLoopAnim('RunShoot2H', humanAnimRate);
 			else
-				LoopAnim('RunShoot', humanAnimRate);
+				DoLoopAnim('RunShoot', humanAnimRate);
 		}
 	}
 	else if (bOnFire)
-		LoopAnim('Panic', humanAnimRate);
+		DoLoopAnim('Panic', humanAnimRate);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			LoopAnim('RunShoot2H', humanAnimRate);
+			DoLoopAnim('RunShoot2H', humanAnimRate);
 		else
-			LoopAnim('Run', humanAnimRate);
+			DoLoopAnim('Run', humanAnimRate);
 	}
 }
 
@@ -157,18 +157,18 @@ function TweenToWaiting(float tweentime)
 	if (IsInState('PlayerSwimming') || (Physics == PHYS_Swimming))
 	{
 		if (IsFiring())
-			LoopAnim('TreadShoot');
+			DoLoopAnim('TreadShoot');
 		else
-			LoopAnim('Tread');
+			DoLoopAnim('Tread');
 	}
 	else if (IsLeaning() || bForceDuck)
-		TweenAnim('CrouchWalk', tweentime);
+		DoTweenAnim('CrouchWalk', tweentime);
 	else if (((AnimSequence == 'Pickup') && bAnimFinished) || ((AnimSequence != 'Pickup') && !IsFiring()))
 	{
 		if (HasTwoHandedWeapon())
-			TweenAnim('BreatheLight2H', tweentime);
+			DoTweenAnim('BreatheLight2H', tweentime);
 		else
-			TweenAnim('BreatheLight', tweentime);
+			DoTweenAnim('BreatheLight', tweentime);
 	}
 }
 
@@ -178,18 +178,18 @@ function PlayWaiting()
 	if (IsInState('PlayerSwimming') || (Physics == PHYS_Swimming))
 	{
 		if (IsFiring())
-			LoopAnim('TreadShoot');
+			DoLoopAnim('TreadShoot');
 		else
-			LoopAnim('Tread');
+			DoLoopAnim('Tread');
 	}
 	else if (IsLeaning() || bForceDuck)
-		TweenAnim('CrouchWalk', 0.1);
+		DoTweenAnim('CrouchWalk', 0.1);
 	else if (!IsFiring())
 	{
 		if (HasTwoHandedWeapon())
-			LoopAnim('BreatheLight2H');
+			DoLoopAnim('BreatheLight2H');
 		else
-			LoopAnim('BreatheLight');
+			DoLoopAnim('BreatheLight');
 	}
 
 }
@@ -197,13 +197,13 @@ function PlayWaiting()
 function PlaySwimming()
 {
 //	ClientMessage("PlaySwimming()");
-	LoopAnim('Tread');
+	DoLoopAnim('Tread');
 }
 
 function TweenToSwimming(float tweentime)
 {
 //	ClientMessage("TweenToSwimming()");
-	TweenAnim('Tread', tweentime);
+	DoTweenAnim('Tread', tweentime);
 }
 
 function PlayInAir()
@@ -232,7 +232,7 @@ function PlayDuck()
 			PlayAnim('Crouch',,0.1);
 	}
 	else
-		TweenAnim('CrouchWalk', 0.1);
+		DoTweenAnim('CrouchWalk', 0.1);
 }
 
 function PlayRising()
@@ -245,9 +245,9 @@ function PlayCrawling()
 {
 //	ClientMessage("PlayCrawling()");
 	if (IsFiring())
-		LoopAnim('CrouchShoot');
+		DoLoopAnim('CrouchShoot');
 	else
-		LoopAnim('CrouchWalk');
+		DoLoopAnim('CrouchWalk');
 }
 
 function PlayFiring()
@@ -261,20 +261,20 @@ function PlayFiring()
 	if (W != None)
 	{
 		if (IsInState('PlayerSwimming') || (Physics == PHYS_Swimming))
-			LoopAnim('TreadShoot',,0.1);
+			DoLoopAnim('TreadShoot',,0.1);
 		else if (W.bHandToHand)
 		{
 			if (bAnimFinished || (AnimSequence != 'Attack'))
 				PlayAnim('Attack',,0.1);
 		}
 		else if (bIsCrouching || IsLeaning())
-			LoopAnim('CrouchShoot',,0.1);
+			DoLoopAnim('CrouchShoot',,0.1);
 		else
 		{
 			if (HasTwoHandedWeapon())
-				LoopAnim('Shoot2H',,0.1);
+				DoLoopAnim('Shoot2H',,0.1);
 			else
-				LoopAnim('Shoot',,0.1);
+				DoLoopAnim('Shoot',,0.1);
 		}
 	}
 }
@@ -400,6 +400,21 @@ simulated function PreBeginPlay()
 		WaterSpeed = mpWaterSpeed;
 		humanAnimRate = (GroundSpeed/320.0);
 	}
+}
+
+//JCOutfits - SARGE
+//Some outfits don't have animations, so we need to
+//make sure we actually have them before attempting to tween to them,
+//otherwise the log will report lots and lots of errors.
+function DoTweenAnim(name Sequence, float Time)
+{
+    if (HasAnim(Sequence))
+        TweenAnim(Sequence,Time);
+}
+function DoLoopAnim(name Sequence, optional float Rate, optional float TweenTime, optional float MinRate)
+{
+    if (HasAnim(Sequence))
+        LoopAnim(Sequence,Rate,TweenTime,MinRate);
 }
 
 defaultproperties
