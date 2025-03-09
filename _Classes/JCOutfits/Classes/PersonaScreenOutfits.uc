@@ -12,8 +12,8 @@ var PersonaActionButtonWindow btnCustom;
 var PersonaListWindow         lstOutfits;
 var PersonaScrollAreaWindow   winScroll;
 var PersonaHeaderTextWindow   winOutfitName;
-var PersonaImageWindow        winImage;
 var PersonaCheckBoxWindow     chkAccessories;
+var ViewportWindow            winViewport;
 
 var localized String ShowAccessoriesLabel;
 var localized String OutfitsTitleText;
@@ -58,7 +58,7 @@ function CreateControls()
 	Super.CreateControls();
 
 	CreateTitleWindow(9, 5, OutfitsTitleText);
-	CreateImageWindow();
+    CreateViewportWindow();
 	CreateOutfitsList();
 	CreateOutfitTitle();
 	CreateButtons();
@@ -69,10 +69,36 @@ function CreateControls()
 // CreateImageWindow()
 // ----------------------------------------------------------------------
 
-function CreateImageWindow()
+function CreateViewportWindow()
 {
-	winImage = PersonaImageWindow(winClient.NewChild(Class'PersonaImageWindow'));
-	winImage.SetPos(15, 20);
+    winViewport = ViewportWindow(winClient.NewChild(class'ViewportWindow'));
+	winViewport.SetPos(15, 20);
+	winViewport.SetSize(400, 400);
+    //winViewport.SetViewportActor(player);
+    winViewport.SetRotation(GetViewportRotation());
+    winViewport.SetViewportLocation(GetViewportLocation(),true);
+    winViewport.SetFOVAngle(55);
+}
+
+function Vector GetViewportLocation()
+{
+	local Vector loc;
+
+	loc = 65 * Vector(player.Rotation);
+	loc.Z = player.BaseEyeHeight - 10;
+	loc += player.Location;
+
+    return loc;
+}
+
+function Rotator GetViewportRotation()
+{
+	local Rotator rot;
+
+	rot = Player.ViewRotation;
+	rot.Yaw += -32768;
+
+    return rot;
 }
 
 // ----------------------------------------------------------------------
@@ -191,29 +217,11 @@ function PopulateOutfitsList()
 }
 
 // ----------------------------------------------------------------------
-// SetImage()
-// ----------------------------------------------------------------------
-
-function SetImage(DataVaultImage newImage)
-{
-	winImage.SetImage(newImage);
-
-	if ( newImage == None )
-		winOutfitName.SetText("");
-	else
-		winOutfitName.SetText(newImage.imageDescription);
-
-	EnableButtons();
-}
-
-// ----------------------------------------------------------------------
 // ListSelectionChanged() 
 // ----------------------------------------------------------------------
 
 event bool ListSelectionChanged(window list, int numSelections, int focusRowId)
 {
-	SetImage(DataVaultImage(lstOutfits.GetRowClientObject(focusRowId)));
-
     selectedRowId = focusRowId;
 
     EnableButtons();
