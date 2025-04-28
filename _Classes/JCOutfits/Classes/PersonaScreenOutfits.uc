@@ -85,7 +85,10 @@ function Vector GetViewportLocation()
 	local Vector loc;
 
 	loc = 65 * Vector(player.Rotation);
-	loc.Z = player.BaseEyeHeight - 10;
+    if (player.bForceDuck || player.bCrouchOn || player.bDuck == 1)
+        loc.Z = player.BaseEyeHeight + 15;
+    else
+        loc.Z = player.BaseEyeHeight - 10;
 	loc += player.Location;
 
     return loc;
@@ -97,6 +100,8 @@ function Rotator GetViewportRotation()
 
 	rot = Player.ViewRotation;
 	rot.Yaw += -32768;
+    rot.Pitch = 0;
+    rot.Roll = 0;
 
     return rot;
 }

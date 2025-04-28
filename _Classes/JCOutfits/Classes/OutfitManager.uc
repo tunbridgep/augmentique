@@ -37,6 +37,9 @@ var PartsGroup Groups[50];
 var int numPartsGroups;
 var PartsGroup currentPartsGroup;
 
+//Outfits unlocked this playthrough. Outfits are made permanent after finishing the game.
+var travel string unlockedOutfits[255];
+
 function OutfitPart CreateNewOutfitPart(PartSlot slot,string name,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
     local OutfitPart P;
@@ -162,9 +165,11 @@ function OutfitAddPartReference(string partID)
 
 function Setup(DeusExPlayer newPlayer)
 {
+    local DeusExLevelInfo dxInfo;
     local string t0, t1, t2, t3, t4, t5, t6, t7, mesh;
 
     player = newPlayer;
+    dxInfo = player.GetLevelInfo();
     player.CarcassType=class'JCOutfits.OutfitCarcassReplacer';
     
     if (defaultMesh == "")
@@ -183,6 +188,17 @@ function Setup(DeusExPlayer newPlayer)
         Player.FlagBase.SetBool('JCOutfits_Equipped_default',true,true,0);
         savedOutfitIndex = -1;
     }
+
+    CopyOverUnlockedOutfits();
+
+    //When we finish the game, or if we're in training, copy our outfits out permanently
+    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0))
+    {
+        //Log("Copying over outfits");
+        CopyOutfitsToPlayer();
+    }
+    //else
+    //    Log("Not Copying over outfits");
 
     if (numOutfits != 0)
         return;
@@ -1115,12 +1131,47 @@ function bool IsUnlocked(string id)
 {
     local int i;
 
-    for (i = 0;i < 255 && player.unlockedOutfits[i] != "";i++)
+    for (i = 0;i < 255 && unlockedOutfits[i] != "";i++)
     {
-        if (player.unlockedOutfits[i] == id)
+        if (unlockedOutfits[i] == id)
             return true;
     }
     return false;
+}
+
+//Copies over any globally unlocked outfits to the current unlocked outfits list.
+//since they are available in all playthroughs
+function CopyOverUnlockedOutfits()
+{
+    local int i;
+    
+    for (i = 0;i<255;i++)
+    {
+        if (player.unlockedOutfits[i] != "")
+        {
+            Unlock(player.unlockedOutfits[i]);
+        }
+    }
+}
+
+//Copies over any unlocked outfits to the global unlocked outfits list.
+//Which makes them available in all playthroughs.
+//Called when we finish the game
+function CopyOutfitsToPlayer()
+{
+    local int i;
+        
+    //Log("Copying over outfits:");
+    
+    //We should already have all the previously unlocked global outfits.
+    //So just copy the entire list over
+    for (i = 0;i<255;i++)
+    {
+        //Log("Copying over outfit " $ i $ ":" @ unlockedOutfits[i]);
+        player.unlockedOutfits[i] = unlockedOutfits[i];
+    }
+
+    player.SaveConfig();
 }
 
 function bool IsCorrectGender(int index)
@@ -1151,11 +1202,11 @@ function Unlock(string id)
         //find the first empty spot to put it in
         for (i = 0;i<255;i++)
         {
-            if (player.unlockedOutfits[i] == "")
+            if (unlockedOutfits[i] == "")
             {
                 //player.ClientMessage("Unlocking " $ id);
-                player.unlockedOutfits[i] = id;
-                player.SaveConfig();
+                unlockedOutfits[i] = id;
+                //player.SaveConfig();
                 break;
             }
         }
