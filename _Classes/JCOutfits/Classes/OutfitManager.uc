@@ -411,6 +411,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Torso_M,65,false,"cop_s","CopTex1");
     GlobalAddPartLO(PS_Torso_M,66,false,"howardstrong_s","HowardStrongTex1");
     GlobalAddPartLO(PS_Torso_M,67,false,"adam_s","AdamJensenTex3");
+    GlobalAddPartLO(PS_Torso_M,67,false,"adam_s2","AdamJensenTex2");
     GlobalAddPartLO(PS_Torso_M,29,false,"dentonclone_s","DentonCloneTex3");
     GlobalAddPartLO(PS_Torso_M,69,false,"everett_s","MorganEverettTex1");
     GlobalAddPartLO(PS_Torso_M,70,false,"boatperson_s","BoatPersonTex1");
@@ -945,6 +946,12 @@ function PopulateOutfitsList()
     BeginNewOutfitL("adam",67,"");
     OutfitAddPartReference("adam_b");
     OutfitAddPartReference("adam_s");
+    OutfitAddPartReference("mib_p");
+    
+    //Adam Jensen Outfit 2
+    BeginNewOutfitL("adam",67,"");
+    OutfitAddPartReference("default_b");
+    OutfitAddPartReference("adam_s2");
     OutfitAddPartReference("mib_p");
     
     //Alex Jacobson Outfit
@@ -1827,6 +1834,7 @@ defaultproperties
      outfitNames(88)="Old Clothes"
      outfitNames(89)="Dragon Head's Uniform"
      outfitNames(90)="Secretary's Outfit"
+     outfitNames(91)="Adam Jensen's Outfit (Alt)"
      outfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
      outfitDescs(1)="JC Denton's Signature Trenchcoat, now with extra jewellery!"
      outfitDescs(2)="The outfit of choice for malkavians"
