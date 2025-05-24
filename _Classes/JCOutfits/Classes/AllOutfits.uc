@@ -123,6 +123,12 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JoJoFineTex1_S3.bmp"                           NAME="JoJoFineTex1_S3"                      GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JoJoFineTex1_S4.bmp"                           NAME="JoJoFineTex1_S4"                      GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S0.bmp"                         NAME="JunkieMaleTex1"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S1.bmp"                         NAME="JunkieMaleTex1_S1"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S2.bmp"                         NAME="JunkieMaleTex1_S2"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S3.bmp"                         NAME="JunkieMaleTex1_S3"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S4.bmp"                         NAME="JunkieMaleTex1_S4"                    GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\LowerClassMaleTex1_S0.bmp"                     NAME="LowerClassMaleTex1"                   GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\LowerClassMaleTex1_S1.bmp"                     NAME="LowerClassMaleTex1_S1"                GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\LowerClassMaleTex1_S2.bmp"                     NAME="LowerClassMaleTex1_S2"                GROUP="Outfits"
