@@ -36,8 +36,6 @@ struct LocalizedOutfitInfo
 };
 
 var const LocalizedOutfitInfo outfitInfos[255];
-var const localized string outfitNames[255];
-var const localized string outfitDescs[255];
 
 //Custom Outfit Name
 var const localized string CustomOutfitName;
@@ -107,7 +105,7 @@ function GlobalAddPartL(PartSlot slot,int partNameIndex,bool isAccessory,string 
 //Uses the outfit names list rather than the parts list
 function GlobalAddPartLO(PartSlot slot,int outfitNameIndex,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
-    GlobalAddPart(slot,outfitNames[outfitNameIndex],isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7,tm);
+    GlobalAddPart(slot,outfitInfos[outfitNameIndex].Name,isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7,tm);
 }
 
 function GlobalAddPart(PartSlot slot,string name,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
@@ -137,7 +135,7 @@ function AddPartL(PartSlot slot,int partNameIndex,bool isAccessory,string id, op
 //Uses the outfit names list rather than the parts list
 function AddPartLO(PartSlot slot,int outfitNameIndex,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
-    AddPart(slot,outfitNames[outfitNameIndex],isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7,tm);
+    AddPart(slot,outfitInfos[outfitNameIndex].Name,isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7,tm);
 }
 
 function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
@@ -341,7 +339,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Body_M,2,false,"default_b","default");
     GlobalAddPartLO(PS_Body_M,2,false,"100%_b","Outfit1_Tex1");
     GlobalAddPartL(PS_Body_M,19,false,"beanie_b","ThugSkin");
-    GlobalAddPartL(PS_Body_M,67,false,"adam_b","AdamJensenTex0");
+    GlobalAddPartLO(PS_Body_M,67,false,"adam_b","AdamJensenTex0");
 
     GlobalAddPartL(PS_Body_F,2,false,"default_b","default");
     //GlobalAddPartLO(PS_Body_F,2,false,"100%_b","Outfit1_Tex1",,,"Outfit1_Tex1");
@@ -391,7 +389,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,81,false,"page_p","BobPageTex2");
     GlobalAddPartLO(PS_Legs,82,false,"gordonquick_p","GordonQuickTex3");
     GlobalAddPartLO(PS_Legs,83,false,"redarrow_p","TriadRedArrowTex3");
-    GlobalAddPartLO(PS_Legs,84,false,"jock_p","JockTex3");
+    GlobalAddPartLO(PS_Legs,26,false,"jock_p","JockTex3");
     GlobalAddPartLO(PS_Legs,89,false,"maxchen_p","MaxChenTex3");
     //Female
     GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
@@ -497,7 +495,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_M,55,false,"thug2_s",,,,,"ThugMaleTex1");
     AddPartLO(PS_Torso_M,82,false,"gordonquick_s",,,,,"GordonQuickTex1");
     AddPartLO(PS_Torso_M,83,false,"redarrow_s",,,,,"TriadRedArrowTex1");
-    AddPartLO(PS_Torso_M,84,false,"jock_s",,,,,"JockTex1");
+    AddPartLO(PS_Torso_M,26,false,"jock_s",,,,,"JockTex1");
     AddPartLO(PS_Torso_M,85,false,"jaime_s",,,,,"JaimeReyesTex1");
     AddPartLO(PS_Torso_M,86,false,"toby_s",,,,,"TobyAtanweTex1");
     AddPartLO(PS_Torso_M,87,false,"garysavage_s",,,,,"GarySavageTex1");
@@ -520,7 +518,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,55,false,"thug2_t",,"ThugMaleTex2");
     AddPartLO(PS_Trench,82,false,"gordonquick_t",,"GordonQuickTex2",,,,"GordonQuickTex2");
     AddPartLO(PS_Trench,83,false,"redarrow_t",,"TriadRedArrowTex2",,,,"TriadRedArrowTex2");
-    AddPartLO(PS_Trench,84,false,"jock_t",,"JockTex2",,,,);
+    AddPartLO(PS_Trench,26,false,"jock_t",,"JockTex2",,,,);
     AddPartLO(PS_Trench,85,false,"toby_t",,"TobyAtanweTex2",,,,"TobyAtanweTex2");
     AddPartLO(PS_Trench,89,false,"maxchen_t",,"MaxChenTex2",,,,"MaxChenTex2");
 
@@ -1449,7 +1447,7 @@ function EquipOutfit(int index)
 {
     local Name flag;
 
-    if (outfits[index].index == 0 || outfits[index].index == currOutfit.index)
+    if (outfits[index].index == currOutfit.index)
         return;
 
     //Set Flags
