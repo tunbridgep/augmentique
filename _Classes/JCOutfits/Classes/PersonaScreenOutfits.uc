@@ -7,7 +7,8 @@ class PersonaScreenOutfits extends PersonaScreenBaseWindow;
 #exec OBJ LOAD FILE=DeusEx
 
 var PersonaActionButtonWindow btnEquip;
-var PersonaActionButtonWindow btnCustom;
+var PersonaActionButtonWindow btnEdit;
+var PersonaActionButtonWindow btnChangeCamera;
 
 var PersonaListWindow         lstOutfits;
 var PersonaScrollAreaWindow   winScroll;
@@ -15,18 +16,29 @@ var PersonaHeaderTextWindow   winOutfitName;
 var PersonaCheckBoxWindow     chkAccessories;
 var ViewportWindow            winViewport;
 
-var PersonaActionButtonWindow   btnSlots[12];
+var PersonaActionButtonWindow   btnSlotsNext[12];
+var PersonaActionButtonWindow   btnSlotsPrev[12];
+var PersonaHeaderTextWindow     txtSlots[12];
 
+var localized String ChangeCameraLabel;
 var localized String ShowAccessoriesLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
-var localized String CustomButtonLabel;
+var localized String EditButtonLabel;
+
+//The offset for the start of the buttons
+var int customButtonStartOffsetX;
+var int customButtonStartOffsetY;
+var int customButtonAddPerButtonY;
+var int customButtonCount;
 
 var int rowIDLastEquipped;
 
 var OutfitManager outfitManager;
 
 var int selectedRowId;
+var bool bCameraChange;
+var bool bEditMode;
 
 // ----------------------------------------------------------------------
 // InitWindow()
@@ -74,23 +86,27 @@ function CreateControls()
 
 function CreateOutfitPartButtons()
 {
-    btnSlots[0] = CreatePartButton(100,122,0,"Skin");
-    btnSlots[1] = CreatePartButton(100,122,1,"Skin");
-    btnSlots[2] = CreatePartButton(100,242,2,"Coat");
-    btnSlots[3] = CreatePartButton(100,262,3,"Torso");
-    btnSlots[4] = CreatePartButton(100,262,4,"Torso");
-    btnSlots[5] = CreatePartButton(100,322,5,"Legs");
-    btnSlots[6] = CreatePartButton(100,322,6,"Legs");
-    btnSlots[7] = CreatePartButton(100,342,7,"Skirt");
-    btnSlots[8] = CreatePartButton(100,382,8,"Glasses");
-    btnSlots[9] = CreatePartButton(100,102,9,"Helmet");
-    btnSlots[10] = CreatePartButton(100,382,10,"Main");
-    btnSlots[11] = CreatePartButton(100,382,11,"Mask");
+    customButtonStartOffsetX = 20;
+    customButtonStartOffsetY = 25;
+    customButtonAddPerButtonY = 20;
+    CreatePartButton(0,"Skin");
+    CreatePartButton(1,"Skin");
+    CreatePartButton(2,"Coat");
+    CreatePartButton(3,"Torso");
+    CreatePartButton(4,"Torso");
+    CreatePartButton(5,"Legs");
+    CreatePartButton(6,"Legs");
+    CreatePartButton(7,"Skirt");
+    CreatePartButton(8,"Glasses");
+    CreatePartButton(9,"Helmet");
+    CreatePartButton(10,"Main");
+    CreatePartButton(11,"Mask");
     UpdateOutfitPartButtons();
 }
 
 function UpdateOutfitPartButtons()
 {
+    customButtonCount = 0;
     UpdateOutfitPartButton(0);
     UpdateOutfitPartButton(1);
     UpdateOutfitPartButton(2);
@@ -109,29 +125,55 @@ function UpdateOutfitPartButton(int id)
 {
     //SARGE: I have no idea why this is required...
     local OutfitManager O;
-    O = OutfitManager(player.outfitManager);
+    local int count;
+    O = outfitManager;
 
-    //Only show when we're on the custom outfit
-    if (O == None || O.currOutfit == None || O.currOutfit != O.customOutfit)
-        return;
+    //Only show when we're on the custom outfit and in edit mode
+    if (O != None && O.currOutfit != None && O.currOutfit == O.customOutfit && bEditMode)
+    {
 
-    //Only show the part button if it's for a valid outfit part.
-    if (O.currOutfit.partsGroup.CountPartType(id,true) > 1)
-        btnSlots[id].Show();
-    else
-        btnSlots[id].Hide();
+        count = O.currOutfit.partsGroup.CountPartType(id,true);
+
+        //Only show the part button if it's for a valid outfit part.
+        if (count > 1)
+        {
+            btnSlotsPrev[id].SetPos(customButtonStartOffsetX,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY));
+            btnSlotsNext[id].SetPos(customButtonStartOffsetX + 30,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY));
+            btnSlotsPrev[id].Show();
+            btnSlotsNext[id].Show();
+            txtSlots[id].SetPos(customButtonStartOffsetX + 60,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY) + 2);
+            txtSlots[id].Show();
+            txtSlots[id].SetText(O.currOutfit.GetPartOfType(id).name);
+            customButtonCount++;
+            return;
+        }
+    }
+
+    btnSlotsPrev[id].Hide();
+    btnSlotsNext[id].Hide();
+    txtSlots[id].Hide();
 }
 
-function PersonaActionButtonWindow CreatePartButton(int posw, int posh, int partID, string label)
+function PersonaActionButtonWindow CreatePartButton(int partID, string label)
 {
     local PersonaActionButtonWindow newBtn;
+    local PersonaHeaderTextWindow newTxt;
 
     newBtn = PersonaActionButtonWindow(winClient.NewChild(class'PersonaActionButtonWindow'));
-    newBtn.SetPos(posw,posh);
-    newBtn.SetButtonText(label);
+    newBtn.SetButtonText("<");
     newBtn.Hide();
 
-    return newBtn;
+    btnSlotsPrev[partID] = newBtn;
+
+    newBtn = PersonaActionButtonWindow(winClient.NewChild(class'PersonaActionButtonWindow'));
+    newBtn.SetButtonText(">");
+    newBtn.Hide();
+    
+    btnSlotsNext[partID] = newBtn;
+    
+    newTxt = PersonaHeaderTextWindow(winClient.NewChild(class'PersonaHeaderTextWindow'));
+
+    txtSlots[partID] = newTxt;
 }
 
 // ----------------------------------------------------------------------
@@ -156,6 +198,8 @@ function Vector GetViewportLocation()
 	loc = 65 * Vector(player.Rotation);
     if (player.bForceDuck || player.bCrouchOn || player.bDuck == 1)
         loc.Z = player.BaseEyeHeight + 15;
+    else if (bCameraChange)
+        loc.Z = player.BaseEyeHeight - 55;
     else
         loc.Z = player.BaseEyeHeight - 10;
 	loc += player.Location;
@@ -222,9 +266,12 @@ function CreateButtons()
 	winActionButtons.SetPos(10, 422);
 	winActionButtons.SetWidth(259);
 	winActionButtons.FillAllSpace(False);
+    
+    btnChangeCamera = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
+	btnChangeCamera.SetButtonText(ChangeCameraLabel);
 	
-    btnCustom = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
-	btnCustom.SetButtonText(CustomButtonLabel);
+    btnEdit = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
+	btnEdit.SetButtonText(EditButtonLabel);
 
 	btnEquip = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
 	btnEquip.SetButtonText(EquipButtonLabel);
@@ -334,10 +381,33 @@ function EquipCustomOutfit()
 }
 
 // ----------------------------------------------------------------------
-// UpdateCustomOutfitSlot()
+// PrevCustomOutfitSlot()
 // ----------------------------------------------------------------------
 
-function UpdateCustomOutfitSlot(int slot)
+function PrevCustomOutfitSlot(int slot)
+{
+    local Outfit O;
+    local OutfitPart P1, P2;
+    local int index;
+
+    outfitManager.EquipCustomOutfit();
+    O = outfitManager.currOutfit;
+    P1 = O.GetPartOfType(slot);
+    if (P1 != None)
+    {
+        P2 = O.partsGroup.GetPreviousPartOfType(slot,P1.index);
+        O.ReplacePart(slot,P2);
+    }
+    outfitManager.ApplyCurrentOutfit();
+    PopulateOutfitsList();
+    UpdateOutfitPartButtons();
+    AskParentForReconfigure();
+}
+// ----------------------------------------------------------------------
+// NextCustomOutfitSlot()
+// ----------------------------------------------------------------------
+
+function NextCustomOutfitSlot(int slot)
 {
     local Outfit O;
     local OutfitPart P1, P2;
@@ -353,6 +423,7 @@ function UpdateCustomOutfitSlot(int slot)
     }
     outfitManager.ApplyCurrentOutfit();
     PopulateOutfitsList();
+    UpdateOutfitPartButtons();
     AskParentForReconfigure();
 }
 
@@ -372,20 +443,43 @@ function bool ButtonActivated( Window buttonPressed )
 			Equip(int(lstOutfits.GetFieldValue(selectedRowId, 2)));
 			break;
 
-		case btnCustom: EquipCustomOutfit(); break;
+		case btnEdit:
+            outfitManager.noAccessories = false;
+            bEditMode = !bEditMode;
+            EquipCustomOutfit();
+            EnableButtons();
+            break;
+		
+        case btnChangeCamera:
+            bCameraChange = !bCameraChange;
+            winViewport.SetViewportLocation(GetViewportLocation(),true);
+            break;
 
-        case btnSlots[0]: UpdateCustomOutfitSlot(0); break;
-        case btnSlots[1]: UpdateCustomOutfitSlot(1); break;
-        case btnSlots[2]: UpdateCustomOutfitSlot(2); break;
-        case btnSlots[3]: UpdateCustomOutfitSlot(3); break;
-        case btnSlots[4]: UpdateCustomOutfitSlot(4); break;
-        case btnSlots[5]: UpdateCustomOutfitSlot(5); break;
-        case btnSlots[6]: UpdateCustomOutfitSlot(6); break;
-        case btnSlots[7]: UpdateCustomOutfitSlot(7); break;
-        case btnSlots[8]: UpdateCustomOutfitSlot(8); break;
-        case btnSlots[9]: UpdateCustomOutfitSlot(9); break;
-        case btnSlots[10]: UpdateCustomOutfitSlot(10); break;
-        case btnSlots[11]: UpdateCustomOutfitSlot(11); break;
+        case btnSlotsPrev[0]: PrevCustomOutfitSlot(0); break;
+        case btnSlotsPrev[1]: PrevCustomOutfitSlot(1); break;
+        case btnSlotsPrev[2]: PrevCustomOutfitSlot(2); break;
+        case btnSlotsPrev[3]: PrevCustomOutfitSlot(3); break;
+        case btnSlotsPrev[4]: PrevCustomOutfitSlot(4); break;
+        case btnSlotsPrev[5]: PrevCustomOutfitSlot(5); break;
+        case btnSlotsPrev[6]: PrevCustomOutfitSlot(6); break;
+        case btnSlotsPrev[7]: PrevCustomOutfitSlot(7); break;
+        case btnSlotsPrev[8]: PrevCustomOutfitSlot(8); break;
+        case btnSlotsPrev[9]: PrevCustomOutfitSlot(9); break;
+        case btnSlotsPrev[10]: PrevCustomOutfitSlot(10); break;
+        case btnSlotsPrev[11]: PrevCustomOutfitSlot(11); break;
+
+        case btnSlotsNext[0]: NextCustomOutfitSlot(0); break;
+        case btnSlotsNext[1]: NextCustomOutfitSlot(1); break;
+        case btnSlotsNext[2]: NextCustomOutfitSlot(2); break;
+        case btnSlotsNext[3]: NextCustomOutfitSlot(3); break;
+        case btnSlotsNext[4]: NextCustomOutfitSlot(4); break;
+        case btnSlotsNext[5]: NextCustomOutfitSlot(5); break;
+        case btnSlotsNext[6]: NextCustomOutfitSlot(6); break;
+        case btnSlotsNext[7]: NextCustomOutfitSlot(7); break;
+        case btnSlotsNext[8]: NextCustomOutfitSlot(8); break;
+        case btnSlotsNext[9]: NextCustomOutfitSlot(9); break;
+        case btnSlotsNext[10]: NextCustomOutfitSlot(10); break;
+        case btnSlotsNext[11]: NextCustomOutfitSlot(11); break;
 
 		default:
 			bHandled = False;
@@ -441,7 +535,7 @@ function EnableButtons()
     index = int(lstOutfits.GetFieldValue(selectedRowId, 2));
 
 	btnEquip.SetSensitivity(!outfitManager.IsEquipped(index));
-    if (outfitManager.currOutfit.HasAccessories())
+    if (outfitManager.currOutfit.HasAccessories() && !bEditMode)
         chkAccessories.Show();
     else
         chkAccessories.Hide();
@@ -456,6 +550,8 @@ function EnableButtons()
 
 function Equip(int index)
 {
+    bEditMode = false;
+    //player.ClientMessage("Index: " $ index);
     outfitManager.EquipOutfit(index);
 
     //Clear the chevron on the previously equipped outfit
@@ -467,8 +563,8 @@ function Equip(int index)
     rowIDLastEquipped = selectedRowId;
     
     UpdateOutfitPartButtons();
-
     //PopulateOutfitsList();
+
     EnableButtons();
 }
 
@@ -515,7 +611,8 @@ defaultproperties
      ShowAccessoriesLabel="Show Accessories"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
-     CustomButtonLabel="Custom Outfit"
+     EditButtonLabel="Edit Outfit"
+     ChangeCameraLabel="Change Camera"
      clientBorderOffsetY=35
      ClientWidth=617
      ClientHeight=439

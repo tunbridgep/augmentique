@@ -70,12 +70,24 @@ function UpdatePartsGroup(PartsGroup PG)
 function AddPartFromID(string partID)
 {
     local OutfitPart P;
+    local int i;
     P = partsGroup.GetPartWithID(partID);
 
     if (P != None)
+    {
+        //Replace any parts in the same slot
+        for (i = 0;i < numParts;i++)
+        {
+            if (parts[i].bodySlot == P.bodySlot)
+            {
+                parts[i] = P;
+                return;
+            }
+        }
         parts[numParts++] = P;
+    }
     else
-        player.ClientMessage("Warning: Outfit could not find part with id " $ partID);
+        player.ClientMessage("Warning: Outfit " $ id $ " could not find part with id " $ partID);
 }
 
 function bool HasAccessories()
