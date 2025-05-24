@@ -379,6 +379,12 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieFemaleTex1_S3.bmp"                       NAME="JunkieFemaleTex1_S3"                  GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieFemaleTex1_S4.bmp"                       NAME="JunkieFemaleTex1_S4"                  GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieFemaleTex2_S0.bmp"                       NAME="JunkieFemaleTex2"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieFemaleTex2_S1.bmp"                       NAME="JunkieFemaleTex2_S1"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieFemaleTex2_S2.bmp"                       NAME="JunkieFemaleTex2_S2"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieFemaleTex2_S3.bmp"                       NAME="JunkieFemaleTex2_S3"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieFemaleTex2_S4.bmp"                       NAME="JunkieFemaleTex2_S4"                  GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S0.bmp"                      NAME="TiffanySavageTex1"                    GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S1.bmp"                      NAME="TiffanySavageTex1_S1"                 GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S2.bmp"                      NAME="TiffanySavageTex1_S2"                 GROUP="Outfits"
