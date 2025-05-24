@@ -15,6 +15,8 @@ var PersonaHeaderTextWindow   winOutfitName;
 var PersonaCheckBoxWindow     chkAccessories;
 var ViewportWindow            winViewport;
 
+var PersonaActionButtonWindow   btnSlots[12];
+
 var localized String ShowAccessoriesLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
@@ -63,10 +65,77 @@ function CreateControls()
 	CreateOutfitTitle();
 	CreateButtons();
     CreateAccessoriesCheckbox();
+    CreateOutfitPartButtons();
 }
 
 // ----------------------------------------------------------------------
-// CreateImageWindow()
+// CreateOutfitPartButtons()
+// ----------------------------------------------------------------------
+
+function CreateOutfitPartButtons()
+{
+    btnSlots[0] = CreatePartButton(100,122,0,"Skin");
+    btnSlots[1] = CreatePartButton(100,122,1,"Skin");
+    btnSlots[2] = CreatePartButton(100,242,2,"Coat");
+    btnSlots[3] = CreatePartButton(100,262,3,"Torso");
+    btnSlots[4] = CreatePartButton(100,262,4,"Torso");
+    btnSlots[5] = CreatePartButton(100,322,5,"Legs");
+    btnSlots[6] = CreatePartButton(100,322,6,"Legs");
+    btnSlots[7] = CreatePartButton(100,342,7,"Skirt");
+    btnSlots[8] = CreatePartButton(100,382,8,"Glasses");
+    btnSlots[9] = CreatePartButton(100,102,9,"Helmet");
+    btnSlots[10] = CreatePartButton(100,382,10,"Main");
+    btnSlots[11] = CreatePartButton(100,382,11,"Mask");
+    UpdateOutfitPartButtons();
+}
+
+function UpdateOutfitPartButtons()
+{
+    UpdateOutfitPartButton(0);
+    UpdateOutfitPartButton(1);
+    UpdateOutfitPartButton(2);
+    UpdateOutfitPartButton(3);
+    UpdateOutfitPartButton(4);
+    UpdateOutfitPartButton(5);
+    UpdateOutfitPartButton(6);
+    UpdateOutfitPartButton(7);
+    UpdateOutfitPartButton(8);
+    UpdateOutfitPartButton(9);
+    UpdateOutfitPartButton(10);
+    UpdateOutfitPartButton(11);
+}
+
+function UpdateOutfitPartButton(int id)
+{
+    //SARGE: I have no idea why this is required...
+    local OutfitManager O;
+    O = OutfitManager(player.outfitManager);
+
+    //Only show when we're on the custom outfit
+    if (O == None || O.currOutfit == None || O.currOutfit != O.customOutfit)
+        return;
+
+    //Only show the part button if it's for a valid outfit part.
+    if (O.currOutfit.partsGroup.CountPartType(id,true) > 1)
+        btnSlots[id].Show();
+    else
+        btnSlots[id].Hide();
+}
+
+function PersonaActionButtonWindow CreatePartButton(int posw, int posh, int partID, string label)
+{
+    local PersonaActionButtonWindow newBtn;
+
+    newBtn = PersonaActionButtonWindow(winClient.NewChild(class'PersonaActionButtonWindow'));
+    newBtn.SetPos(posw,posh);
+    newBtn.SetButtonText(label);
+    newBtn.Hide();
+
+    return newBtn;
+}
+
+// ----------------------------------------------------------------------
+// CreateViewportWindow()
 // ----------------------------------------------------------------------
 
 function CreateViewportWindow()
@@ -253,6 +322,41 @@ event FocusLeftDescendant(Window leaveWindow)
 }
 
 // ----------------------------------------------------------------------
+// EquipCustomOutfit()
+// ----------------------------------------------------------------------
+
+function EquipCustomOutfit()
+{
+    outfitManager.EquipCustomOutfit();
+    outfitManager.ApplyCurrentOutfit();
+    PopulateOutfitsList();
+    UpdateOutfitPartButtons();
+}
+
+// ----------------------------------------------------------------------
+// UpdateCustomOutfitSlot()
+// ----------------------------------------------------------------------
+
+function UpdateCustomOutfitSlot(int slot)
+{
+    local Outfit O;
+    local OutfitPart P1, P2;
+    local int index;
+
+    outfitManager.EquipCustomOutfit();
+    O = outfitManager.currOutfit;
+    P1 = O.GetPartOfType(slot);
+    if (P1 != None)
+    {
+        P2 = O.partsGroup.GetNextPartOfType(slot,P1.index);
+        O.ReplacePart(slot,P2);
+    }
+    outfitManager.ApplyCurrentOutfit();
+    PopulateOutfitsList();
+    AskParentForReconfigure();
+}
+
+// ----------------------------------------------------------------------
 // ButtonActivated()
 // ----------------------------------------------------------------------
 
@@ -268,9 +372,20 @@ function bool ButtonActivated( Window buttonPressed )
 			Equip(int(lstOutfits.GetFieldValue(selectedRowId, 2)));
 			break;
 
-		case btnCustom:
-            player.invokeuiscreen(class'MenuScreenOutfitChanger');
-			break;
+		case btnCustom: EquipCustomOutfit(); break;
+
+        case btnSlots[0]: UpdateCustomOutfitSlot(0); break;
+        case btnSlots[1]: UpdateCustomOutfitSlot(1); break;
+        case btnSlots[2]: UpdateCustomOutfitSlot(2); break;
+        case btnSlots[3]: UpdateCustomOutfitSlot(3); break;
+        case btnSlots[4]: UpdateCustomOutfitSlot(4); break;
+        case btnSlots[5]: UpdateCustomOutfitSlot(5); break;
+        case btnSlots[6]: UpdateCustomOutfitSlot(6); break;
+        case btnSlots[7]: UpdateCustomOutfitSlot(7); break;
+        case btnSlots[8]: UpdateCustomOutfitSlot(8); break;
+        case btnSlots[9]: UpdateCustomOutfitSlot(9); break;
+        case btnSlots[10]: UpdateCustomOutfitSlot(10); break;
+        case btnSlots[11]: UpdateCustomOutfitSlot(11); break;
 
 		default:
 			bHandled = False;
@@ -351,6 +466,8 @@ function Equip(int index)
 
     rowIDLastEquipped = selectedRowId;
     
+    UpdateOutfitPartButtons();
+
     //PopulateOutfitsList();
     EnableButtons();
 }

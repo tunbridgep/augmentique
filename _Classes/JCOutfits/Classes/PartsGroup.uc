@@ -10,13 +10,14 @@ var int numOutfitParts;
 var DeusExPlayer player;
 var OutfitManager manager;
 
-function int CountPartType(int type)
+function int CountPartType(int type, optional bool unlockedOnly)
 {
     local int i,c;
     for (i = 0;i < numOutfitParts;i++)
     {
         if (PartsList[i].bodySlot == type)
-            c++;
+            if (!unlockedonly || (CheckUnlock(i) && IsCorrectGender()))
+                c++;
     }
     return c;
 }
