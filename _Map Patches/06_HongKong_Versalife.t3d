@@ -40,4 +40,17 @@ Begin Actor Class=OutfitStrippedCarcass Name=StrippedCarcass
     bSelected=True
     Name=StrippedCarcass
 End Actor
+Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner0
+    Id="office"
+    bDynamicLight=True
+    LastRenderTime=112.287376
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=OutfitSpawner2
+    Region=(Zone=ZoneInfo'MyLevel.ZoneInfo1',iLeaf=962,ZoneNumber=1)
+    Location=(X=150.274933,Y=1489.311157,Z=-89.899826)
+    Rotation=(Yaw=16000)
+    OldLocation=(X=143.274933,Y=1501.311157,Z=-89.899826)
+    bSelected=True
+    Name=OutfitSpawner0
+End Actor
 End Map

@@ -422,6 +422,7 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_DressLegs,59,false,"business_p","BusinessWoman1Tex2");
     GlobalAddPartLO(PS_DressLegs,28,false,"nicolette_p","NicoletteDuClareTex3");
     GlobalAddPartLO(PS_DressLegs,40,false,"sarah_p","SarahMeadTex3");
+    GlobalAddPartLO(PS_DressLegs,92,false,"office_p","Female2Tex1");
 
     //Skirts
     GlobalAddPartLO(PS_Skirt,28,false,"nicolette_sk","NicoletteDuClareTex2","NicoletteDuClareTex2");
@@ -792,6 +793,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_F,58,false,"rachel_s",,,,,"RachelMeadTex1","RachelMeadTex1");
     AddPartLO(PS_Torso_F,59,false,"business_s",,,,,"BusinessWoman1Tex1","BusinessWoman1Tex1");
     AddPartLO(PS_Torso_F,90,false,"secretary_s",,,,,"SecretaryTex2","SecretaryTex2");
+    AddPartLO(PS_Torso_F,92,false,"office_s",,,,,"Female2Tex2","Female2Tex2");
     
     //Defaults
     AddDefaultReference("default_b");
@@ -834,6 +836,11 @@ function PopulateOutfitsList()
     OutfitAddPartReference("secretary_s");
     OutfitAddPartReference("nurse_p");
     OutfitAddPartReference("business_g");
+    
+    //Office Lady
+    BeginNewOutfitL("office",92);
+    OutfitAddPartReference("office_s");
+    OutfitAddPartReference("office_p");
 
     //========================================================
     //  GFM_Dress
@@ -1815,6 +1822,7 @@ defaultproperties
      outfitInfos(89)=(Name="Dragon Head's Uniform")
      outfitInfos(90)=(Name="Secretary's Outfit")
      outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)")
+     outfitInfos(92)=(Name="Office Worker's Outfit")
      partNames(0)="Cool Sunglasses"
      partNames(1)="Black Bars"
      partNames(2)="Default Skin"
