@@ -391,6 +391,12 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S3.bmp"                      NAME="TiffanySavageTex1_S3"                 GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TiffanySavageTex1_S4.bmp"                      NAME="TiffanySavageTex1_S4"                 GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S0.bmp"                                NAME="WIBTex1"                              GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S1.bmp"                                NAME="WIBTex1_S1"                           GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S2.bmp"                                NAME="WIBTex1_S2"                           GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S3.bmp"                                NAME="WIBTex1_S3"                           GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S4.bmp"                                NAME="WIBTex1_S4"                           GROUP="Outfits"
+
 defaultproperties
 {
 }
