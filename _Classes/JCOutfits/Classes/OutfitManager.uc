@@ -20,11 +20,29 @@ var travel OutfitCustom customOutfit;
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
 
-//Names for the default JC Denton outfit
+//part names
 var const localized string partNames[255];
+
+//Outfit Information
+
+struct LocalizedOutfitInfo
+{
+    var const localized string Name;
+    var const localized string Desc;
+    var const localized string HighlightName;
+    var const localized string PickupName;
+    var const localized string PickupMessage;
+    var const localized string Article;
+};
+
+var const LocalizedOutfitInfo outfitInfos[255];
 var const localized string outfitNames[255];
 var const localized string outfitDescs[255];
+
+//Custom Outfit Name
 var const localized string CustomOutfitName;
+
+//Default Name
 var const localized string NothingName;
 
 //TODO: Replace these with outfit 0
@@ -200,8 +218,8 @@ function Setup(DeusExPlayer newPlayer)
     //else
     //    Log("Not Copying over outfits");
 
-    if (numOutfits != 0)
-        return;
+    //if (numOutfits != 0)
+    //    return;
     
     PopulateOutfitsList();
 }
@@ -231,6 +249,7 @@ function SetupOutfitSpawners()
     local Texture T;
     local Actor a;
     local int i;
+    local int index;
 
 	foreach player.AllActors(class'OutfitSpawner', S)
     {
@@ -239,8 +258,11 @@ function SetupOutfitSpawners()
         {
             S.outfitManager = self;
 
-            //Set Frob Label
-            S.ItemName = sprintf(S.PickupName,GetOutfitNameByID(S.id));
+            index = GetOutfitIndexByID(S.id);
+
+            //Set Frob Label and such
+            //S.ItemName = sprintf(S.PickupName,GetOutfitNameByID(S.id));
+            S.ItemName = outfits[index].PickupName;
 
             //Set up texture
             T = findTexture(S.LookupTexture);
@@ -277,7 +299,15 @@ function SetupOutfitSpawners()
 
 function SpawnerPickup(OutfitSpawner S)
 {
-    player.ClientMessage(sprintf(S.PickupMessage,GetOutfitNameByID(S.id)), 'Pickup');
+    local int index;
+    index = GetOutfitIndexByID(S.id);
+
+    //Stop percentages being broken when using custom pickup messages
+    if (InStr(outfits[index].PickupMessage,"%s") != -1)
+        player.ClientMessage(sprintf(outfits[index].PickupMessage,outfits[index].PickupArticle,outfits[index].PickupName), 'Pickup');
+    else
+        player.ClientMessage(outfits[index].PickupMessage, 'Pickup');
+        
     Unlock(S.id);
     S.Destroy();
 }
@@ -495,7 +525,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,89,false,"maxchen_t",,"MaxChenTex2",,,,"MaxChenTex2");
 
     //Default M
-    BeginNewOutfitL("default",0,"");
+    BeginNewOutfitL("default",0);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("default_t");
     OutfitAddPartReference("default_p");
@@ -503,7 +533,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_g");
 
     //100% Black Outfit M
-    BeginNewOutfitL("100black",2,"");
+    BeginNewOutfitL("100black",2);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("100%_p");
     OutfitAddPartReference("100%_s");
@@ -511,7 +541,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("100%_t");
 
     //100% Black (alt) M
-    BeginNewOutfitL("100black",34,"");
+    BeginNewOutfitL("100black",34);
     OutfitAddPartReference("100%_b");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
@@ -519,7 +549,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_t");
 
     //Labcoat M
-    BeginNewOutfitL("labcoat",4,"");
+    BeginNewOutfitL("labcoat",4);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sci_g");
     OutfitAddPartReference("lab_p");
@@ -527,7 +557,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("lab_s");
     
     //Doctor Outfit
-    BeginNewOutfitL("doctor",48,"");
+    BeginNewOutfitL("doctor",48);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("lab_t");
@@ -535,7 +565,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("doctor_s");
     
     //Paul Outfit
-    BeginNewOutfitL("paul",5,"");
+    BeginNewOutfitL("paul",5);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("default_g");
     OutfitAddPartReference("paul_p");
@@ -543,28 +573,28 @@ function PopulateOutfitsList()
     OutfitAddPartReference("paul_s");
     
     //Gary Savage Outfit
-    BeginNewOutfitL("garysavage",87,"");
+    BeginNewOutfitL("garysavage",87);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("paul_p");
     OutfitAddPartReference("lab_t");
     OutfitAddPartReference("garysavage_s");
     
     //Gilbert Renton Outfit
-    BeginNewOutfitL("gilbertrenton",50,"");
+    BeginNewOutfitL("gilbertrenton",50);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("gilbertrenton_p");
     OutfitAddPartReference("gilbertrenton_t");
     OutfitAddPartReference("gilbertrenton_s");
     
     //Gordon Quick's Outfit
-    BeginNewOutfitL("gordonquick",82,"");
+    BeginNewOutfitL("gordonquick",82);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("gordonquick_p");
     OutfitAddPartReference("gordonquick_s");
     OutfitAddPartReference("gordonquick_t");
 
     //Bum
-    BeginNewOutfitL("bum",21,"");
+    BeginNewOutfitL("bum",21);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("bum_p");
@@ -572,7 +602,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("bum_s");
     
     //Bum2
-    BeginNewOutfitL("bum2",44,"");
+    BeginNewOutfitL("bum2",44);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("bum_p");
@@ -580,21 +610,21 @@ function PopulateOutfitsList()
     OutfitAddPartReference("bum2_s");
     
     //Bum2
-    BeginNewOutfitL("bum3",88,"");
+    BeginNewOutfitL("bum3",88);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("brown_p");
     OutfitAddPartReference("bum3_t");
     OutfitAddPartReference("bum2_s"); //Not a mistake. Bum 2 and 3 have the same shirt
 
     //Jaime
-    BeginNewOutfitL("jaimereyes",85,"");
+    BeginNewOutfitL("jaimereyes",85);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("lab_t");
     OutfitAddPartReference("jaime_s");
     OutfitAddPartReference("lowclass_p2");
 
     //Jock
-    BeginNewOutfitL("jock",84,"");
+    BeginNewOutfitL("jock",26);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sunglasses2_g");
     OutfitAddPartReference("jock_p");
@@ -602,7 +632,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("jock_t");
 
     //Lebedev
-    BeginNewOutfitL("lebedev",22,"");
+    BeginNewOutfitL("lebedev",22);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sunglasses_g");
     OutfitAddPartReference("nsf_p");
@@ -610,7 +640,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("lebedev_s");
 
     //Max Chen
-    BeginNewOutfitL("maxchen",89,"");
+    BeginNewOutfitL("maxchen",89);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("maxchen_t");
     OutfitAddPartReference("maxchen_p");
@@ -618,7 +648,7 @@ function PopulateOutfitsList()
     
 
     //Smugglers Outfit
-    BeginNewOutfitL("smug",23,"");
+    BeginNewOutfitL("smug",23);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("mib_p");
     OutfitAddPartReference("smuggler_t");
@@ -626,7 +656,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("sci_g");
 
     //Simons Outfit
-    BeginNewOutfitL("simons",24,"");
+    BeginNewOutfitL("simons",24);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("mib_p");
     OutfitAddPartReference("sunglasses_g");
@@ -634,35 +664,35 @@ function PopulateOutfitsList()
     OutfitAddPartReference("simons_t");
 
     //Red Arrow Outfit
-    BeginNewOutfitL("redarrow",83,"");
+    BeginNewOutfitL("redarrow",83);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("redarrow_s");
     OutfitAddPartReference("redarrow_p");
     OutfitAddPartReference("redarrow_t");
     
     //Harley Filben Outfit
-    BeginNewOutfitL("harleyfilben",45,"");
+    BeginNewOutfitL("harleyfilben",45);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("brown_p");
     OutfitAddPartReference("bum_s");
     OutfitAddPartReference("harleyfilben_t");
     
     //Ford Schick Outfit
-    BeginNewOutfitL("ford",52,"");
+    BeginNewOutfitL("ford",52);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("gilbertrenton_p");
     OutfitAddPartReference("ford_s");
     OutfitAddPartReference("ford_t");
     
     //Rook Member Outfit
-    BeginNewOutfitL("thug2",55,"");
+    BeginNewOutfitL("thug2",55);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("thug2_p");
     OutfitAddPartReference("thug2_s");
     OutfitAddPartReference("thug2_t");
     
     //Toby Atanwe
-    BeginNewOutfitL("toby",86,"");
+    BeginNewOutfitL("toby",86);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("paul_p");
     OutfitAddPartReference("toby_t");
@@ -694,7 +724,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,16,false,"goth_t",,"Female4Tex2",,,,"Female4Tex2");
 
     //Default
-    BeginNewOutfitL("default",0,"");
+    BeginNewOutfitL("default",0);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("default_t");
     OutfitAddPartReference("default_p");
@@ -702,7 +732,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_g");
     
     //Alternate Fem Jewellery
-    BeginNewOutfitL("default",1,"");
+    BeginNewOutfitL("default",1);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("default_t");
     OutfitAddPartReference("default_p");
@@ -710,7 +740,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_g");
 
     //100% Black Outfit
-    BeginNewOutfitL("100black",2,"");
+    BeginNewOutfitL("100black",2);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("100%_p");
     OutfitAddPartReference("100%_s");
@@ -718,7 +748,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("100%_t");
 
     //100% Black (alt)
-    BeginNewOutfitL("100black",34,"");
+    BeginNewOutfitL("100black",34);
     OutfitAddPartReference("100%_b");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
@@ -726,7 +756,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_t");
 
     //Lab Coat
-    BeginNewOutfitL("labcoat",4,"");
+    BeginNewOutfitL("labcoat",4);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sci_g");
     OutfitAddPartReference("lab_pf");
@@ -734,7 +764,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("lab_s");
     
     //Gold Brown Outfit
-    BeginNewOutfitL("goldbrown",13,"");
+    BeginNewOutfitL("goldbrown",13);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("lab_s");
     OutfitAddPartReference("goldbrown_p");
@@ -742,7 +772,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_g");
     
     //Matrix Outfit
-    BeginNewOutfitL("matrix",15,"");
+    BeginNewOutfitL("matrix",15);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("matrix_s");
     OutfitAddPartReference("matrix_p");
@@ -750,7 +780,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("sunglasses_g");
     
     //Goth GF Outfit
-    BeginNewOutfitL("goth",16,"");
+    BeginNewOutfitL("goth",16);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("goth_s");
     OutfitAddPartReference("goth_p");
@@ -777,45 +807,45 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_F,90,false,"secretary_s",,,,,"SecretaryTex2","SecretaryTex2");
     
     //WIB Outfit
-    BeginNewOutfitL("wib",19,"");
+    BeginNewOutfitL("wib",19);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("stockings_p");
     OutfitAddPartReference("wib_s");
     OutfitAddPartReference("sunglasses_g");
     
     //Maggie Chow's Outfit
-    BeginNewOutfitL("maggie",27,"");
+    BeginNewOutfitL("maggie",27);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("stockings_p");
     OutfitAddPartReference("maggie_s");
     OutfitAddPartReference("sunglasses_g");
 
     //Nurse Outfit
-    BeginNewOutfitL("nurse",49,"");
+    BeginNewOutfitL("nurse",49);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("nurse_p");
     OutfitAddPartReference("nurse_s");
     
     //Vice President
-    BeginNewOutfitL("vicepresident",57,"");
+    BeginNewOutfitL("vicepresident",57);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("stockings_p");
     OutfitAddPartReference("vp_sf");
 
     //Rachel Mead
-    BeginNewOutfitL("meadrachel",58,"");
+    BeginNewOutfitL("meadrachel",58);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("rachel_p");
     OutfitAddPartReference("rachel_s");
 
     //Business Woman
-    BeginNewOutfitL("businesswoman",59,"");
+    BeginNewOutfitL("businesswoman",59);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("business_p");
     OutfitAddPartReference("business_s");
 
     //Secretary
-    BeginNewOutfitL("secretary",90,"");
+    BeginNewOutfitL("secretary",90);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("secretary_s");
     OutfitAddPartReference("nurse_p");
@@ -835,35 +865,35 @@ function PopulateOutfitsList()
     //Torsos
     
     //Nicollette DuClare's outfit
-    BeginNewOutfitL("nicolette",28,"");
+    BeginNewOutfitL("nicolette",28);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("nicolette_p");
     OutfitAddPartReference("nicolette_s");
     OutfitAddPartReference("nicolette_sk");
     
     //Sarah Mead
-    BeginNewOutfitL("meadsarah",40,"");
+    BeginNewOutfitL("meadsarah",40);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sarah_p");
     OutfitAddPartReference("sarah_s");
     OutfitAddPartReference("sarah_sk");
     
     //Hooker
-    BeginNewOutfitL("hooker",42,"");
+    BeginNewOutfitL("hooker",42);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("hooker_p");
     OutfitAddPartReference("hooker_s");
     OutfitAddPartReference("hooker_sk");
     
     //Hooker2
-    BeginNewOutfitL("assless",51,"");
+    BeginNewOutfitL("assless",51);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("hooker2_p");
     OutfitAddPartReference("hooker2_s");
     OutfitAddPartReference("hooker2_sk");
     
     //Alex Denton
-    BeginNewOutfitL("alex",56,"");
+    BeginNewOutfitL("alex",56);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("alex_p");
     OutfitAddPartReference("alex_s");
@@ -878,42 +908,42 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,6);
     GroupTranspose(PS_Torso_F,7);
     
-    BeginNewOutfitL("anna",38,"");
+    BeginNewOutfitL("anna",38);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("anna_p");
     OutfitAddPartReference("anna_s");
     
-    BeginNewOutfitL("bum",21,"");
+    BeginNewOutfitL("bum",21);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("bum_p");
     OutfitAddPartReference("bum_sf");
     
-    BeginNewOutfitL("dentonclone",29,"");
+    BeginNewOutfitL("dentonclone",29);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("dentonclone_sf");
     OutfitAddPartReference("dentonclone_pf");
     
-    BeginNewOutfitL("tiffany",39,"");
+    BeginNewOutfitL("tiffany",39);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("tiffany_p");
     OutfitAddPartReference("tiffany_s");
     
-    BeginNewOutfitL("shea",41,"");
+    BeginNewOutfitL("shea",41);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("shea_s");
     OutfitAddPartReference("mib_p");
     
-    BeginNewOutfitL("junkie",54,"");
+    BeginNewOutfitL("junkie",54);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("junkie_s");
     OutfitAddPartReference("junkie_p2");
     
-    BeginNewOutfitL("lowclass",60,"");
+    BeginNewOutfitL("lowclass",60);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("lowclass_sf");
     OutfitAddPartReference("lowclass_p");
     
-    BeginNewOutfitL("sandrarenton",61,"");
+    BeginNewOutfitL("sandrarenton",61);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sandrarenton_s");
     OutfitAddPartReference("mib_p"); //Yes, really!
@@ -927,7 +957,7 @@ function PopulateOutfitsList()
     //Main Textures
     AddPartLO(PS_Main,33,false,"scuba","none","ScubasuitTex0","ScubasuitTex1","none","none","none","none","none","ScubasuitTex1");
 
-    BeginNewOutfitL("diver",33,"");
+    BeginNewOutfitL("diver",33);
     OutfitAddPartReference("scuba");
     
     //========================================================
@@ -943,57 +973,57 @@ function PopulateOutfitsList()
     //Adam Jensen Outfit
     //TODO: Investigate making this better
     //The textures have multiple Alt versions!
-    BeginNewOutfitL("adam",67,"");
+    BeginNewOutfitL("adam",67);
     OutfitAddPartReference("adam_b");
     OutfitAddPartReference("adam_s");
     OutfitAddPartReference("mib_p");
     
     //Adam Jensen Outfit 2
-    BeginNewOutfitL("adam",67,"");
+    BeginNewOutfitL("adam",67);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("adam_s2");
     OutfitAddPartReference("mib_p");
     
     //Alex Jacobson Outfit
-    BeginNewOutfitL("ajacobson",3,"");
+    BeginNewOutfitL("ajacobson",3);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("ajacobson_s");
     OutfitAddPartReference("ajacobson_p");
     OutfitAddPartReference("sci_g");
     
     //Bartender Outfit
-    BeginNewOutfitL("bartender",63,"");
+    BeginNewOutfitL("bartender",63);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("paul_p");
     OutfitAddPartReference("bartender_s");
     
     //Boat Person Outfit
-    BeginNewOutfitL("boatperson",70,"");
+    BeginNewOutfitL("boatperson",70);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("boatperson_s");
     OutfitAddPartReference("gilbertrenton_p");
     
     //Chad's Outfit
-    BeginNewOutfitL("chad",71,"");
+    BeginNewOutfitL("chad",71);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("chad_s");
     OutfitAddPartReference("chad_p");
     
     //Cop Outfit
-    BeginNewOutfitL("cop",65,"");
+    BeginNewOutfitL("cop",65);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("cop_p");
     OutfitAddPartReference("cop_s");
     OutfitAddPartReference("sunglasses2_g");
     
     /*
-    BeginNewOutfitL("dentonclone",29,"");
+    BeginNewOutfitL("dentonclone",29);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("dentonclone_s");
     OutfitAddPartReference("dentonclone_p");
     */
     
-    BeginNewOutfitL("dentonclone",68,"");
+    BeginNewOutfitL("dentonclone",68);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("default_g");
     OutfitAddPartReference("dentonclone_s");
@@ -1001,7 +1031,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_p");
     
     //Howard Strong
-    BeginNewOutfitL("howardstrong",66,"");
+    BeginNewOutfitL("howardstrong",66);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("howardstrong_p");
     OutfitAddPartReference("howardstrong_s");
@@ -1009,44 +1039,44 @@ function PopulateOutfitsList()
     
     //JoJo Fine
     //Aww, you bad!
-    BeginNewOutfitL("jojo",62,"");
+    BeginNewOutfitL("jojo",62);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("jojo_p");
     OutfitAddPartReference("jojo_s");
 
     //Thug
     //Beanie Replaces head tex
-    BeginNewOutfitL("thug",37,"");
+    BeginNewOutfitL("thug",37);
     OutfitAddPartReference("beanie_b");
     OutfitAddPartReference("thug_p");
     OutfitAddPartReference("thug_s");
     
     //Janitor Outfit
-    BeginNewOutfitL("janitor",72,"");
+    BeginNewOutfitL("janitor",72);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("janitor_s");
     OutfitAddPartReference("janitor_p");
     
     //Joe Greene Outfit
-    BeginNewOutfitL("joegreene",53,"");
+    BeginNewOutfitL("joegreene",53);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("joegreene_s");
     OutfitAddPartReference("lab_p");
    
     //Junkie
-    BeginNewOutfitL("junkie",54,"");
+    BeginNewOutfitL("junkie",54);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("junkie_s");
     OutfitAddPartReference("junkie_p");
     
     //Lower Class outfit
-    BeginNewOutfitL("lowclass",60,"");
+    BeginNewOutfitL("lowclass",60);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("lowclass_p2");
     OutfitAddPartReference("lowclass_s");
     
     //Morgan Everett
-    BeginNewOutfitL("everett",69,"");
+    BeginNewOutfitL("everett",69);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("lowclass_p"); //Yep, Everett wears lower class pants :S
     OutfitAddPartReference("everett_s");
@@ -1060,7 +1090,7 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Glasses,4,5);
     
-    BeginNewOutfitL("thug3",64,"");
+    BeginNewOutfitL("thug3",64);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("thug3_p");
     OutfitAddPartReference("thug3_s");
@@ -1098,60 +1128,60 @@ function PopulateOutfitsList()
     AddPartL(PS_Hat,29,true,"ponytail_g",,,,,,,,"PonyTailTex1");
 
     //Brown Suit
-    BeginNewOutfitL("businessman1",6,"");
+    BeginNewOutfitL("businessman1",6);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("businessman1_p");
     OutfitAddPartReference("businessman1_s");
     
     //White Business Suit
-    BeginNewOutfitL("businessman2",46,"");
+    BeginNewOutfitL("businessman2",46);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("businessman2_p");
     OutfitAddPartReference("businessman2_s");
     
     //Butler Suit
-    BeginNewOutfitL("butler",80,"");
+    BeginNewOutfitL("butler",80);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("butler_s");
     OutfitAddPartReference("mib_p");
     
     //Lower Class outfit
-    BeginNewOutfitL("lowclass",77,"");
+    BeginNewOutfitL("lowclass",77);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("lowclass2_s");
     OutfitAddPartReference("lowclass2_p");
     
     //MIB Suit
-    BeginNewOutfitL("mib",7,"");
+    BeginNewOutfitL("mib",7);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sunglasses_g");
     OutfitAddPartReference("mib_p");
     OutfitAddPartReference("mib_s");
     
     //Luminous Path
-    BeginNewOutfitL("lumpath",78,"");
+    BeginNewOutfitL("lumpath",78);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("ponytail_g"); //SARGE: Looks like crap
     OutfitAddPartReference("chef_p");
     OutfitAddPartReference("lumpath_s");
     
     //Presidents Suit (Philip Mead Suit)
-    BeginNewOutfitL("meadphilip",30,"");
+    BeginNewOutfitL("meadphilip",30);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sunglasses_g");
     OutfitAddPartReference("mib_p");
     OutfitAddPartReference("president_s");
     
     //Bob Page's Suit
-    BeginNewOutfitL("page",81,"");
+    BeginNewOutfitL("page",81);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("page_s");
     OutfitAddPartReference("page_p");
     
     //Chef Outfit
-    BeginNewOutfitL("chef",11,"");
+    BeginNewOutfitL("chef",11);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("default_g");
     OutfitAddPartReference("chef_p");
@@ -1160,7 +1190,7 @@ function PopulateOutfitsList()
     
     //Sailor
     //"Hat" Replaces head tex
-    BeginNewOutfitL("sailor",31,"");
+    BeginNewOutfitL("sailor",31);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("sailor_p");
@@ -1168,20 +1198,20 @@ function PopulateOutfitsList()
     OutfitAddPartReference("sailor_h");
     
     //Vinny - Navy Dress Uniform
-    BeginNewOutfitL("vinny",79,"");
+    BeginNewOutfitL("vinny",79);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("vinny_p");
     OutfitAddPartReference("vinny_s");
     
     //Secret Service
-    BeginNewOutfitL("secretservice",47,"");
+    BeginNewOutfitL("secretservice",47);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("sunglasses_g");
     OutfitAddPartReference("secretservice_p");
     OutfitAddPartReference("secretservice_s");
     
     //Vice President
-    BeginNewOutfitL("vicepresident",57,"");
+    BeginNewOutfitL("vicepresident",57);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("vp_p");
     OutfitAddPartReference("vp_s");
@@ -1219,13 +1249,13 @@ function PopulateOutfitsList()
     AddPartL(PS_Body_M,28,false,"mj12elite_b",,,,"MJ12EliteTex0","MJ12EliteTex0","GrayMaskTex");
     
     //Alex Denton
-    BeginNewOutfitL("alex",56,"");
+    BeginNewOutfitL("alex",56);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("mj12_p");
     OutfitAddPartReference("alex_s");
     
     //Unatco Troop
-    BeginNewOutfitL("unatcotroop",8,"");
+    BeginNewOutfitL("unatcotroop",8);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("unatco_b");
     OutfitAddPartReference("unatco_p");
@@ -1233,7 +1263,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("unatco_h");
     
     //Mechanic
-    BeginNewOutfitL("mechanic",9,"");
+    BeginNewOutfitL("mechanic",9);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("mechanic_p");
     OutfitAddPartReference("mechanic_s");
@@ -1241,47 +1271,47 @@ function PopulateOutfitsList()
     
     //Soldier
     //Note: Helmet has a custom strap
-    BeginNewOutfitL("soldier",17,"");
+    BeginNewOutfitL("soldier",17);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("soldier_p");
     OutfitAddPartReference("soldier_s");
     OutfitAddPartReference("soldier_h");
 
     //Riot Cop
-    BeginNewOutfitL("riotcop",18,"");
+    BeginNewOutfitL("riotcop",18);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("riotcop_p");
     OutfitAddPartReference("riotcop_s");
     OutfitAddPartReference("riotcop_h");
     
     //Hong Kong Police
-    BeginNewOutfitL("hkmilitary",75,"");
+    BeginNewOutfitL("hkmilitary",75);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("hkmilitary_p");
     OutfitAddPartReference("hkmilitary_s");
     
     //Martial Artist
-    BeginNewOutfitL("martialartist",73,"");
+    BeginNewOutfitL("martialartist",73);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("martialartist_p");
     OutfitAddPartReference("martialartist_s");
     
     //MJ12
-    BeginNewOutfitL("mj12",25,"");
+    BeginNewOutfitL("mj12",25);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("mj12_p");
     OutfitAddPartReference("mj12_s");
     OutfitAddPartReference("mj12_h");
     
     //MJ12 Elite
-    BeginNewOutfitL("mj122",76,"");
+    BeginNewOutfitL("mj122",76);
     OutfitAddPartReference("mj12elite_b");
     OutfitAddPartReference("mj12_p");
     OutfitAddPartReference("mj12_s");
     OutfitAddPartReference("mj12elite_h");
 
     //NSF Troop
-    BeginNewOutfitL("nsf",20,"");
+    BeginNewOutfitL("nsf",20);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("nsf_b");
     OutfitAddPartReference("nsf_p");
@@ -1289,19 +1319,19 @@ function PopulateOutfitsList()
     OutfitAddPartReference("nsf_h");
     
     //NSF Alt, more equipment/clothing
-    BeginNewOutfitL("nsf",43,"");
+    BeginNewOutfitL("nsf",43);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("nsf_p");
     OutfitAddPartReference("nsf_s");
     
     //Sam Carter Outfit
-    BeginNewOutfitL("carter",32,"");
+    BeginNewOutfitL("carter",32);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("carter_s");
     OutfitAddPartReference("carter_p");
     
     //Tong
-    BeginNewOutfitL("tong",74,"");
+    BeginNewOutfitL("tong",74);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("tong_s");
     OutfitAddPartReference("tong_p");
@@ -1309,7 +1339,7 @@ function PopulateOutfitsList()
     //Prisoner Outfit
     //TODO: This is currently just the Mechanic mesh
     /*
-    BeginNewOutfitL("prisoner",35,"");
+    BeginNewOutfitL("prisoner",35);
     OutfitAddPartReference("default_b");
     OutfitAddPartReference("mechanic_p");
     OutfitAddPartReference("mechanic_s");
@@ -1352,18 +1382,21 @@ function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
 //Only used internally
 //Works exactly the same way as BeginOutfit, but automatically looks up the default names/descriptions list
 //at the bottom of this file
-function BeginNewOutfitL(string id, int nameIndex, string preview)
+function BeginNewOutfitL(string id, int nameIndex)
 {
-    local string n,d;
+    local string n,d,h,p,m,a;
 
-    n = outfitNames[nameIndex];
-    d = outfitDescs[nameIndex];
+    n = outfitInfos[nameIndex].Name;
+    d = outfitInfos[nameIndex].Desc;
+    h = outfitInfos[nameIndex].HighlightName;
+    p = outfitInfos[nameIndex].PickupName;
+    m = outfitInfos[nameIndex].PickupMessage;
+    a = outfitInfos[nameIndex].Article;
 
-    //BeginNewOutfit(id,n,d,preview,male,female);
-    BeginNewOutfit2(id,n,d,preview);
+    BeginNewOutfit(id,n,d,h,p,m,a);
 }
 
-function BeginNewOutfit2(string id, string name, string desc, string preview)
+function BeginNewOutfit(string id, string name, string desc, optional string highlightName, optional string pickupName, optional string pickupMessage, optional string pickupArticle)
 {
     local Outfit O;
     O = new(Self) class'Outfit';
@@ -1371,15 +1404,30 @@ function BeginNewOutfit2(string id, string name, string desc, string preview)
     O.id = id;
     O.index = numOutfits;
     O.name = name;
+    O.desc = desc;
+
+    if (highlightName == "")
+        highlightName = name;
+
+    if (pickupName == "")
+        pickupName = name;
+
+    if (pickupArticle == "")
+        pickupArticle = "a";
+
+    if (pickupMessage == "")
+        pickupMessage = "You found %s %s";
+
+    O.PickupMessage = pickupMessage;
+    O.PickupName = pickupName;
+    O.PickupArticle = pickupArticle;
+    O.HighlightName = highlightName;
+
     O.partsGroup = currentPartsGroup;
     O.player = player;
 
     outfits[numOutfits++] = O;
     currOutfit = O;
-}
-
-function BeginNewOutfit(string id, string n, string d, string preview, bool male, bool female)
-{
 }
 
 function PartsGroup GetPartsGroupByID(string id)
@@ -1715,6 +1763,95 @@ function bool ValidateSpawn(string id)
 defaultproperties
 {
      savedOutfitIndex=1
+     outfitInfos(0)=(Name="JC Denton's Trenchcoat",Desc="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look")
+     outfitInfos(1)=(Name="JC Denton's Trenchcoat (Alt)",Desc="JC Denton's Signature Trenchcoat, now with extra jewellery!")
+     outfitInfos(2)=(Name="100% Black",Desc="The outfit of choice for Malkavians",PickupMessage="We're 100% Black",HighlightName="???")
+     outfitInfos(3)=(Name="Alex Jacobson's Outfit",Desc="Used by hackers everywhere!")
+     outfitInfos(4)=(Name="Lab Coat",Desc="Discovery Awaits!")
+     outfitInfos(5)=(Name="Paul Denton's Outfit")
+     outfitInfos(6)=(Name="Fancy Suit",Desc="For very special agents")
+     outfitInfos(7)=(Name="MIB Black Suit",Desc="For very special agents")
+     outfitInfos(8)=(Name="UNATCO Combat Uniform")
+     outfitInfos(9)=(Name="Mechanic Jumpsuit")
+     outfitInfos(11)=(Name="Chef Outfit",Desc="Something about cooking, IDK") //!!!
+     outfitInfos(13)=(Name="Gold and Brown Business")
+     outfitInfos(14)=(Name="Goth GF Outfit")
+     outfitInfos(15)=(Name="Matrix Outfit",Desc="This outfit is considered one of the classic three. From the immortal Trinity, if you will...")
+     outfitInfos(16)=(Name="Goth GF Outfit") //!!!
+     outfitInfos(17)=(Name="Soldier Outfit")
+     outfitInfos(18)=(Name="Riot Gear")
+     outfitInfos(19)=(Name="WIB Suit",Desc="Dressed to kill")
+     outfitInfos(20)=(Name="NSF Sympathiser",Desc="For the people!")
+     outfitInfos(21)=(Name="Stained Clothes")
+     outfitInfos(22)=(Name="Juan Lebedev's Outfit")
+     outfitInfos(23)=(Name="Smuggler's Outfit",Desc="This expensive outfit matches Smuggler's prices")
+     outfitInfos(24)=(Name="FEMA Executive's Outfit",Desc="Just because you work behind a desk doesn't mean you can't be fashionable")
+     outfitInfos(25)=(Name="MJ12 Soldier Uniform")
+     outfitInfos(26)=(Name="Jock's Outfit")
+     outfitInfos(27)=(Name="Maggie's Outfit")
+     outfitInfos(28)=(Name="Nicolette's Outfit")
+     outfitInfos(29)=(Name="JC Clone Outfit")
+     outfitInfos(30)=(Name="Presidential Suit")
+     outfitInfos(31)=(Name="Sailor Outfit")
+     outfitInfos(32)=(Name="Carter's Outfit")
+     outfitInfos(33)=(Name="SCUBA Suit")
+     outfitInfos(34)=(Name="100% Black (Alt)",Desc="OMG! It's just like the memes!")
+     outfitInfos(35)=(Name="Prison Uniform")
+     outfitInfos(36)=(Name="100% Black (Augmented Edition)")
+     outfitInfos(37)=(Name="Thug Outfit")
+     outfitInfos(38)=(Name="Anna Navarre's Outfit")
+     outfitInfos(39)=(Name="Tiffany Savage's Outfit")
+     outfitInfos(40)=(Name="Sarah Mead's Outfit")
+     outfitInfos(41)=(Name="Jordan Shea's Outfit")
+     outfitInfos(42)=(Name="Hooker Outfit")
+     outfitInfos(43)=(Name="NSF Sympathiser (Alt)")
+     outfitInfos(44)=(Name="Unwashed Clothes")
+     outfitInfos(45)=(Name="Harley Filben's Outfit")
+     outfitInfos(46)=(Name="White Business Suit")
+     outfitInfos(47)=(Name="Secret Service Suit")
+     outfitInfos(48)=(Name="Doctor's Outfit")
+     outfitInfos(49)=(Name="Nurse's Outfit")
+     outfitInfos(50)=(Name="Gilbert Renton's Outfit")
+     outfitInfos(51)=(Name="Hooker Outfit (Alt)")
+     outfitInfos(52)=(Name="Ford Schick's Outfit")
+     outfitInfos(53)=(Name="Joe Greene's Outfit")
+     outfitInfos(54)=(Name="Soiled Junkie Clothes")
+     outfitInfos(55)=(Name="Rook Member Outfit")
+     outfitInfos(56)=(Name="Alex Denton's Outfit",Desc="Say the line, JC!")
+     outfitInfos(57)=(Name="Vice President's Outfit")
+     outfitInfos(58)=(Name="Rachel Mead's Outfit")
+     outfitInfos(59)=(Name="Business Outfit",Desc="Show them you mean business!")
+     outfitInfos(60)=(Name="Low Class Outfit")
+     outfitInfos(61)=(Name="Sandra Renton's Outfit")
+     outfitInfos(62)=(Name="NSF Leader Outfit") //!!!
+     outfitInfos(63)=(Name="Bartender Outfit")
+     outfitInfos(64)=(Name="Tough Guy Outfit")
+     outfitInfos(65)=(Name="Police Uniform")
+     outfitInfos(66)=(Name="Howard Strong's Outfit")
+     outfitInfos(67)=(Name="Adam Jensen's Outfit")
+     outfitInfos(68)=(Name="Average GEPGUN Enjoyer",Desc="What's it like to stand around revving your actuators while the more fashionable agents complete the mission?")
+     outfitInfos(69)=(Name="Morgan Everett's Outfit")
+     outfitInfos(70)=(Name="Boat Person Outfit")
+     outfitInfos(71)=(Name="Chad's Outfit")
+     outfitInfos(72)=(Name="Janitor Uniform")
+     outfitInfos(73)=(Name="Martial Arts Uniform")
+     outfitInfos(74)=(Name="Tracer Tong's Outfit")
+     outfitInfos(75)=(Name="Hong Kong Military Uniform")
+     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="Give me Deus Ex")
+     outfitInfos(77)=(Name="Citizens Attire")
+     outfitInfos(78)=(Name="Luminous Path Uniform")
+     outfitInfos(79)=(Name="Navy Dress Uniform")
+     outfitInfos(80)=(Name="Butler Uniform")
+     outfitInfos(81)=(Name="Bob Page's Signature Suit")
+     outfitInfos(82)=(Name="Gordon Quick's Outfit")
+     outfitInfos(83)=(Name="Red Arrow Uniform")
+     outfitInfos(85)=(Name="Jaime's Outfit") //!!!
+     outfitInfos(86)=(Name="Illuminati Coat")
+     outfitInfos(87)=(Name="Vandenberg Scientist Outfit")
+     outfitInfos(88)=(Name="Old Clothes")
+     outfitInfos(89)=(Name="Dragon Head's Uniform")
+     outfitInfos(90)=(Name="Secretary's Outfit")
+     outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)")
      partNames(0)="Cool Sunglasses"
      partNames(1)="Black Bars"
      partNames(2)="Default Skin"
@@ -1745,120 +1882,6 @@ defaultproperties
      partNames(27)="MJ12 Elite Helmet"
      partNames(28)="MJ12 Elite Tacticool Gear"
      partNames(29)="Ponytail"
-     outfitNames(0)="JC Denton's Trenchcoat"
-     outfitNames(1)="JC Denton's Trenchcoat (Alt)"
-     outfitNames(2)="100% Black"
-     outfitNames(3)="Alex Jacobson's Outfit"
-     outfitNames(4)="Lab Coat"
-     outfitNames(5)="Paul Denton's Outfit"
-     outfitNames(6)="Fancy Suit"
-     outfitNames(7)="MIB Black Suit"
-     outfitNames(8)="UNATCO Combat Uniform"
-     outfitNames(9)="Mechanic Jumpsuit"
-     outfitNames(11)="Chef Outfit"
-     outfitNames(13)="Gold and Brown Business"
-     outfitNames(14)="Goth GF Outfit"
-     outfitNames(15)="Matrix Outfit"
-     outfitNames(16)="Goth GF Outfit"
-     outfitNames(17)="Soldier Outfit"
-     outfitNames(18)="Riot Gear"
-     outfitNames(19)="WIB Suit"
-     outfitNames(20)="NSF Sympathiser"
-     outfitNames(21)="Stained Clothes"
-     outfitNames(22)="Juan Lebedev's Outfit"
-     outfitNames(23)="Smuggler's Outfit"
-     outfitNames(24)="FEMA Executive's Outfit"
-     outfitNames(25)="MJ12 Soldier Outfit"
-     outfitNames(26)="Jock's Outfit"
-     outfitNames(27)="Maggie's Outfit"
-     outfitNames(28)="Nicolette's Outfit"
-     outfitNames(29)="JC Clone Outfit"
-     outfitNames(30)="Presidential Suit"
-     outfitNames(31)="Sailor Outfit"
-     outfitNames(32)="Carter's Outfit"
-     outfitNames(33)="Scuba Suit"
-     outfitNames(34)="100% Black (Alt)"
-     outfitNames(35)="Prison Uniform"
-     outfitNames(36)="100% Black (Ultimate Edition)"
-     outfitNames(37)="Thug Outfit"
-     outfitNames(38)="Anna Navarre's Outfit"
-     outfitNames(39)="Tiffany Savage's Outfit"
-     outfitNames(40)="Sarah Mead's Outfit"
-     outfitNames(41)="Jordan Shea's Outfit"
-     outfitNames(42)="Hooker Outfit"
-     outfitNames(43)="NSF Sympathiser (Alt)"
-     outfitNames(44)="Unwashed Clothes"
-     outfitNames(45)="Harley Filben's Outfit"
-     outfitNames(46)="White Business Suit"
-     outfitNames(47)="Secret Service Suit"
-     outfitNames(48)="Doctor's Outfit"
-     outfitNames(49)="Nurse Outfit"
-     outfitNames(50)="Gilbert Renton's Outfit"
-     outfitNames(51)="Hooker Outfit (Alt)"
-     outfitNames(52)="Ford Schick's Outfit"
-     outfitNames(53)="Joe Greene's Outfit"
-     outfitNames(54)="Soiled Junkie Clothes"
-     outfitNames(55)="Rook Member Outfit"
-     outfitNames(56)="Alex Denton's Outfit"
-     outfitNames(57)="Vice President's Outfit"
-     outfitNames(58)="Rachel Mead's Outfit"
-     outfitNames(59)="Business Outfit"
-     outfitNames(60)="Low Class Outfit"
-     outfitNames(61)="Sandra Renton's Outfit"
-     outfitNames(62)="NSF Leader Outfit"
-     outfitNames(63)="Bartender Outfit"
-     outfitNames(64)="Tough Guy Outfit"
-     outfitNames(65)="Cop Outfit"
-     outfitNames(66)="Howard Strong's Outfit"
-     outfitNames(67)="Adam Jensen's Outfit"
-     outfitNames(68)="Average GEPGUN Enjoyer"
-     outfitNames(69)="Morgan Everett's Outfit"
-     outfitNames(70)="Boat Person Outfit"
-     outfitNames(71)="Chad's Outfit"
-     outfitNames(72)="Janitors Outfit"
-     outfitNames(73)="Martial Arts Outfit"
-     outfitNames(74)="Tracer Tong's Outfit"
-     outfitNames(75)="Hong Kong Military Outfit"
-     outfitNames(76)="MJ12 Elite Outfit"
-     outfitNames(77)="Citizens Attire"
-     outfitNames(78)="Luminous Path Uniform"
-     outfitNames(79)="Navy Battle Dress Uniform"
-     outfitNames(80)="Butler Uniform"
-     outfitNames(81)="Bob Page's Business Suit"
-     outfitNames(82)="Gordon Quick's Outfit"
-     outfitNames(83)="Red Arrow Uniform"
-     outfitNames(84)="Jock's Outfit"
-     outfitNames(85)="Jaime's Outfit"
-     outfitNames(86)="Illuminati Coat"
-     outfitNames(87)="Vandenberg Scientist Outfit"
-     outfitNames(88)="Old Clothes"
-     outfitNames(89)="Dragon Head's Uniform"
-     outfitNames(90)="Secretary's Outfit"
-     outfitNames(91)="Adam Jensen's Outfit (Alt)"
-     outfitDescs(0)="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look"
-     outfitDescs(1)="JC Denton's Signature Trenchcoat, now with extra jewellery!"
-     outfitDescs(2)="The outfit of choice for malkavians"
-     outfitDescs(3)="Used by hackers everywhere!"
-     outfitDescs(4)="Discovery Awaits!"
-     outfitDescs(5)="Seeing Double!"
-     outfitDescs(6)="For very special agents!"
-     outfitDescs(7)="For very special agents!"
-     outfitDescs(11)="Something about cooking, IDK"
-     outfitDescs(15)="This outfit is considered one of the classic three. From the immortal Trinity, if you will..."
-     outfitDescs(19)="Dressed to Kill"
-     outfitDescs(20)="For the people!"
-     outfitDescs(21)="Look for a bum."
-     outfitDescs(22)="So fine it'll make you want to kill your boss"
-     outfitDescs(23)="This expensive outfit matches Smuggler's Prices"
-     outfitDescs(24)="Just because you work behind a desk doesn't mean you can't be fashionable"
-     outfitDescs(25)="The sort of outfit you can take over the world in"
-     outfitDescs(34)="OMG! It's just like the memes!"
-     outfitDescs(44)="Look for a bum."
-     outfitDescs(46)="Requiem for a Dream"
-     outfitDescs(56)="Say the line JC!"
-     outfitDescs(59)="Show them you mean business!"
-     outfitDescs(68)="Oops, one's dead, the other one's dead, maybe I'm a bad cop?"
-     outfitDescs(76)="Give Me Deus Ex"
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
 }

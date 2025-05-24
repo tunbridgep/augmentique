@@ -1,7 +1,12 @@
 class Outfit extends Object;
 
 var string id;
-var travel string name;
+var string name;
+var string desc;
+var string pickupName;
+var string pickupMessage;
+var string pickupArticle;
+var string highlightName;
 
 var PartsGroup partsGroup;
 
