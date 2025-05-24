@@ -512,6 +512,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_M,86,false,"toby_s",,,,,"TobyAtanweTex1");
     AddPartLO(PS_Torso_M,87,false,"garysavage_s",,,,,"GarySavageTex1");
     AddPartLO(PS_Torso_M,89,false,"maxchen_s",,,,,"MaxChenTex1");
+    AddPartLO(PS_Torso_M,94,false,"manderley_s",,,,,"JosephManderleyTex1");
     
     //Trenchcoats
     AddPartL(PS_Trench,3,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
@@ -533,6 +534,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,26,false,"jock_t",,"JockTex2",,,,);
     AddPartLO(PS_Trench,85,false,"toby_t",,"TobyAtanweTex2",,,,"TobyAtanweTex2");
     AddPartLO(PS_Trench,89,false,"maxchen_t",,"MaxChenTex2",,,,"MaxChenTex2");
+    AddPartLO(PS_Trench,94,false,"manderley_t",,"JosephManderleyTex2",,,,"JosephManderleyTex2");
 
     //Default M
     BeginNewOutfitL("default",0);
@@ -641,6 +643,11 @@ function PopulateOutfitsList()
     OutfitAddPartReference("maxchen_p");
     OutfitAddPartReference("maxchen_s");
     
+    //Joseph Manderley
+    BeginNewOutfitL("manderley",94);
+    OutfitAddPartReference("manderley_s");
+    OutfitAddPartReference("manderley_t");
+    OutfitAddPartReference("mib_p");
 
     //Smugglers Outfit
     BeginNewOutfitL("smug",23);
@@ -794,6 +801,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Torso_F,59,false,"business_s",,,,,"BusinessWoman1Tex1","BusinessWoman1Tex1");
     AddPartLO(PS_Torso_F,90,false,"secretary_s",,,,,"SecretaryTex2","SecretaryTex2");
     AddPartLO(PS_Torso_F,92,false,"office_s",,,,,"Female2Tex2","Female2Tex2");
+    AddPartLO(PS_Torso_F,93,false,"maid_s",,,,,"MaidTex1","MaidTex1");
     
     //Defaults
     AddDefaultReference("default_b");
@@ -841,6 +849,11 @@ function PopulateOutfitsList()
     BeginNewOutfitL("office",92);
     OutfitAddPartReference("office_s");
     OutfitAddPartReference("office_p");
+    
+    //Maid
+    BeginNewOutfitL("maid",93);
+    OutfitAddPartReference("maid_s");
+    OutfitAddPartReference("stockings_p");
 
     //========================================================
     //  GFM_Dress
@@ -1823,6 +1836,8 @@ defaultproperties
      outfitInfos(90)=(Name="Secretary's Outfit")
      outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)")
      outfitInfos(92)=(Name="Office Worker's Outfit")
+     outfitInfos(93)=(Name="Maid Outfit")
+     outfitInfos(94)=(Name="Manderley's Outfit")
      partNames(0)="Cool Sunglasses"
      partNames(1)="Black Bars"
      partNames(2)="Default Skin"

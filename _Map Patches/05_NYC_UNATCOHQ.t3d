@@ -75,4 +75,15 @@ Begin Actor Class=OutfitSpawner3 Name=OutfitSpawner23
     bSelected=True
     Name=OutfitSpawner23
 End Actor
+Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner1
+    Id="manderley"
+    bDynamicLight=True
+    LastRenderTime=62.105171
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=OutfitSpawner2
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=784,ZoneNumber=1)
+    Location=(X=287.759277,Y=-112.275002,Z=246.099869)
+    OldLocation=(X=300.759277,Y=-107.275002,Z=246.099869)
+    Name=OutfitSpawner1
+End Actor
 End Map
