@@ -413,16 +413,17 @@ function PopulateOutfitsList()
     GlobalAddPartLO(PS_Legs,29,false,"dentonclone_pf","DentonCloneTex2Fem");
     
     //Dress Pants
-    GlobalAddPartLO(PS_DressLegs,49,false,"nurse_p","LegsTex1");
-    GlobalAddPartLO(PS_DressLegs,19,false,"stockings_p","LegsTex2");
-    GlobalAddPartLO(PS_DressLegs,42,false,"hooker_p","Hooker1Tex1");
-    GlobalAddPartLO(PS_DressLegs,51,false,"hooker2_p","Hooker2Tex1");
-    GlobalAddPartLO(PS_DressLegs,56,false,"alex_p","Outfit5F_Tex1");
-    GlobalAddPartLO(PS_DressLegs,58,false,"rachel_p","RachelMeadTex2");
-    GlobalAddPartLO(PS_DressLegs,59,false,"business_p","BusinessWoman1Tex2");
-    GlobalAddPartLO(PS_DressLegs,28,false,"nicolette_p","NicoletteDuClareTex3");
-    GlobalAddPartLO(PS_DressLegs,40,false,"sarah_p","SarahMeadTex3");
-    GlobalAddPartLO(PS_DressLegs,92,false,"office_p","Female2Tex1");
+    GlobalAddPartLO(PS_DressLegs,49,false,"nurse_pf","LegsTex1");
+    GlobalAddPartLO(PS_DressLegs,19,false,"stockings_pf","LegsTex2");
+    GlobalAddPartLO(PS_DressLegs,42,false,"hooker_pf","Hooker1Tex1");
+    GlobalAddPartLO(PS_DressLegs,51,false,"hooker2_pf","Hooker2Tex1");
+    GlobalAddPartLO(PS_DressLegs,56,false,"alex_pf","Outfit5F_Tex1");
+    GlobalAddPartLO(PS_DressLegs,58,false,"rachel_pf","RachelMeadTex2");
+    GlobalAddPartLO(PS_DressLegs,59,false,"business_pf","BusinessWoman1Tex2");
+    GlobalAddPartLO(PS_DressLegs,28,false,"nicolette_pf","NicoletteDuClareTex3");
+    GlobalAddPartLO(PS_DressLegs,40,false,"sarah_pf","SarahMeadTex3");
+    GlobalAddPartLO(PS_DressLegs,92,false,"office_pf","Female2Tex1");
+    GlobalAddPartLO(PS_DressLegs,95,false,"lowclass2_pf","Female3Tex2");
 
     //Skirts
     GlobalAddPartLO(PS_Skirt,28,false,"nicolette_sk","NicoletteDuClareTex2","NicoletteDuClareTex2");
@@ -793,15 +794,16 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Glasses,6,7);
     
     //Unique Torsos
-    AddPartLO(PS_Torso_F,19,false,"wib_s",,,,,"WIBTex1","WIBTex1");
-    AddPartLO(PS_Torso_F,27,false,"maggie_s",,,,,"MaggieChowTex1","MaggieChowTex1");
-    AddPartLO(PS_Torso_F,49,false,"nurse_s",,,,,"NurseTex1","NurseTex1");
+    AddPartLO(PS_Torso_F,19,false,"wib_sf",,,,,"WIBTex1","WIBTex1");
+    AddPartLO(PS_Torso_F,27,false,"maggie_sf",,,,,"MaggieChowTex1","MaggieChowTex1");
+    AddPartLO(PS_Torso_F,49,false,"nurse_sf",,,,,"NurseTex1","NurseTex1");
     AddPartLO(PS_Torso_F,57,false,"vp_sf",,,,,"MargaretWilliamsTex1","MargaretWilliamsTex1");
-    AddPartLO(PS_Torso_F,58,false,"rachel_s",,,,,"RachelMeadTex1","RachelMeadTex1");
-    AddPartLO(PS_Torso_F,59,false,"business_s",,,,,"BusinessWoman1Tex1","BusinessWoman1Tex1");
-    AddPartLO(PS_Torso_F,90,false,"secretary_s",,,,,"SecretaryTex2","SecretaryTex2");
-    AddPartLO(PS_Torso_F,92,false,"office_s",,,,,"Female2Tex2","Female2Tex2");
-    AddPartLO(PS_Torso_F,93,false,"maid_s",,,,,"MaidTex1","MaidTex1");
+    AddPartLO(PS_Torso_F,58,false,"rachel_sf",,,,,"RachelMeadTex1","RachelMeadTex1");
+    AddPartLO(PS_Torso_F,59,false,"business_sf",,,,,"BusinessWoman1Tex1","BusinessWoman1Tex1");
+    AddPartLO(PS_Torso_F,90,false,"secretary_sf",,,,,"SecretaryTex2","SecretaryTex2");
+    AddPartLO(PS_Torso_F,92,false,"office_sf",,,,,"Female2Tex2","Female2Tex2");
+    AddPartLO(PS_Torso_F,93,false,"maid_sf",,,,,"MaidTex1","MaidTex1");
+    AddPartLO(PS_Torso_F,95,false,"lowclass2_sf",,,,,"Female3Tex1","Female3Tex1");
     
     //Defaults
     AddDefaultReference("default_b");
@@ -809,51 +811,56 @@ function PopulateOutfitsList()
     
     //WIB Outfit
     BeginNewOutfitL("wib",19);
-    OutfitAddPartReference("stockings_p");
-    OutfitAddPartReference("wib_s");
+    OutfitAddPartReference("stockings_pf");
+    OutfitAddPartReference("wib_sf");
     OutfitAddPartReference("sunglasses_g");
     
     //Maggie Chow's Outfit
     BeginNewOutfitL("maggie",27);
-    OutfitAddPartReference("stockings_p");
-    OutfitAddPartReference("maggie_s");
+    OutfitAddPartReference("stockings_pf");
+    OutfitAddPartReference("maggie_sf");
     OutfitAddPartReference("sunglasses_g");
 
     //Nurse Outfit
     BeginNewOutfitL("nurse",49);
-    OutfitAddPartReference("nurse_p");
-    OutfitAddPartReference("nurse_s");
+    OutfitAddPartReference("nurse_pf");
+    OutfitAddPartReference("nurse_sf");
     
     //Vice President
     BeginNewOutfitL("vicepresident",57);
-    OutfitAddPartReference("stockings_p");
+    OutfitAddPartReference("stockings_pf");
     OutfitAddPartReference("vp_sf");
 
     //Rachel Mead
     BeginNewOutfitL("meadrachel",58);
-    OutfitAddPartReference("rachel_p");
-    OutfitAddPartReference("rachel_s");
+    OutfitAddPartReference("rachel_pf");
+    OutfitAddPartReference("rachel_sf");
 
     //Business Woman
     BeginNewOutfitL("businesswoman",59);
-    OutfitAddPartReference("business_p");
-    OutfitAddPartReference("business_s");
+    OutfitAddPartReference("business_pf");
+    OutfitAddPartReference("business_sf");
 
     //Secretary
     BeginNewOutfitL("secretary",90);
-    OutfitAddPartReference("secretary_s");
-    OutfitAddPartReference("nurse_p");
+    OutfitAddPartReference("secretary_sf");
+    OutfitAddPartReference("nurse_pf");
     OutfitAddPartReference("business_g");
     
     //Office Lady
     BeginNewOutfitL("office",92);
-    OutfitAddPartReference("office_s");
-    OutfitAddPartReference("office_p");
+    OutfitAddPartReference("office_sf");
+    OutfitAddPartReference("office_pf");
     
     //Maid
     BeginNewOutfitL("maid",93);
-    OutfitAddPartReference("maid_s");
-    OutfitAddPartReference("stockings_p");
+    OutfitAddPartReference("maid_sf");
+    OutfitAddPartReference("stockings_pf");
+    
+    //Lower Class 2
+    BeginNewOutfitL("lowclass2",95);
+    OutfitAddPartReference("lowclass2_sf");
+    OutfitAddPartReference("lowclass2_pf");
 
     //========================================================
     //  GFM_Dress
@@ -1133,7 +1140,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mib_p");
     
     //Lower Class outfit
-    BeginNewOutfitL("lowclass",77);
+    BeginNewOutfitL("lowclass2",77);
     OutfitAddPartReference("lowclass2_s");
     OutfitAddPartReference("lowclass2_p");
     
@@ -1821,7 +1828,7 @@ defaultproperties
      outfitInfos(74)=(Name="Tracer Tong's Outfit")
      outfitInfos(75)=(Name="Hong Kong Military Uniform")
      outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="Give me Deus Ex")
-     outfitInfos(77)=(Name="Citizens Attire")
+     outfitInfos(77)=(Name="Traditional Attire")
      outfitInfos(78)=(Name="Luminous Path Uniform")
      outfitInfos(79)=(Name="Navy Dress Uniform")
      outfitInfos(80)=(Name="Butler Uniform")
@@ -1838,6 +1845,7 @@ defaultproperties
      outfitInfos(92)=(Name="Office Worker's Outfit")
      outfitInfos(93)=(Name="Maid Outfit")
      outfitInfos(94)=(Name="Manderley's Outfit")
+     outfitInfos(95)=(Name="Traditional Dress")
      partNames(0)="Cool Sunglasses"
      partNames(1)="Black Bars"
      partNames(2)="Default Skin"

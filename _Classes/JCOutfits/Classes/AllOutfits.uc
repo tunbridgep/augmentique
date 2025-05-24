@@ -229,6 +229,12 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female2Tex2_S3.bmp"                            NAME="Female2Tex2_S3"                       GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female2Tex2_S4.bmp"                            NAME="Female2Tex2_S4"                       GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex1_S0.bmp"                            NAME="Female3Tex1"                          GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex1_S1.bmp"                            NAME="Female3Tex1_S1"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex1_S2.bmp"                            NAME="Female3Tex1_S2"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex1_S3.bmp"                            NAME="Female3Tex1_S3"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex1_S4.bmp"                            NAME="Female3Tex1_S4"                       GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex2_S0.bmp"                            NAME="Female3Tex2"                          GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex2_S1.bmp"                            NAME="Female3Tex2_S1"                       GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Female3Tex2_S2.bmp"                            NAME="Female3Tex2_S2"                       GROUP="Outfits"
