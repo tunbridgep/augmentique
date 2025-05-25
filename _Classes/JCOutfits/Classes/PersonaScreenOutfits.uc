@@ -633,7 +633,7 @@ defaultproperties
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
      EditButtonLabel="Customize Outfit"
-     ChangeCameraLabel="Change Camera"
+     ChangeCameraLabel="Change View"
      NewLabel="(New)"
      clientBorderOffsetY=35
      ClientWidth=617
