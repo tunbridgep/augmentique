@@ -4,8 +4,8 @@ class OutfitManager extends OutfitManagerBase;
 
 var DeusExPlayer player;
 
-var Outfit outfits[255];
-var int numOutfits;
+var transient Outfit outfits[255];
+var transient int numOutfits;
 
 //Used for saving outfit number between maps
 //This can be used for other purposes, but better to use currOutfit instead
@@ -14,18 +14,18 @@ var travel int savedOutfitIndex;
 //Some outfits are special
 const CUSTOM_OUTFIT = 0;
 const DEFAULT_OUTFIT = 1;
-var Outfit currOutfit;
+var transient Outfit currOutfit;
 var travel OutfitCustom customOutfit;
 
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
 
 //part names
-var const localized string partNames[255];
+var const localized string partNames[1000];
 
 //add default parts - horrible hack
-var string defaultParts[50];
-var int defaultPartsNum;
+var transient string defaultParts[50];
+var transient int defaultPartsNum;
 
 //Outfit Information
 
@@ -334,152 +334,155 @@ function PopulateOutfitsList()
 
     ////Add Global Parts
     
-    //Default "Nothing" accessories
+    //Default "Nothing" accessories/textures
     GlobalAddPart(PS_Glasses,NothingName,true,"nothing_g","none","none");
     GlobalAddPart(PS_Hat,NothingName,true,"nothing_h","none","none");
     GlobalAddPart(PS_Mask,NothingName,true,"nothing_m","none","none");
+    GlobalAddPartL(PS_Body_M,0,false,"default_b","default");
+    GlobalAddPartL(PS_Body_F,0,false,"default_b","default");
 
     //Glasses
-    GlobalAddPartL(PS_Glasses,0,true,"default_g","FramesTex4","LensesTex5");
-    GlobalAddPartL(PS_Glasses,4,true,"sci_g","FramesTex1","LensesTex1");
-    GlobalAddPartL(PS_Glasses,1,true,"100%_g","Outfit1_Tex1","Outfit1_Tex1");
-    GlobalAddPartL(PS_Glasses,6,true,"business_g","FramesTex1","LensesTex2");
-    GlobalAddPartL(PS_Glasses,8,true,"sunglasses_g","FramesTex2","LensesTex3");
-    GlobalAddPartL(PS_Glasses,26,true,"sunglasses2_g","FramesTex2","LensesTex2");
-    GlobalAddPartL(PS_Glasses,25,true,"visor_g","ThugMale3Tex3","ThugMale3Tex3");
+    GlobalAddPartL(PS_Glasses,1,true,"default_g","FramesTex4","LensesTex5");
+    GlobalAddPartL(PS_Glasses,2,true,"sci_g","FramesTex1","LensesTex1");
+    GlobalAddPartL(PS_Glasses,3,true,"100%_g","Outfit1_Tex1","Outfit1_Tex1");
+    GlobalAddPartL(PS_Glasses,4,true,"business_g","FramesTex1","LensesTex2");
+    GlobalAddPartL(PS_Glasses,5,true,"sunglasses_g","FramesTex2","LensesTex3");
+    GlobalAddPartL(PS_Glasses,6,true,"sunglasses2_g","FramesTex2","LensesTex2");
+    GlobalAddPartL(PS_Glasses,7,true,"visor_g","ThugMale3Tex3","ThugMale3Tex3");
 
     //Skin Textures
-    GlobalAddPartL(PS_Body_M,2,false,"default_b","default");
-    GlobalAddPartLO(PS_Body_M,2,false,"100%_b","Outfit1_Tex1");
-    GlobalAddPartL(PS_Body_M,19,false,"beanie_b","ThugSkin");
-    GlobalAddPartLO(PS_Body_M,67,false,"adam_b","AdamJensenTex0");
+    GlobalAddPartL(PS_Body_M,8,false,"100%_b","Outfit1_Tex1");
+    GlobalAddPartL(PS_Body_M,9,false,"beanie_b","ThugSkin");
+    GlobalAddPartL(PS_Body_M,10,false,"adam_b","AdamJensenTex0");
 
-    GlobalAddPartL(PS_Body_F,2,false,"default_b","default");
     //GlobalAddPartLO(PS_Body_F,2,false,"100%_b","Outfit1_Tex1",,,"Outfit1_Tex1");
-    GlobalAddPartLO(PS_Body_F,2,false,"100%_b","Outfit1_Tex1");
+    GlobalAddPartL(PS_Body_F,2,false,"100%_b","Outfit1_Tex1");
 
     //Pants
-    GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
-    GlobalAddPartL(PS_Legs,22,false,"lab_p","PantsTex1");
-    GlobalAddPartL(PS_Legs,21,false,"gilbertrenton_p","PantsTex3"); //Also used by Ford Schick and Boat Person
-    GlobalAddPartLO(PS_Legs,2,false,"100%_p","Outfit1_Tex1");
-    GlobalAddPartLO(PS_Legs,5,false,"paul_p","PantsTex8"); //Also used by Toby Atanwe and others
-    GlobalAddPartLO(PS_Legs,6,false,"businessman1_p","Businessman1Tex2");
-    GlobalAddPartLO(PS_Legs,46,false,"businessman2_p","Businessman2Tex2");
-    GlobalAddPartLO(PS_Legs,3,false,"ajacobson_p","AlexJacobsonTex2");
-    GlobalAddPartLO(PS_Legs,8,false,"unatco_p","UnatcoTroopTex1");
-    GlobalAddPartLO(PS_Legs,11,false,"chef_p","PantsTex10"); //Also used by Luminous Path members
-    GlobalAddPartLO(PS_Legs,9,false,"mechanic_p","MechanicTex2");
-    GlobalAddPartLO(PS_Legs,17,false,"soldier_p","SoldierTex2");
-    GlobalAddPartLO(PS_Legs,18,false,"riotcop_p","RiotCopTex1");
-    GlobalAddPartLO(PS_Legs,20,false,"nsf_p","TerroristTex2");
-    GlobalAddPartLO(PS_Legs,25,false,"mj12_p","MJ12TroopTex1");
-    GlobalAddPartLO(PS_Legs,32,false,"carter_p","SamCarterTex2");
-    GlobalAddPartLO(PS_Legs,31,false,"sailor_p","SailorTex2");
-    GlobalAddPartLO(PS_Legs,21,false,"bum_p","PantsTex4");
-    //GlobalAddPartLO(PS_Legs,22,false,"lebedev_p","JuanLebedevTex3"); //Exactly the same as the regular NSF pants
-    GlobalAddPartLO(PS_Legs,37,false,"thug_p","ThugMale2Tex2");
-    GlobalAddPartLO(PS_Legs,55,false,"thug2_p","ThugMaleTex3");
-    GlobalAddPartL(PS_Legs,7,false,"mib_p","PantsTex5"); //Also used for Butler, and several others
-    GlobalAddPartL(PS_Legs,20,false,"brown_p","PantsTex7");
-    GlobalAddPartL(PS_Legs,20,false,"secretservice_p","SecretServiceTex2");
-    GlobalAddPartL(PS_Legs,23,false,"junkie_p","JunkieMaleTex2");
-    GlobalAddPartLO(PS_Legs,62,false,"jojo_p","JoJoFineTex2");
-    GlobalAddPartLO(PS_Legs,64,false,"thug3_p","ThugMale3Tex2");
-    GlobalAddPartLO(PS_Legs,65,false,"cop_p","CopTex2");
-    GlobalAddPartLO(PS_Legs,66,false,"howardstrong_p","HowardStrongTex2");
-    GlobalAddPartLO(PS_Legs,71,false,"chad_p","ChadTex2");
+    GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
+    GlobalAddPartL(PS_Legs,12,false,"lab_p","PantsTex1");
+    GlobalAddPartL(PS_Legs,13,false,"gilbertrenton_p","PantsTex3"); //Also used by Ford Schick and Boat Person
+    GlobalAddPartL(PS_Legs,3,false,"100%_p","Outfit1_Tex1");
+    GlobalAddPartL(PS_Legs,14,false,"paul_p","PantsTex8"); //Also used by Toby Atanwe and others
+    GlobalAddPartL(PS_Legs,15,false,"businessman1_p","Businessman1Tex2");
+    GlobalAddPartL(PS_Legs,16,false,"businessman2_p","Businessman2Tex2");
+    GlobalAddPartL(PS_Legs,114,false,"chef_p","PantsTex10"); //Also used by Luminous Path members //TODO:
+    GlobalAddPartL(PS_Legs,17,false,"ajacobson_p","AlexJacobsonTex2");
+    GlobalAddPartL(PS_Legs,18,false,"unatco_p","UnatcoTroopTex1");
+    GlobalAddPartL(PS_Legs,19,false,"mechanic_p","MechanicTex2");
+    GlobalAddPartL(PS_Legs,20,false,"soldier_p","SoldierTex2");
+    GlobalAddPartL(PS_Legs,21,false,"riotcop_p","RiotCopTex1");
+    GlobalAddPartL(PS_Legs,22,false,"nsf_p","TerroristTex2");
+    GlobalAddPartL(PS_Legs,23,false,"mj12_p","MJ12TroopTex1");
+    GlobalAddPartL(PS_Legs,24,false,"carter_p","SamCarterTex2");
+    GlobalAddPartL(PS_Legs,25,false,"sailor_p","SailorTex2");
+    GlobalAddPartL(PS_Legs,26,false,"bum_p","PantsTex4");
+    //GlobalAddPartL(PS_Legs,22,false,"lebedev_p","JuanLebedevTex3"); //Exactly the same as the regular NSF pants
+    GlobalAddPartL(PS_Legs,27,false,"thug_p","ThugMale2Tex2");
+    GlobalAddPartL(PS_Legs,28,false,"thug2_p","ThugMaleTex3");
+    GlobalAddPartL(PS_Legs,29,false,"mib_p","PantsTex5"); //Also used for Butler, and several others
+    GlobalAddPartL(PS_Legs,30,false,"brown_p","PantsTex7");
+    GlobalAddPartL(PS_Legs,31,false,"secretservice_p","SecretServiceTex2");
+    GlobalAddPartL(PS_Legs,32,false,"junkie_p","JunkieMaleTex2");
+    GlobalAddPartL(PS_Legs,33,false,"jojo_p","JoJoFineTex2");
+    //GlobalAddPartLO(PS_Legs,64,false,"thug3_p","ThugMale3Tex2");
+    GlobalAddPartL(PS_Legs,34,false,"cop_p","CopTex2");
+    GlobalAddPartL(PS_Legs,35,false,"howardstrong_p","HowardStrongTex2");
+    GlobalAddPartL(PS_Legs,36,false,"chad_p","ChadTex2");
     //GlobalAddPartLO(PS_Legs,29,false,"dentonclone_p","DentonCloneTex2"); //FAIL, these suck
-    GlobalAddPartLO(PS_Legs,60,false,"lowclass_p","PantsTex6");
-    GlobalAddPartLO(PS_Legs,60,false,"lowclass_p2","PantsTex2"); //Also used by Jaime Reyes, and others
-    GlobalAddPartLO(PS_Legs,77,false,"lowclass2_p","LowerClassMale2Tex2");
-    GlobalAddPartLO(PS_Legs,72,false,"janitor_p","JanitorTex2");
-    GlobalAddPartLO(PS_Legs,73,false,"martialartist_p","Male4Tex2");
-    GlobalAddPartLO(PS_Legs,74,false,"tong_p","TracerTongTex2");
-    GlobalAddPartLO(PS_Legs,75,false,"hkmilitary_p","HKMilitaryTex2");
-    GlobalAddPartLO(PS_Legs,57,false,"vp_p","MichaelHamnerTex2");
-    GlobalAddPartLO(PS_Legs,79,false,"vinny_p","NathanMadisonTex2");
-    GlobalAddPartLO(PS_Legs,81,false,"page_p","BobPageTex2");
-    GlobalAddPartLO(PS_Legs,82,false,"gordonquick_p","GordonQuickTex3");
-    GlobalAddPartLO(PS_Legs,83,false,"redarrow_p","TriadRedArrowTex3");
-    GlobalAddPartLO(PS_Legs,26,false,"jock_p","JockTex3");
-    GlobalAddPartLO(PS_Legs,89,false,"maxchen_p","MaxChenTex3");
+    GlobalAddPartL(PS_Legs,37,false,"lowclass_p","PantsTex6");
+    GlobalAddPartL(PS_Legs,38,false,"lowclass_p2","PantsTex2"); //Also used by Jaime Reyes, and others
+    GlobalAddPartL(PS_Legs,39,false,"lowclass2_p","LowerClassMale2Tex2");
+    GlobalAddPartL(PS_Legs,40,false,"janitor_p","JanitorTex2");
+    GlobalAddPartL(PS_Legs,41,false,"martialartist_p","Male4Tex2");
+    GlobalAddPartL(PS_Legs,42,false,"tong_p","TracerTongTex2");
+    GlobalAddPartL(PS_Legs,43,false,"hkmilitary_p","HKMilitaryTex2");
+    GlobalAddPartL(PS_Legs,44,false,"vp_p","MichaelHamnerTex2");
+    GlobalAddPartL(PS_Legs,45,false,"vinny_p","NathanMadisonTex2");
+    GlobalAddPartL(PS_Legs,46,false,"page_p","BobPageTex2");
+    GlobalAddPartL(PS_Legs,47,false,"gordonquick_p","GordonQuickTex3");
+    GlobalAddPartL(PS_Legs,48,false,"redarrow_p","TriadRedArrowTex3");
+    GlobalAddPartL(PS_Legs,49,false,"jock_p","JockTex3");
+    GlobalAddPartL(PS_Legs,50,false,"maxchen_p","MaxChenTex3");
+
     //Female
-    GlobalAddPartL(PS_Legs,3,false,"default_p","JCDentonTex3");
-    GlobalAddPartLO(PS_Legs,4,false,"lab_pf","ScientistFemaleTex3");
-    GlobalAddPartLO(PS_Legs,2,false,"100%_p","Outfit1_Tex1");
-    GlobalAddPartLO(PS_Legs,13,false,"goldbrown_p","Outfit2F_Tex3");
-    GlobalAddPartLO(PS_Legs,15,false,"matrix_p","Outfit4F_Tex3");
-    GlobalAddPartLO(PS_Legs,16,false,"goth_p","Outfit3F_Tex3");
-    GlobalAddPartLO(PS_Legs,38,false,"anna_p","PantsTex9");
-    GlobalAddPartLO(PS_Legs,39,false,"tiffany_p","TiffanySavageTex2");
-    GlobalAddPartL(PS_Legs,24,false,"junkie_p2","JunkieFemaleTex2");
-    GlobalAddPartLO(PS_Legs,29,false,"dentonclone_pf","DentonCloneTex2Fem");
+    GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
+    GlobalAddPartL(PS_Legs,12,false,"lab_pf","ScientistFemaleTex3");
+    GlobalAddPartL(PS_Legs,3,false,"100%_p","Outfit1_Tex1");
+    GlobalAddPartL(PS_Legs,129,false,"goldbrown_p","Outfit2F_Tex3");
+    GlobalAddPartL(PS_Legs,130,false,"matrix_p","Outfit4F_Tex3");
+    GlobalAddPartL(PS_Legs,131,false,"goth_p","Outfit3F_Tex3");
+    GlobalAddPartL(PS_Legs,132,false,"anna_p","PantsTex9");
+    GlobalAddPartL(PS_Legs,133,false,"tiffany_p","TiffanySavageTex2");
+    
+    //TODO: These are female only
+    GlobalAddPartL(PS_Legs_F,134,false,"junkie_p2","JunkieFemaleTex2");
+    GlobalAddPartL(PS_Legs_F,135,false,"dentonclone_pf","DentonCloneTex2Fem");
     
     //Dress Pants
-    GlobalAddPartLO(PS_DressLegs,49,false,"nurse_pf","LegsTex1");
-    GlobalAddPartLO(PS_DressLegs,19,false,"stockings_pf","LegsTex2");
-    GlobalAddPartLO(PS_DressLegs,42,false,"hooker_pf","Hooker1Tex1");
-    GlobalAddPartLO(PS_DressLegs,51,false,"hooker2_pf","Hooker2Tex1");
-    GlobalAddPartLO(PS_DressLegs,56,false,"alex_pf","Outfit5F_Tex1");
-    GlobalAddPartLO(PS_DressLegs,58,false,"rachel_pf","RachelMeadTex2");
-    GlobalAddPartLO(PS_DressLegs,59,false,"business_pf","BusinessWoman1Tex2");
-    GlobalAddPartLO(PS_DressLegs,28,false,"nicolette_pf","NicoletteDuClareTex3");
-    GlobalAddPartLO(PS_DressLegs,40,false,"sarah_pf","SarahMeadTex3");
-    GlobalAddPartLO(PS_DressLegs,92,false,"office_pf","Female2Tex1");
-    GlobalAddPartLO(PS_DressLegs,95,false,"lowclass2_pf","Female3Tex2");
+    GlobalAddPartL(PS_DressLegs,136,false,"nurse_pf","LegsTex1");
+    GlobalAddPartL(PS_DressLegs,137,false,"stockings_pf","LegsTex2");
+    GlobalAddPartL(PS_DressLegs,138,false,"hooker_pf","Hooker1Tex1");
+    GlobalAddPartL(PS_DressLegs,139,false,"hooker2_pf","Hooker2Tex1");
+    GlobalAddPartL(PS_DressLegs,140,false,"alex_pf","Outfit5F_Tex1");
+    GlobalAddPartL(PS_DressLegs,141,false,"rachel_pf","RachelMeadTex2");
+    GlobalAddPartL(PS_DressLegs,142,false,"business_pf","BusinessWoman1Tex2");
+    GlobalAddPartL(PS_DressLegs,143,false,"nicolette_pf","NicoletteDuClareTex3");
+    GlobalAddPartL(PS_DressLegs,144,false,"sarah_pf","SarahMeadTex3");
+    GlobalAddPartL(PS_DressLegs,145,false,"office_pf","Female2Tex1");
+    GlobalAddPartL(PS_DressLegs,146,false,"lowclass2_pf","Female3Tex2");
 
     //Skirts
-    GlobalAddPartLO(PS_Skirt,28,false,"nicolette_sk","NicoletteDuClareTex2","NicoletteDuClareTex2");
-    GlobalAddPartLO(PS_Skirt,40,false,"sarah_sk","SarahMeadTex2","SarahMeadTex2");
-    GlobalAddPartLO(PS_Skirt,42,false,"hooker_sk","Hooker1Tex2","Hooker1Tex2");
-    GlobalAddPartLO(PS_Skirt,51,false,"hooker2_sk","Hooker2Tex2","Hooker2Tex2");
-    GlobalAddPartLO(PS_Skirt,56,false,"alex_sk","Outfit5F_Tex2","Outfit5F_Tex2");
+    GlobalAddPartL(PS_Skirt,160,false,"nicolette_sk","NicoletteDuClareTex2","NicoletteDuClareTex2");
+    GlobalAddPartL(PS_Skirt,161,false,"sarah_sk","SarahMeadTex2","SarahMeadTex2");
+    GlobalAddPartL(PS_Skirt,162,false,"hooker_sk","Hooker1Tex2","Hooker1Tex2");
+    GlobalAddPartL(PS_Skirt,163,false,"hooker2_sk","Hooker2Tex2","Hooker2Tex2");
+    GlobalAddPartL(PS_Skirt,164,false,"alex_sk","Outfit5F_Tex2","Outfit5F_Tex2");
 
     //Shirts etc
-    GlobalAddPartLO(PS_Torso_M,3,false,"ajacobson_s","AlexJacobsonTex1");
-    GlobalAddPartLO(PS_Torso_M,8,false,"unatco_s","UNATCOTroopTex2");
-    GlobalAddPartLO(PS_Torso_M,9,false,"mechanic_s","MechanicTex1");
-    GlobalAddPartLO(PS_Torso_M,17,false,"soldier_s","SoldierTex1");
-    GlobalAddPartLO(PS_Torso_M,18,false,"riotcop_s","RiotCopTex2");
-    GlobalAddPartLO(PS_Torso_M,20,false,"nsf_s","TerroristTex1");
-    GlobalAddPartLO(PS_Torso_M,25,false,"mj12_s","MJ12TroopTex2");
-    GlobalAddPartLO(PS_Torso_M,32,false,"carter_s","SamCarterTex1");
-    GlobalAddPartLO(PS_Torso_M,37,false,"thug_s","ThugMale2Tex1");
-    GlobalAddPartLO(PS_Torso_M,53,false,"joegreene_s","JoeGreeneTex1");
-    GlobalAddPartLO(PS_Torso_M,54,false,"junkie_s","JunkieMaleTex1");
-    GlobalAddPartLO(PS_Torso_M,62,false,"jojo_s","JoJoFineTex1");
-    GlobalAddPartLO(PS_Torso_M,63,false,"bartender_s","BartenderTex1");
-    GlobalAddPartLO(PS_Torso_M,64,false,"thug3_s","ThugMale3Tex1");
-    GlobalAddPartLO(PS_Torso_M,65,false,"cop_s","CopTex1");
-    GlobalAddPartLO(PS_Torso_M,66,false,"howardstrong_s","HowardStrongTex1");
-    GlobalAddPartLO(PS_Torso_M,67,false,"adam_s","AdamJensenTex3");
-    GlobalAddPartLO(PS_Torso_M,67,false,"adam_s2","AdamJensenTex2");
-    GlobalAddPartLO(PS_Torso_M,29,false,"dentonclone_s","DentonCloneTex3");
-    GlobalAddPartLO(PS_Torso_M,69,false,"everett_s","MorganEverettTex1");
-    GlobalAddPartLO(PS_Torso_M,70,false,"boatperson_s","BoatPersonTex1");
-    GlobalAddPartLO(PS_Torso_M,60,false,"lowclass_s","LowerClassMaleTex1");
-    GlobalAddPartLO(PS_Torso_M,71,false,"chad_s","ChadTex1");
-    GlobalAddPartLO(PS_Torso_M,72,false,"janitor_s","JanitorTex1");
-    GlobalAddPartLO(PS_Torso_M,73,false,"martialartist_s","Male4Tex1");
-    GlobalAddPartLO(PS_Torso_M,74,false,"tong_s","TracerTongTex1");
-    GlobalAddPartLO(PS_Torso_M,75,false,"hkmilitary_s","HKMilitaryTex1");
-    GlobalAddPartLO(PS_Torso_M,56,false,"alex_s","AlexDentonMaleTex2");
+    GlobalAddPartL(PS_Torso_M,89,false,"ajacobson_s","AlexJacobsonTex1");
+    GlobalAddPartL(PS_Torso_M,90,false,"unatco_s","UNATCOTroopTex2");
+    GlobalAddPartL(PS_Torso_M,91,false,"mechanic_s","MechanicTex1");
+    GlobalAddPartL(PS_Torso_M,92,false,"soldier_s","SoldierTex1");
+    GlobalAddPartL(PS_Torso_M,93,false,"riotcop_s","RiotCopTex2");
+    GlobalAddPartL(PS_Torso_M,55,false,"nsf_s","TerroristTex1");
+    GlobalAddPartL(PS_Torso_M,94,false,"mj12_s","MJ12TroopTex2");
+    GlobalAddPartL(PS_Torso_M,95,false,"carter_s","SamCarterTex1");
+    GlobalAddPartL(PS_Torso_M,96,false,"thug_s","ThugMale2Tex1");
+    GlobalAddPartL(PS_Torso_M,97,false,"joegreene_s","JoeGreeneTex1");
+    GlobalAddPartL(PS_Torso_M,98,false,"junkie_s","JunkieMaleTex1");
+    GlobalAddPartL(PS_Torso_M,99,false,"jojo_s","JoJoFineTex1");
+    GlobalAddPartL(PS_Torso_M,100,false,"bartender_s","BartenderTex1");
+    //GlobalAddPartL(PS_Torso_M,115,false,"thug3_s","ThugMale3Tex1");
+    GlobalAddPartL(PS_Torso_M,101,false,"cop_s","CopTex1");
+    GlobalAddPartL(PS_Torso_M,102,false,"howardstrong_s","HowardStrongTex1");
+    GlobalAddPartL(PS_Torso_M,103,false,"adam_s","AdamJensenTex3");
+    GlobalAddPartL(PS_Torso_M,104,false,"adam_s2","AdamJensenTex2");
+    GlobalAddPartL(PS_Torso_M,63,false,"dentonclone_s","DentonCloneTex3");
+    GlobalAddPartL(PS_Torso_M,105,false,"everett_s","MorganEverettTex1");
+    GlobalAddPartL(PS_Torso_M,106,false,"boatperson_s","BoatPersonTex1");
+    GlobalAddPartL(PS_Torso_M,107,false,"lowclass_s","LowerClassMaleTex1");
+    GlobalAddPartL(PS_Torso_M,108,false,"chad_s","ChadTex1");
+    GlobalAddPartL(PS_Torso_M,109,false,"janitor_s","JanitorTex1");
+    GlobalAddPartL(PS_Torso_M,110,false,"martialartist_s","Male4Tex1");
+    GlobalAddPartL(PS_Torso_M,111,false,"tong_s","TracerTongTex1");
+    GlobalAddPartL(PS_Torso_M,112,false,"hkmilitary_s","HKMilitaryTex1");
+    GlobalAddPartL(PS_Torso_M,113,false,"alex_s","AlexDentonMaleTex2");
 
     //Female
-    GlobalAddPartLO(PS_Torso_F,28,false,"nicolette_s","NicoletteDuClareTex1");
-    GlobalAddPartLO(PS_Torso_F,38,false,"anna_s","AnnaNavarreTex1");
-    GlobalAddPartLO(PS_Torso_F,39,false,"tiffany_s","TiffanySavageTex1");
-    GlobalAddPartLO(PS_Torso_F,40,false,"sarah_s","SarahMeadTex1");
-    GlobalAddPartLO(PS_Torso_F,40,false,"shea_s","JordanSheaTex1");
-    GlobalAddPartLO(PS_Torso_F,42,false,"hooker_s","Hooker1Tex3");
-    GlobalAddPartLO(PS_Torso_F,51,false,"hooker2_s","Hooker2Tex3");
-    GlobalAddPartLO(PS_Torso_F,54,false,"junkie_s","JunkieFemaleTex1");
-    GlobalAddPartLO(PS_Torso_F,56,false,"alex_s","Outfit5F_Tex3");
-    GlobalAddPartLO(PS_Torso_F,21,false,"bum_sf","BumFemaleTex1");
-    GlobalAddPartLO(PS_Torso_F,60,false,"lowclass_sf","LowerClassFemaleTex1");
-    GlobalAddPartLO(PS_Torso_F,61,false,"sandrarenton_s","SandraRentonTex1");
-    GlobalAddPartLO(PS_Torso_F,29,false,"dentonclone_sf","DentonCloneTex3Fem");
+    GlobalAddPartL(PS_Torso_F,147,false,"nicolette_s","NicoletteDuClareTex1");
+    GlobalAddPartL(PS_Torso_F,148,false,"anna_s","AnnaNavarreTex1");
+    GlobalAddPartL(PS_Torso_F,149,false,"tiffany_s","TiffanySavageTex1");
+    GlobalAddPartL(PS_Torso_F,150,false,"sarah_s","SarahMeadTex1");
+    GlobalAddPartL(PS_Torso_F,151,false,"shea_s","JordanSheaTex1");
+    GlobalAddPartL(PS_Torso_F,152,false,"hooker_s","Hooker1Tex3");
+    GlobalAddPartL(PS_Torso_F,153,false,"hooker2_s","Hooker2Tex3");
+    GlobalAddPartL(PS_Torso_F,154,false,"junkie_s","JunkieFemaleTex1");
+    GlobalAddPartL(PS_Torso_F,155,false,"alex_s","Outfit5F_Tex3");
+    GlobalAddPartL(PS_Torso_F,156,false,"bum_sf","BumFemaleTex1");
+    GlobalAddPartL(PS_Torso_F,157,false,"lowclass_sf","LowerClassFemaleTex1");
+    GlobalAddPartL(PS_Torso_F,158,false,"sandrarenton_s","SandraRentonTex1");
+    GlobalAddPartL(PS_Torso_F,159,false,"dentonclone_sf","DentonCloneTex3Fem");
     
     //========================================================
     //  GM_Trench
@@ -497,50 +500,50 @@ function PopulateOutfitsList()
     AddDefaultReference("nothing_g");
     
     //Add Trenchcoat-only Torsos because they can't be used on other outfits, and other torsos can't be used here
-    AddPartL(PS_Torso_M,3,false,"default_s",,,,,"JCDentonTex1");
-    AddPartLO(PS_Torso_M,4,false,"lab_s",,,,,"TrenchShirtTex3");
-    AddPartLO(PS_Torso_M,2,false,"100%_s",,,,,"Outfit1_Tex1");
-    AddPartLO(PS_Torso_M,5,false,"paul_s",,,,,"PaulDentonTex1");
-    AddPartLO(PS_Torso_M,21,false,"bum_s",,,,,"TrenchShirtTex1");
-    AddPartLO(PS_Torso_M,44,false,"bum2_s",,,,,"TrenchShirtTex2");
-    AddPartLO(PS_Torso_M,22,false,"lebedev_s",,,,,"JuanLebedevTex1");
-    AddPartLO(PS_Torso_M,23,false,"smuggler_s",,,,,"SmugglerTex1");
-    AddPartLO(PS_Torso_M,24,false,"simons_s",,,,,"WaltonSimonsTex1");
-    AddPartLO(PS_Torso_M,48,false,"doctor_s",,,,,"DoctorTex1");
-    AddPartLO(PS_Torso_M,50,false,"gilbertrenton_s",,,,,"GilbertRentonTex1");
-    AddPartLO(PS_Torso_M,52,false,"ford_s",,,,,"FordSchickTex1");
-    AddPartLO(PS_Torso_M,55,false,"thug2_s",,,,,"ThugMaleTex1");
-    AddPartLO(PS_Torso_M,82,false,"gordonquick_s",,,,,"GordonQuickTex1");
-    AddPartLO(PS_Torso_M,83,false,"redarrow_s",,,,,"TriadRedArrowTex1");
-    AddPartLO(PS_Torso_M,26,false,"jock_s",,,,,"JockTex1");
-    AddPartLO(PS_Torso_M,85,false,"jaime_s",,,,,"JaimeReyesTex1");
-    AddPartLO(PS_Torso_M,86,false,"toby_s",,,,,"TobyAtanweTex1");
-    AddPartLO(PS_Torso_M,87,false,"garysavage_s",,,,,"GarySavageTex1");
-    AddPartLO(PS_Torso_M,89,false,"maxchen_s",,,,,"MaxChenTex1");
-    AddPartLO(PS_Torso_M,94,false,"manderley_s",,,,,"JosephManderleyTex1");
+    AddPartL(PS_Torso_M,0,false,"default_s",,,,,"JCDentonTex1");
+    AddPartL(PS_Torso_M,51,false,"lab_s",,,,,"TrenchShirtTex3");
+    AddPartL(PS_Torso_M,8,false,"100%_s",,,,,"Outfit1_Tex1");
+    AddPartL(PS_Torso_M,52,false,"paul_s",,,,,"PaulDentonTex1");
+    AddPartL(PS_Torso_M,53,false,"bum_s",,,,,"TrenchShirtTex1");
+    AddPartL(PS_Torso_M,54,false,"bum2_s",,,,,"TrenchShirtTex2");
+    AddPartL(PS_Torso_M,55,false,"lebedev_s",,,,,"JuanLebedevTex1");
+    AddPartL(PS_Torso_M,56,false,"smuggler_s",,,,,"SmugglerTex1");
+    AddPartL(PS_Torso_M,57,false,"simons_s",,,,,"WaltonSimonsTex1");
+    AddPartL(PS_Torso_M,58,false,"doctor_s",,,,,"DoctorTex1");
+    AddPartL(PS_Torso_M,59,false,"manderley_s",,,,,"JosephManderleyTex1");
+    AddPartL(PS_Torso_M,60,false,"gilbertrenton_s",,,,,"GilbertRentonTex1");
+    AddPartL(PS_Torso_M,61,false,"ford_s",,,,,"FordSchickTex1");
+    AddPartL(PS_Torso_M,62,false,"thug2_s",,,,,"ThugMaleTex1");
+    AddPartL(PS_Torso_M,63,false,"gordonquick_s",,,,,"GordonQuickTex1");
+    AddPartL(PS_Torso_M,64,false,"redarrow_s",,,,,"TriadRedArrowTex1");
+    AddPartL(PS_Torso_M,65,false,"jock_s",,,,,"JockTex1");
+    AddPartL(PS_Torso_M,66,false,"jaime_s",,,,,"JaimeReyesTex1");
+    AddPartL(PS_Torso_M,67,false,"toby_s",,,,,"TobyAtanweTex1");
+    AddPartL(PS_Torso_M,68,false,"garysavage_s",,,,,"GarySavageTex1");
+    AddPartL(PS_Torso_M,69,false,"maxchen_s",,,,,"MaxChenTex1");
     
     //Trenchcoats
-    AddPartL(PS_Trench,3,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
-    AddPartLO(PS_Trench,4,false,"lab_t",,"LabCoatTex1",,,,"LabCoatTex1");
-    AddPartLO(PS_Trench,2,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
-    AddPartLO(PS_Trench,5,false,"paul_t",,"PaulDentonTex2",,,,"PaulDentonTex2");
-    AddPartLO(PS_Trench,21,false,"bum_t",,"BumMaleTex2",,,,"BumMaleTex2");
-    AddPartLO(PS_Trench,44,false,"bum2_t",,"BumMale2Tex2",,,,"BumMale2Tex2");
-    AddPartLO(PS_Trench,88,false,"bum3_t",,"BumMale3Tex2",,,,"BumMale3Tex2");
-    AddPartLO(PS_Trench,22,false,"lebedev_t",,"JuanLebedevTex2",,,,"JuanLebedevTex2");
-    AddPartLO(PS_Trench,23,false,"smuggler_t",,"SmugglerTex2",,,,"SmugglerTex2");
-    AddPartLO(PS_Trench,24,false,"simons_t",,"WaltonSimonsTex2",,,,"WaltonSimonsTex2");
-    AddPartLO(PS_Trench,45,false,"harleyfilben_t",,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
-    AddPartLO(PS_Trench,50,false,"gilbertrenton_t",,"GilbertRentonTex2",,,,"GilbertRentonTex2");
-    AddPartLO(PS_Trench,52,false,"ford_t",,"FordSchickTex2",,,,"FordSchickTex2");
-    AddPartLO(PS_Trench,55,false,"thug2_t",,"ThugMaleTex2");
-    AddPartLO(PS_Trench,82,false,"gordonquick_t",,"GordonQuickTex2",,,,"GordonQuickTex2");
-    AddPartLO(PS_Trench,83,false,"redarrow_t",,"TriadRedArrowTex2",,,,"TriadRedArrowTex2");
-    AddPartLO(PS_Trench,26,false,"jock_t",,"JockTex2",,,,);
-    AddPartLO(PS_Trench,85,false,"toby_t",,"TobyAtanweTex2",,,,"TobyAtanweTex2");
-    AddPartLO(PS_Trench,89,false,"maxchen_t",,"MaxChenTex2",,,,"MaxChenTex2");
-    AddPartLO(PS_Trench,94,false,"manderley_t",,"JosephManderleyTex2",,,,"JosephManderleyTex2");
-    AddPartLO(PS_Trench,96,false,"gray_t",,"TrenchCoatTex1",,,,"TrenchCoatTex1");
+    AddPartL(PS_Trench,0,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
+    AddPartL(PS_Trench,70,false,"lab_t",,"LabCoatTex1",,,,"LabCoatTex1");
+    AddPartL(PS_Trench,8,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
+    AddPartL(PS_Trench,71,false,"paul_t",,"PaulDentonTex2",,,,"PaulDentonTex2");
+    AddPartL(PS_Trench,72,false,"bum_t",,"BumMaleTex2",,,,"BumMaleTex2");
+    AddPartL(PS_Trench,73,false,"bum2_t",,"BumMale2Tex2",,,,"BumMale2Tex2");
+    AddPartL(PS_Trench,74,false,"bum3_t",,"BumMale3Tex2",,,,"BumMale3Tex2");
+    AddPartL(PS_Trench,75,false,"lebedev_t",,"JuanLebedevTex2",,,,"JuanLebedevTex2");
+    AddPartL(PS_Trench,76,false,"smuggler_t",,"SmugglerTex2",,,,"SmugglerTex2");
+    AddPartL(PS_Trench,77,false,"simons_t",,"WaltonSimonsTex2",,,,"WaltonSimonsTex2");
+    AddPartL(PS_Trench,78,false,"harleyfilben_t",,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
+    AddPartL(PS_Trench,79,false,"gilbertrenton_t",,"GilbertRentonTex2",,,,"GilbertRentonTex2");
+    AddPartL(PS_Trench,80,false,"ford_t",,"FordSchickTex2",,,,"FordSchickTex2");
+    AddPartL(PS_Trench,81,false,"thug2_t",,"ThugMaleTex2");
+    AddPartL(PS_Trench,82,false,"gordonquick_t",,"GordonQuickTex2",,,,"GordonQuickTex2");
+    AddPartL(PS_Trench,83,false,"redarrow_t",,"TriadRedArrowTex2",,,,"TriadRedArrowTex2");
+    AddPartL(PS_Trench,84,false,"jock_t",,"JockTex2",,,,);
+    AddPartL(PS_Trench,85,false,"toby_t",,"TobyAtanweTex2",,,,"TobyAtanweTex2");
+    AddPartL(PS_Trench,86,false,"maxchen_t",,"MaxChenTex2",,,,"MaxChenTex2");
+    AddPartL(PS_Trench,87,false,"manderley_t",,"JosephManderleyTex2",,,,"JosephManderleyTex2");
+    AddPartL(PS_Trench,88,false,"gray_t",,"TrenchCoatTex1",,,,"TrenchCoatTex1");
 
     //Default M
     BeginNewOutfitL("default",0);
@@ -712,6 +715,7 @@ function PopulateOutfitsList()
     BeginNewPartsGroup("GFM_Trench", false, true);
     GroupAddParts(PS_Body_F);
     GroupTranspose(PS_Legs,2);
+    GroupTranspose2(PS_Legs_F,PS_Legs,2);
     GroupTranspose(PS_Glasses,6,7);
     
     //Defaults
@@ -719,20 +723,20 @@ function PopulateOutfitsList()
     AddDefaultReference("nothing_g");
     
     //Add Trenchcoat-only Torsos because they can't be used on other outfits, and other torsos can't be used here
-    AddPartL(PS_Torso_F,3,false,"default_s",,,,,"default");
-    AddPartL(PS_Torso_F,5,false,"default_s2",,,,,"Outfit1F_Tex1");
-    AddPartLO(PS_Torso_F,2,false,"100%_s",,,,,"Outfit1_Tex1");
-    AddPartLO(PS_Torso_F,4,false,"lab_s",,,,,"TrenchShirtTex3");
-    AddPartLO(PS_Torso_F,15,false,"matrix_s",,,,,"Outfit4F_Tex1");
-    AddPartLO(PS_Torso_F,16,false,"goth_s",,,,,"Outfit3F_Tex1");
+    AddPartL(PS_Torso_F,0,false,"default_s",,,,,"default");
+    AddPartL(PS_Torso_F,161,false,"default_s2",,,,,"Outfit1F_Tex1");
+    AddPartL(PS_Torso_F,8,false,"100%_s",,,,,"Outfit1_Tex1");
+    AddPartL(PS_Torso_F,51,false,"lab_s",,,,,"TrenchShirtTex3");
+    AddPartL(PS_Torso_F,162,false,"matrix_s",,,,,"Outfit4F_Tex1");
+    AddPartL(PS_Torso_F,163,false,"goth_s",,,,,"Outfit3F_Tex1");
 
     //Trenchcoats
-    AddPartL(PS_Trench,3,false,"default_t",,"default",,,,"default");
-    AddPartLO(PS_Trench,4,false,"lab_t",,"ScientistFemaleTex2",,,,"ScientistFemaleTex2");
-    AddPartLO(PS_Trench,2,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
-    AddPartLO(PS_Trench,13,false,"goldbrown_t",,"Outfit2F_Tex2",,,,"Outfit2F_Tex2");
-    AddPartLO(PS_Trench,15,false,"matrix_t",,"Outfit4F_Tex2",,,,"Outfit4F_Tex2");
-    AddPartLO(PS_Trench,16,false,"goth_t",,"Female4Tex2",,,,"Female4Tex2");
+    AddPartL(PS_Trench,0,false,"default_t",,"default",,,,"default");
+    AddPartL(PS_Trench,70,false,"lab_t",,"ScientistFemaleTex2",,,,"ScientistFemaleTex2");
+    AddPartL(PS_Trench,8,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
+    AddPartL(PS_Trench,164,false,"goldbrown_t",,"Outfit2F_Tex2",,,,"Outfit2F_Tex2");
+    AddPartL(PS_Trench,165,false,"matrix_t",,"Outfit4F_Tex2",,,,"Outfit4F_Tex2");
+    AddPartL(PS_Trench,166,false,"goth_t",,"Female4Tex2",,,,"Female4Tex2");
 
     //Default
     BeginNewOutfitL("default",0);
@@ -801,6 +805,7 @@ function PopulateOutfitsList()
     GroupAddParts(PS_Body_F);
     //GroupTranspose(PS_Legs,3);
     //GroupTranspose2(PS_DressLegs,PS_Legs,3);
+    //GroupTranspose2(PS_Legs_F,PS_Legs,3);
     GroupTranspose(PS_DressLegs,3);
     GroupTranspose(PS_Glasses,6,7);
     
@@ -880,6 +885,7 @@ function PopulateOutfitsList()
     BeginNewPartsGroup("GFM_Dress", false, true);
     GroupTranspose(PS_Body_F,7);
     GroupTranspose(PS_Legs,1);
+    GroupTranspose2(PS_Legs_F,PS_Legs,1);
     GroupTranspose2(PS_DressLegs,PS_Legs,1);
     GroupTranspose(PS_Skirt,2,4);
     GroupTranspose(PS_Torso_F,3);
@@ -924,6 +930,7 @@ function PopulateOutfitsList()
     BeginNewPartsGroup("GFM_TShirtPants", false, true);
     GroupAddParts(PS_Body_F);
     GroupTranspose(PS_Legs,6);
+    GroupTranspose2(PS_Legs_F,PS_Legs,6);
     GroupTranspose(PS_Torso_F,7);
     
     //Defaults
@@ -1028,9 +1035,11 @@ function PopulateOutfitsList()
     OutfitAddPartReference("sunglasses2_g");
     
     //Denton Clone
+    /*
     BeginNewOutfitL("dentonclone",29);
     OutfitAddPartReference("dentonclone_s");
     OutfitAddPartReference("dentonclone_pf"); //Female legs work for male
+    */
     
     //GEP Gun Enjoyer
     BeginNewOutfitL("dentonclone",68);
@@ -1124,9 +1133,9 @@ function PopulateOutfitsList()
     
     //Hat
     //EDIT: These should probably be exclusive to GM_Suit
-    AddPartL(PS_Hat,11,true,"chef_h",,,,,,,,"ChefTex3");
-    AddPartL(PS_Hat,18,true,"sailor_h","SailorSkin",,,,,,,"SailorTex3");
-    AddPartL(PS_Hat,29,true,"ponytail_g",,,,,,,,"PonyTailTex1");
+    AddPartL(PS_Hat,126,true,"chef_h",,,,,,,,"ChefTex3");
+    AddPartL(PS_Hat,127,true,"sailor_h","SailorSkin",,,,,,,"SailorTex3");
+    AddPartL(PS_Hat,128,true,"ponytail_g",,,,,,,,"PonyTailTex1");
     
     //Defaults
     AddDefaultReference("default_b");
@@ -1219,16 +1228,24 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Torso_M,2);
     GroupTranspose(PS_Mask,3,4,5);
     GroupTranspose(PS_Hat,6);
+    
+    //Masks
+    //Can only realistically be used on this model
+    //TODO: Either make these not count as accessories (set arg 3 to false), or
+    //add in a system whereby we always assign a default texture
+    AddPartL(PS_Body_M,116,false,"unatco_b",,,,"MiscTex1JC","MiscTex1JC","GrayMaskTex");
+    AddPartL(PS_Body_M,117,false,"nsf_b",,,,"TerroristTex0","TerroristTex0","GrayMaskTex");
+    AddPartL(PS_Body_M,118,false,"mj12elite_b",,,,"MJ12EliteTex0","MJ12EliteTex0","GrayMaskTex");
 
     //Jumpsuit specific helmets
-    AddPartL(PS_Hat,10,true,"unatco_h",,,,,,,"UNATCOTroopTex3");
-    AddPartL(PS_Hat,12,true,"soldier_h",,,,"SoldierTex0",,,"SoldierTex3");
-    //AddPartL(PS_Hat,12,true,"soldier_h",,,,,,,"SoldierTex3");
-    AddPartL(PS_Hat,13,true,"mechanic_h",,,,,,,"MechanicTex3");
-    AddPartLO(PS_Hat,18,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
-    AddPartL(PS_Hat,16,true,"nsf_h",,,,,,,"GogglesTex1");
-    AddPartL(PS_Hat,17,true,"mj12_h",,,,,,"MJ12TroopTex3","MJ12TroopTex4");
-    AddPartL(PS_Hat,27,true,"mj12elite_h",,,,,,"MJ12EliteTex3","MJ12EliteTex3");
+    AddPartL(PS_Hat,119,true,"unatco_h",,,,,,,"UNATCOTroopTex3");
+    AddPartL(PS_Hat,120,true,"soldier_h",,,,"SoldierTex0","PinkMaskTex","PinkMaskTex","SoldierTex3","PinkMaskTex");
+    //AddPartL(PS_Hat,120,true,"soldier_h",,,,,,,"SoldierTex3");
+    AddPartL(PS_Hat,121,true,"mechanic_h",,,,,,,"MechanicTex3");
+    AddPartL(PS_Hat,122,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
+    AddPartL(PS_Hat,123,true,"nsf_h",,,,,,,"GogglesTex1");
+    AddPartL(PS_Hat,124,true,"mj12_h",,,,,,"MJ12TroopTex3","MJ12TroopTex4");
+    AddPartL(PS_Hat,125,true,"mj12elite_h",,,,,,"MJ12EliteTex3","MJ12EliteTex3");
     
     //Defaults
     AddDefaultReference("default_b");
@@ -1237,14 +1254,6 @@ function PopulateOutfitsList()
 
     //test
     //AddPartLO(PS_Torso_M,31,false,"sailor_s",,,"SailorTex1");
-    
-    //Masks
-    //Can only realistically be used on this model
-    //TODO: Either make these not count as accessories (set arg 3 to false), or
-    //add in a system whereby we always assign a default texture
-    AddPartL(PS_Body_M,9,false,"unatco_b",,,,"MiscTex1JC","MiscTex1JC","GrayMaskTex");
-    AddPartL(PS_Body_M,15,false,"nsf_b",,,,"TerroristTex0","TerroristTex0","GrayMaskTex");
-    AddPartL(PS_Body_M,28,false,"mj12elite_b",,,,"MJ12EliteTex0","MJ12EliteTex0","GrayMaskTex");
     
     //Alex Denton
     BeginNewOutfitL("alex",56);
@@ -1538,7 +1547,7 @@ function bool IsUnlocked(string id)
     local int i;
 
     //SARGE: Remove this before release!
-    //return true;
+    return true;
 
     for (i = 0;i < 255 && unlockedOutfits[i] != "";i++)
     {
@@ -1861,36 +1870,219 @@ defaultproperties
      outfitInfos(94)=(Name="Manderley's Outfit")
      outfitInfos(95)=(Name="Traditional Dress")
      outfitInfos(96)=(Name="Terrorist Commander Outfit")
-     partNames(0)="Cool Sunglasses"
-     partNames(1)="Black Bars"
-     partNames(2)="Default Skin"
-     partNames(3)="Default"
-     partNames(4)="Prescription Glasses"
-     partNames(5)="Default w/ Jewellery"
-     partNames(6)="Reading Glasses"
-     partNames(7)="Black Suit Pants"
-     partNames(8)="Cool Shades"
-     partNames(9)="UNATCO Combat Mask"
-     partNames(10)="UNATCO Combat Helmet"
-     partNames(11)="Chef's Hat"
-     partNames(12)="Soldier's Helmet"
-     partNames(13)="Mechanic's Hard Hat"
-     partNames(14)="Helmet Strap"
-     partNames(15)="Tacticool Gear"
-     partNames(16)="Tacticool Goggles"
-     partNames(17)="Majestic 12 Helmet"
-     partNames(18)="Sailor Hat"
-     partNames(19)="Beanie"
-     partNames(20)="Dirty Brown Pants"
-     partNames(21)="Blue Business Pants"
-     partNames(22)="Black Business Pants"
-     partNames(23)="Soiled Pants (Brown)"
-     partNames(24)="Soiled Pants (Blue)"
-     partNames(25)="Tech Visor"
-     partNames(26)="Dark Glasses"
-     partNames(27)="MJ12 Elite Helmet"
-     partNames(28)="MJ12 Elite Tacticool Gear"
-     partNames(29)="Ponytail"
+
+     //Misc
+     partNames(0)="Default"
+
+     //Glasses
+     partNames(1)="Slim Sunglasses"
+     partNames(2)="Prescription Glasses"
+     partNames(3)="Black Bars"
+     partNames(4)="Reading Glasses"
+     partNames(5)="Aviators"
+     partNames(6)="Sunglasses"
+     partNames(7)="Tacticool Goggles"
+
+     //Skin Textures
+     partNames(8)="100% Black"
+     partNames(9)="Beanie"
+     partNames(10)="Jensen"
+     
+     //Pants (Male)
+     partNames(11)="Blue Tactical Pants with Boots"
+     partNames(12)="Tan Business Pants"
+     partNames(13)="Dirty Jeans"
+     partNames(14)="Dark Blue Dress Pants"
+     partNames(15)="Brown Dress Pants"
+     partNames(16)="Light Blue Dress Pants"
+     partNames(17)="Hackerman Pants"
+     partNames(18)="UNATCO Combat Pants"
+     partNames(19)="Mechanic's Jumpsuit Pants"
+     partNames(20)="Fatigue Pants"
+     partNames(21)="Riot Gear Pants"
+     partNames(22)="Brown Dress Pants with Boots"
+     partNames(23)="MJ12 Combat Pants"
+     partNames(24)="Black Military Pants with Boots"
+     partNames(25)="Sailor Pants"
+     partNames(26)="Ripped Jeans"
+     partNames(27)="Black Dress Pants"
+     partNames(28)="Black Dress Pants with Boots"
+     partNames(29)="Black Dress Pants 2"
+     partNames(30)="Soiled Pants"
+     partNames(31)="Dark Blue Dress Pants"
+     partNames(32)="Dirty Brown Pants"
+     partNames(33)="Dirty Grey Pants"
+     partNames(34)="Police Uniform Pants"
+     partNames(35)="Black Pants with White Socks"
+     partNames(36)="Biker Pants"
+     partNames(37)="Brown Casual Pants"
+     partNames(38)="Jeans"
+     partNames(39)="Black Casual Pants"
+     partNames(40)="Janitors Pants"
+     partNames(41)="Monk's Pants"
+     partNames(42)="Green Pants with Boots"
+     partNames(43)="Military Fatigues with Boots"
+     partNames(44)="Dark Brown Dress Pants"
+     partNames(45)="Navy Dress Pants"
+     partNames(46)="Gray Dress Pants"
+     partNames(47)="Black Pants with Dragon"
+     partNames(48)="Sports Pants"
+     partNames(49)="Black Aviator Pants"
+     partNames(50)="Max Chen's Pants"
+     
+     //Trench Coat Shirts
+     partNames(51)="Beige and Brown Turtleneck"
+     partNames(52)="Light Blue Turtleneck"
+     partNames(53)="Dirty White and Gray Shirt"
+     partNames(54)="Stained White Shirt"
+     partNames(55)="NSF Body Armor"
+     partNames(56)="Red Turtleneck"
+     partNames(57)="Black Vest and Black Tie"
+     partNames(58)="Blue Vest and Red Tie"
+     partNames(59)="Black Vest and Red Tie"
+     partNames(60)="Dirty Green Turtleneck"
+     partNames(61)="White Shirt"
+     partNames(62)="Punk Shirt"
+     partNames(63)="Bare Chest"
+     partNames(64)="Dark Blue Turtleneck"
+     partNames(65)="Aviator Shirt"
+     partNames(66)="White Shirt and Black Tie"
+     partNames(67)="Toby Atanwe's Shirt"
+     partNames(68)="Blue Shirt and Red Tie"
+     partNames(69)="Max Chen's Shirt"
+
+     //Trench Coats
+     partNames(70)="Lab Coat"
+     partNames(71)="Gray and Blue Jacket"
+     partNames(72)="Old Brown and Blue Jacket"
+     partNames(73)="Old Brown Jacket"
+     partNames(74)="Old Blue Jacket"
+     partNames(75)="Brown Jacket"
+     partNames(76)="Gray Jacket"
+     partNames(77)="Cyber Trenchcoat"
+     partNames(78)="Tattered Green Jacket"
+     partNames(79)="Old Gray Jacket"
+     partNames(80)="Blue Jacket"
+     partNames(81)="Tough Guy Leather Jacket"
+     partNames(82)="Adorned White Jacket"
+     partNames(83)="Red Arrow Jacket"
+     partNames(84)="Aviator Jacket"
+     partNames(85)="Illuminati Trenchcoat"
+     partNames(86)="Dragon Coat"
+     partNames(87)="Business Blazer"
+     partNames(88)="Gray Jacket"
+
+     //Shirts
+     partNames(89)="Hackerman Shirt"
+     partNames(90)="UNATCO Combat Vest"
+     partNames(91)="Mechanic's Jumpsuit Shirt"
+     partNames(92)="Military Fatigues"
+     partNames(93)="Riot Gear Tactical Vest"
+     partNames(94)="MJ12 Combat Vest"
+     partNames(95)="Military Fatigues 2"
+     partNames(96)="Woollen Turtleneck"
+     partNames(97)="Gray Business Shirt"
+     partNames(98)="Soiled Shirt"
+     partNames(99)="Fake Body Mod"
+     partNames(100)="White Business Shirt"
+     partNames(101)="Police Uniform Shirt"
+     partNames(102)="Gray Shirt with Waistcoat"
+     partNames(103)="Adam Jensen's Body"
+     partNames(104)="Adam Jensen's Body (Alt)"
+     partNames(105)="Slate Shirt with Waistcoat"
+     partNames(106)="Dirty White Singlet"
+     partNames(107)="Dirty White Shirt"
+     partNames(108)="Headshot Smiley Shirt"
+     partNames(109)="Janitors Shirt"
+     partNames(110)="Monk's Shirt"
+     partNames(111)="Tracer Tong's Shirt"
+     partNames(112)="Military Fatigues with Vest"
+     partNames(113)="Alex Denton's Shirt"
+
+     //Missed some previously
+     partNames(114)="White Dress Pants"
+     partNames(115)="Thug3 Shirt" //Placeholder
+
+     //Suit Torsos
+     //EDIT: These will just keep their outfit names
+
+     //Jumpsuit Bodies
+     partNames(116)="Tactical Face Mask"
+     partNames(117)="Tactical Equipment"
+     partNames(118)="Elite Tactical Equipment"
+
+     //Jumpsuit Helmets
+     partNames(119)="UNATCO Helmet"
+     partNames(120)="Military Helmet"
+     partNames(120)="Military Helmet"
+     partNames(121)="Hard Hat"
+     partNames(122)="Riot Helmet"
+     partNames(123)="Tacticool Goggles"
+     partNames(124)="MJ12 Helmet"
+     partNames(125)="MJ12 Elite Helmet"
+
+     //Suit Hats
+     partNames(126)="Chef Hat"
+     partNames(127)="Sailor Hat"
+     partNames(128)="Ponytail"
+
+     //FEMALE STUFF
+
+     //Pants
+     partNames(129)="Gold Brown Business Pants"
+     partNames(130)="Black Tactical Pants with Boots"
+     partNames(131)="Goth Pants with Boots"
+     partNames(132)="Mechanical Legs"
+     partNames(133)="Gray Pants with Leather Boots"
+     partNames(134)="Soiled Ripped Jeans"
+     partNames(135)="Underwear"
+
+     //Dress Pants
+     partNames(136)="Stockings with Brown Shoes"
+     partNames(137)="Dark Stockings with Black Shoes"
+     partNames(138)="Stockings with Red Shoes"
+     partNames(139)="Black Stockings with Black Shoes"
+     partNames(140)="Purple Stockings with Black Shoes"
+     partNames(141)="Stockings with Red Shoes (No Socks)"
+     partNames(142)="Medium Dark Stockings with Black Shoes"
+     partNames(143)="Punk Leggings"
+     partNames(144)="Thigh High Socks"
+     partNames(145)="Gray Shoes"
+     partNames(146)="Gray Shoes with Socks"
+
+     //Shirts
+     partNames(147)="Punk Top"
+     partNames(148)="Augmented Body"
+     partNames(149)="Leather Top"
+     partNames(150)="School Shirt"
+     partNames(151)="White Shirt (Open)"
+     partNames(152)="Blue Crop Top"
+     partNames(153)="Hooker Top"
+     partNames(154)="Soiled Tank Top"
+     partNames(155)="Alex Denton's Tactical Suit"
+     partNames(156)="Torn Top"
+     partNames(157)="Blue and White Top"
+     partNames(158)="Tattered Top"
+     partNames(159)="Basic Bra"
+
+     //Skirts
+     partNames(160)="Punk Skirt"
+     partNames(161)="Tartan Skirt"
+     partNames(162)="Race-Stripe Miniskirt"
+     partNames(163)="Black Skirt"
+     partNames(164)="Alex Denton's Tactical Suit"
+
+     //Trench Shirts
+     partNames(161)="Necklace"
+     partNames(162)="Matrix Shirt"
+     partNames(163)="Fishnet Shirt"
+     partNames(164)="Dark Brown Jacket"
+     partNames(165)="Green Patterned Black Jacket"
+     partNames(166)="Red Patterned Black Jacket"
+
+     //SuitSkirt Torsos
+     //EDIT: Leave these as the outfits for now
+
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
 }
