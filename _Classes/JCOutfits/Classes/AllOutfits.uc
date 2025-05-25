@@ -307,11 +307,11 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MargaretWilliamsTex1_S3.bmp"                   NAME="MargaretWilliamsTex1_S3"              GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MargaretWilliamsTex1_S4.bmp"                   NAME="MargaretWilliamsTex1_S4"              GROUP="Outfits"
 
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S0.bmp"                         NAME="MaggieChowTex1"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S1.bmp"                         NAME="MaggieChowTex1_S1"                    GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S2.bmp"                         NAME="MaggieChowTex1_S2"                    GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S3.bmp"                         NAME="MaggieChowTex1_S3"                    GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S4.bmp"                         NAME="MaggieChowTex1_S4"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S0.pcx"                         NAME="MaggieChowTex1"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S1.pcx"                         NAME="MaggieChowTex1_S1"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S2.pcx"                         NAME="MaggieChowTex1_S2"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S3.pcx"                         NAME="MaggieChowTex1_S3"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S4.pcx"                         NAME="MaggieChowTex1_S4"                    GROUP="Outfits"
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex1_S0.bmp"                   NAME="NicoletteDuclareTex1"                 GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex1_S1.bmp"                   NAME="NicoletteDuclareTex1_S1"              GROUP="Outfits"
