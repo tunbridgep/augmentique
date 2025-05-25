@@ -1531,7 +1531,7 @@ function bool IsUnlocked(string id)
     local int i;
 
     //SARGE: Remove this before release!
-    return true;
+    //return true;
 
     for (i = 0;i < 255 && unlockedOutfits[i] != "";i++)
     {

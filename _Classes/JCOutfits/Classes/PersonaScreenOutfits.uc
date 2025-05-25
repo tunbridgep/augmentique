@@ -632,7 +632,7 @@ defaultproperties
      ShowAccessoriesLabel="Show Accessories"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
-     EditButtonLabel="Edit Outfit"
+     EditButtonLabel="Customize Outfit"
      ChangeCameraLabel="Change Camera"
      NewLabel="(New)"
      clientBorderOffsetY=35
