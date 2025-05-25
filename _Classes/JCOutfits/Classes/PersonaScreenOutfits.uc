@@ -25,6 +25,7 @@ var localized String ShowAccessoriesLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
 var localized String EditButtonLabel;
+var localized String NewLabel;
 
 //The offset for the start of the buttons
 var int customButtonStartOffsetX;
@@ -32,13 +33,13 @@ var int customButtonStartOffsetY;
 var int customButtonAddPerButtonY;
 var int customButtonCount;
 
-var int rowIDLastEquipped;
+var transient int rowIDLastEquipped;
 
 var OutfitManager outfitManager;
 
-var int selectedRowId;
-var bool bCameraChange;
-var bool bEditMode;
+var transient int selectedRowId;
+var transient bool bCameraChange;
+var transient bool bEditMode;
 
 // ----------------------------------------------------------------------
 // InitWindow()
@@ -197,7 +198,12 @@ function Vector GetViewportLocation()
 
 	loc = 65 * Vector(player.Rotation);
     if (player.bForceDuck || player.bCrouchOn || player.bDuck == 1)
-        loc.Z = player.BaseEyeHeight + 15;
+    {
+        if (bCameraChange)
+            loc.Z = player.BaseEyeHeight - 15;
+        else
+            loc.Z = player.BaseEyeHeight + 15;
+    }
     else if (bCameraChange)
         loc.Z = player.BaseEyeHeight - 55;
     else
@@ -244,8 +250,9 @@ function CreateOutfitsList()
 	lstOutfits = PersonaListWindow(winScroll.clipWindow.NewChild(Class'PersonaListWindow'));
 	lstOutfits.EnableMultiSelect(False);
 	lstOutfits.EnableAutoExpandColumns(True);
-	lstOutfits.SetNumColumns(3);
+	lstOutfits.SetNumColumns(4);
 	lstOutfits.HideColumn(2, True);
+	lstOutfits.HideColumn(3, True);
 	lstOutfits.SetSortColumn(0, True);
 	lstOutfits.EnableAutoSort(False);
 	lstOutfits.SetColumnWidth(0, 150);
@@ -297,6 +304,7 @@ function PopulateOutfitsList()
 {
     local Outfit O;
 	local int rowId, i;
+    local string sortName;
 
 	// First clear the list
 	lstOutfits.DeleteAllRows();
@@ -317,15 +325,11 @@ function PopulateOutfitsList()
         if (O.hidden)
             continue;
 
-		rowId = lstOutfits.AddRow(O.name);
+		rowId = lstOutfits.AddRow(O.Name);
 
-		// Check to see if we need to display *New* in the second column
-		//if (image.bPlayerViewedImage == False)
-		//	lstOutfits.SetField(rowId, 1, "C");
+        if (O.bNew)
+            lstOutfits.SetField(rowId, 0, O.name @ NewLabel);
 
-		// Save the image away
-		//lstOutfits.SetRowClientObject(rowId, outfit);
-		lstOutfits.SetField(rowId, 0, O.name);
         if (outfitManager.IsEquipped(i))
         {
     		lstOutfits.SetField(rowId, 1, "C");
@@ -334,7 +338,24 @@ function PopulateOutfitsList()
 
         // Set the outfit number to the second column
         lstOutfits.SetFieldValue(rowId, 2, i);
+        
+        // Set up the third column for sorting
+
+        //Custom always goes to the top,
+        //New are below it
+        if (i == 0)
+            sortName = "000000" $ O.Name;
+        else if (O.bNew)
+            sortName = "111111" $ O.Name;
+        else
+            sortName = O.name;
+        
+        lstOutfits.SetField(rowId, 3, sortName);
 	}
+    
+    //Sort by name
+    lstOutfits.SetSortColumn(3, false);
+    lstOutfits.Sort();
 }
 
 // ----------------------------------------------------------------------
@@ -613,6 +634,7 @@ defaultproperties
      EquipButtonLabel="Equip"
      EditButtonLabel="Edit Outfit"
      ChangeCameraLabel="Change Camera"
+     NewLabel="(New)"
      clientBorderOffsetY=35
      ClientWidth=617
      ClientHeight=439

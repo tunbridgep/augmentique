@@ -1,12 +1,12 @@
 class Outfit extends Object;
 
-var string id;
-var string name;
-var string desc;
-var string pickupName;
-var string pickupMessage;
-var string pickupArticle;
-var string highlightName;
+var travel string id;
+var travel string name;
+var travel string desc;
+var travel string pickupName;
+var travel string pickupMessage;
+var travel string pickupArticle;
+var travel string highlightName;
 
 var PartsGroup partsGroup;
 
@@ -18,6 +18,7 @@ var DeusExPlayer player;
 var int index;                                  //The position in the master outfits list
 var travel bool hidden;                         //The outfit will not be shown in the list
 var bool unlocked;                              //Has this outfit been unlocked?
+var bool bNew;                                  //Sort to the top when we open the outfits menu if we haven't equipped this yet
 
 //Set our outfit unlocked, and unlock all parts
 function SetUnlocked()
@@ -72,6 +73,13 @@ function AddPartFromID(string partID)
     local OutfitPart P;
     local int i;
     P = partsGroup.GetPartWithID(partID);
+
+    if (numParts >= 20)
+    {
+        player.ClientMessage("Warning: Outfit " $ id $ " could not add part " $ partID $ " because the parts array is full");
+        return;
+    }
+
 
     if (P != None)
     {
