@@ -312,6 +312,10 @@ function SpawnerPickup(OutfitSpawner S)
         player.ClientMessage(outfits[index].PickupMessage, 'Pickup');
         
     Unlock(S.id);
+
+    //Set outfit as new
+    outfits[index].bNew = true;
+
     S.Destroy();
 }
 
@@ -878,31 +882,31 @@ function PopulateOutfitsList()
     
     //Nicollette DuClare's outfit
     BeginNewOutfitL("nicolette",28);
-    OutfitAddPartReference("nicolette_p");
+    OutfitAddPartReference("nicolette_pf");
     OutfitAddPartReference("nicolette_s");
     OutfitAddPartReference("nicolette_sk");
     
     //Sarah Mead
     BeginNewOutfitL("meadsarah",40);
-    OutfitAddPartReference("sarah_p");
+    OutfitAddPartReference("sarah_pf");
     OutfitAddPartReference("sarah_s");
     OutfitAddPartReference("sarah_sk");
     
     //Hooker
     BeginNewOutfitL("hooker",42);
-    OutfitAddPartReference("hooker_p");
+    OutfitAddPartReference("hooker_pf");
     OutfitAddPartReference("hooker_s");
     OutfitAddPartReference("hooker_sk");
     
     //Hooker2
     BeginNewOutfitL("assless",51);
-    OutfitAddPartReference("hooker2_p");
+    OutfitAddPartReference("hooker2_pf");
     OutfitAddPartReference("hooker2_s");
     OutfitAddPartReference("hooker2_sk");
     
     //Alex Denton
     BeginNewOutfitL("alex",56);
-    OutfitAddPartReference("alex_p");
+    OutfitAddPartReference("alex_pf");
     OutfitAddPartReference("alex_s");
     OutfitAddPartReference("alex_sk");
 
@@ -1453,6 +1457,9 @@ function EquipOutfit(int index)
         flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ currOutfit.id);
         Player.FlagBase.DeleteFlag(flag,FLAG_Bool);
     }
+
+    //Set the outfit as no longer new
+    outfits[index].bNew = false;
 
     currOutfit = outfits[index];
     savedOutfitIndex = index;
