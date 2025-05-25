@@ -540,6 +540,7 @@ function PopulateOutfitsList()
     AddPartLO(PS_Trench,85,false,"toby_t",,"TobyAtanweTex2",,,,"TobyAtanweTex2");
     AddPartLO(PS_Trench,89,false,"maxchen_t",,"MaxChenTex2",,,,"MaxChenTex2");
     AddPartLO(PS_Trench,94,false,"manderley_t",,"JosephManderleyTex2",,,,"JosephManderleyTex2");
+    AddPartLO(PS_Trench,96,false,"gray_t",,"TrenchCoatTex1",,,,"TrenchCoatTex1");
 
     //Default M
     BeginNewOutfitL("default",0);
@@ -691,6 +692,12 @@ function PopulateOutfitsList()
     OutfitAddPartReference("thug2_p");
     OutfitAddPartReference("thug2_s");
     OutfitAddPartReference("thug2_t");
+    
+    //Terrorist Commander
+    BeginNewOutfitL("terroristcommander",96);
+    OutfitAddPartReference("gray_t");
+    OutfitAddPartReference("lebedev_s");
+    OutfitAddPartReference("paul_p");
     
     //Toby Atanwe
     BeginNewOutfitL("toby",86);
@@ -1853,6 +1860,7 @@ defaultproperties
      outfitInfos(93)=(Name="Maid Outfit")
      outfitInfos(94)=(Name="Manderley's Outfit")
      outfitInfos(95)=(Name="Traditional Dress")
+     outfitInfos(96)=(Name="Terrorist Commander Outfit")
      partNames(0)="Cool Sunglasses"
      partNames(1)="Black Bars"
      partNames(2)="Default Skin"
