@@ -356,6 +356,13 @@ const			NintendoDelay = 6.0;
 // For closing comptuers if the server quits
 var Computers ActiveComputer;
 
+// ----------------------------------------------------------------------
+// Augmentique Setup
+// ----------------------------------------------------------------------
+
+var travel OutfitManagerBase outfitManager;
+var globalconfig string unlockedOutfits[255];
+
 // native Functions
 native(1099) final function string GetDeusExVersion();
 native(2100) final function ConBindEvents();

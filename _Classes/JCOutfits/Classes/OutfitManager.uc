@@ -23,6 +23,9 @@ var travel bool noAccessories;
 //Show item descriptions
 var globalconfig bool noDescriptions;
 
+//Print outfit part names to the console
+var globalconfig bool bDebugMode;
+
 //part names
 var const localized string partNames[1000];
 
@@ -1360,8 +1363,29 @@ function AddDefaultReference(string defRef)
 
 function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
 {
-    local int i;
+    local Mesh M;
     local PartsGroup G;
+
+    M = findMesh(mesh);
+
+    //Not a valid mesh, or we already have it.
+    if (M == None || GetPartsGroup(mesh))
+        return;
+    
+    G = new(Self) class'PartsGroup';
+    G.mesh = M;
+    G.allowMale = allowMale;
+    G.allowFemale = allowFemale;
+    G.player = player;
+
+    Groups[numPartsGroups] = G;
+    currentPartsGroup = G;
+    numPartsGroups++;
+}
+
+function bool GetPartsGroup(string mesh)
+{
+    local int i;
     local Mesh M;
 
     M = findMesh(mesh);
@@ -1375,19 +1399,11 @@ function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
         if (M == Groups[i].mesh)
         {
             currentPartsGroup = Groups[i];
-            return;
+            return true;
         }
     }
-    
-    G = new(Self) class'PartsGroup';
-    G.mesh = M;
-    G.allowMale = allowMale;
-    G.allowFemale = allowFemale;
-    G.player = player;
 
-    Groups[numPartsGroups] = G;
-    currentPartsGroup = G;
-    numPartsGroups++;
+    return false;
 }
 
 //Localised version of BeginNewOutfit.
@@ -1408,7 +1424,7 @@ function BeginNewOutfitL(string id, int nameIndex)
     BeginNewOutfit(id,n,d,h,p,m,a);
 }
 
-function BeginNewOutfit(string id, string name, string desc, optional string highlightName, optional string pickupName, optional string pickupMessage, optional string pickupArticle)
+function BeginNewOutfit(string id, string name, optional string desc, optional string highlightName, optional string pickupName, optional string pickupMessage, optional string pickupArticle)
 {
     local Outfit O;
     local int i;
@@ -1466,6 +1482,7 @@ function PartsGroup GetPartsGroupByID(string id)
 function EquipOutfit(int index)
 {
     local Name flag;
+    local int i;
 
     if (outfits[index].index == currOutfit.index)
         return;
@@ -1487,6 +1504,15 @@ function EquipOutfit(int index)
 
     currOutfit = outfits[index];
     savedOutfitIndex = index;
+
+    //If debug mode is on, print the outfit parts to the log file
+    if (bDebugMode)
+    {
+        Log("Augmentique: Equipping outfit " $ currOutfit.Name);
+        for (i = 0;i < currOutfit.numParts;i++)
+            Log("   Outfit Part: " $ currOutfit.parts[i].name $ " with id " $ currOutfit.parts[i].partId);
+    }
+
     ApplyCurrentOutfit();
 }
 
@@ -1555,7 +1581,8 @@ function bool IsUnlocked(string id)
     local int i;
 
     //SARGE: Remove this before release!
-    //return true;
+    if (bDebugMode)
+        return true;
 
     for (i = 0;i < 255 && unlockedOutfits[i] != "";i++)
     {

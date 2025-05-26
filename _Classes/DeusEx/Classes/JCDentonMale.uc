@@ -4,6 +4,75 @@
 class JCDentonMale extends Human;
 
 // ----------------------------------------------------------------------
+// Augmentique Setup
+// ----------------------------------------------------------------------
+
+// ----------------------------------------------------------------------
+// Timer()
+// Augmentique: We need to delay slightly before setting models, to allow mods like LDDP to work properly
+// ----------------------------------------------------------------------
+
+function Timer()
+{
+    Super.Timer();
+
+    //Setup Outfit Manager
+    SetupOutfitManager();
+
+    //Apply Current Outfit
+    outfitManager.ApplyCurrentOutfit();
+}
+
+// ----------------------------------------------------------------------
+// ResetPlayerToDefaults()
+// Augmentique: When we start a new game, throw away our outfit manager
+// ----------------------------------------------------------------------
+function ResetPlayerToDefaults()
+{
+    outfitManager = None;
+    Super.ResetPlayerToDefaults();
+}
+
+// ----------------------------------------------------------------------
+// SetupOutfitManager()
+// Augmentique: Setup the outfit manager and restore current outfit
+// ----------------------------------------------------------------------
+
+function SetupOutfitManager()
+{
+    local class<OutfitManagerBase> managerBaseClass;
+
+	// create the Outfit Manager if not found
+	if (outfitManager == None || !outfitManager.IsA('OutfitManager'))
+    {
+        managerBaseClass = class<OutfitManagerBase>(DynamicLoadObject("Augmentique.OutfitManager", class'Class'));
+        
+        if (managerBaseClass == None)
+        {
+            outfitManager = new(Self) class'OutfitManagerBase';
+        }
+        else
+        {
+            outfitManager = new(Self) managerBaseClass;
+        }
+    }
+
+    if (outfitManager != None)
+    {
+        //Call base setup code, required each map load
+        outfitManager.Setup(Self);
+        
+        //Add additional outfits below this line
+        //---------------------------------------
+        //See docs/mod_integration.pdf for more info
+        //---------------------------------------
+
+        //Finish Outfit Setup
+        outfitManager.CompleteSetup();
+    }
+}
+
+// ----------------------------------------------------------------------
 // TravelPostAccept()
 // ----------------------------------------------------------------------
 
@@ -165,6 +234,9 @@ event TravelPostAccept()
 			break;
 		}
 	}
+    
+    //Augmentique: Setup outfit manager
+    SetTimer(0.1,false);
 }
 
 // ----------------------------------------------------------------------

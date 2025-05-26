@@ -22,6 +22,35 @@ var localized String ImagesButtonLabel;
 var localized String LogsButtonLabel;
 
 // ----------------------------------------------------------------------
+// Augmentique Setup
+// CreateOutfitsButton()
+// Will shorten the Images and Logs button to fit it in
+// ----------------------------------------------------------------------
+
+//Outfits button
+var PersonaNavButtonWindow btnOutfits;
+
+var localized String OutfitsButtonLabel;
+
+//Shortened versions of existing labels
+var localized String ImagesButtonLabelShort;
+var localized String LogsButtonLabelShort;
+
+function CreateOutfitsButton()
+{
+    local class<PersonaScreenBaseWindow> test;
+    test = class<PersonaScreenBaseWindow>(DynamicLoadObject("Augmentique.PersonaScreenOutfits", class'Class', true));
+
+    //Only create the Outfits button if the outfits window is actually available
+    if (test != None)
+    {
+		btnOutfits   = CreateNavButton(winNavButtons, OutfitsButtonLabel);
+		btnImages.SetButtonText(ImagesButtonLabelShort);
+		btnLogs.SetButtonText(LogsButtonLabelShort);
+    }
+} 
+
+// ----------------------------------------------------------------------
 // CreateButtons()
 // ----------------------------------------------------------------------
 
@@ -30,6 +59,7 @@ function CreateButtons()
 	btnLogs      = CreateNavButton(winNavButtons, LogsButtonLabel);
 	btnImages    = CreateNavButton(winNavButtons, ImagesButtonLabel);
 	btnCons      = CreateNavButton(winNavButtons, ConsButtonLabel);
+    CreateOutfitsButton(); //Augmentique: Added
 	btnGoals     = CreateNavButton(winNavButtons, GoalsButtonLabel);
 	btnSkills    = CreateNavButton(winNavButtons, SkillsButtonLabel);
 	btnAugs      = CreateNavButton(winNavButtons, AugsButtonLabel);
@@ -84,6 +114,11 @@ function bool ButtonActivated( Window buttonPressed )
 			winClass = Class'PersonaScreenLogs';
 			break;
 
+        //Augmentique: Trigger Outfits screen
+		case btnOutfits:
+            winClass = class<PersonaScreenBaseWindow>(DynamicLoadObject("Augmentique.PersonaScreenOutfits", class'Class'));
+			break;
+
 		default:
 			bHandled = False;
 			break;
@@ -114,4 +149,7 @@ defaultproperties
      ConsButtonLabel="|&Conversations"
      ImagesButtonLabel="I|&mages"
      LogsButtonLabel="|&Logs"
+     ImagesButtonLabelShort="I|&mg"
+     LogsButtonLabelShort="|&Log"
+     OutfitsButtonLabel="|&Outfits"
 }
