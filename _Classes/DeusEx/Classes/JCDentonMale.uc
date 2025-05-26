@@ -67,6 +67,7 @@ function SetupOutfitManager()
         //---------------------------------------
 
         //---------------------------------------
+
         //Finish Outfit Setup
         outfitManager.CompleteSetup();
     }

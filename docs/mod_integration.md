@@ -664,9 +664,25 @@ event TravelPostAccept()
 
 ```
 
+## Update the Maps
+
+Once the code has been updated, it's important to ensure all the outfit pickups are added to the maps.
+
+`t3d` files are provided within the `_Map Patches` folder. Simply load each map in the editor, go to `File->Import Level`. Make sure to select "Import Contents into existing map".
+
+*Note: Some maps will likely crash the editor upon loading. To load them, ensure the Mode setting in the 3D view is set to Map Perp*
+
 ## Creating new Outfits
 
-Outfits should be created inside the `SetupOutfitManager` function in the outlined area.
+Outfits should be created inside the `SetupOutfitManager` function in `JCDentonMale.uc`, inside the outlined area between the lines:
+
+```
+//Add additional outfits between these lines
+//See docs/mod_integration.pdf for more info
+//---------------------------------------
+
+//---------------------------------------
+```
 
 ### Adding a new outfit using existing parts
 
