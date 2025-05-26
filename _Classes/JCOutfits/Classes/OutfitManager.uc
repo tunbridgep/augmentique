@@ -20,6 +20,9 @@ var travel OutfitCustom customOutfit;
 //Set to true to disable hats/glasses/etc
 var travel bool noAccessories;
 
+//Show item descriptions
+var globalconfig bool noDescriptions;
+
 //part names
 var const localized string partNames[1000];
 
@@ -51,11 +54,11 @@ var const localized string NothingName;
 var travel string defaultTextures[8];
 var travel string defaultMesh;
 
-var OutfitPart PartsList[300];
-var int numParts;
-var PartsGroup Groups[50];
-var int numPartsGroups;
-var PartsGroup currentPartsGroup;
+var transient OutfitPart PartsList[300];
+var transient int numParts;
+var transient PartsGroup Groups[50];
+var transient int numPartsGroups;
+var transient PartsGroup currentPartsGroup;
 
 //Outfits unlocked this playthrough. Outfits are made permanent after finishing the game.
 var travel string unlockedOutfits[255];
@@ -360,7 +363,7 @@ function PopulateOutfitsList()
 
     //Pants
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
-    GlobalAddPartL(PS_Legs,12,false,"lab_p","PantsTex1");
+    GlobalAddPartL(PS_Legs_M,12,false,"lab_p","PantsTex1");
     GlobalAddPartL(PS_Legs,13,false,"gilbertrenton_p","PantsTex3"); //Also used by Ford Schick and Boat Person
     GlobalAddPartL(PS_Legs,3,false,"100%_p","Outfit1_Tex1");
     GlobalAddPartL(PS_Legs,14,false,"paul_p","PantsTex8"); //Also used by Toby Atanwe and others
@@ -407,8 +410,7 @@ function PopulateOutfitsList()
 
     //Female
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
-    GlobalAddPartL(PS_Legs,12,false,"lab_pf","ScientistFemaleTex3");
-    GlobalAddPartL(PS_Legs,3,false,"100%_p","Outfit1_Tex1");
+    GlobalAddPartL(PS_Legs_F,12,false,"lab_p","ScientistFemaleTex3");
     GlobalAddPartL(PS_Legs,129,false,"goldbrown_p","Outfit2F_Tex3");
     GlobalAddPartL(PS_Legs,130,false,"matrix_p","Outfit4F_Tex3");
     GlobalAddPartL(PS_Legs,131,false,"goth_p","Outfit3F_Tex3");
@@ -419,6 +421,66 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Legs_F,134,false,"junkie_p2","JunkieFemaleTex2");
     GlobalAddPartL(PS_Legs_F,135,false,"dentonclone_pf","DentonCloneTex2Fem");
     
+    //Trenchcoat Torsos
+    GlobalAddPartL(PS_Trench_Shirt_M,51,false,"lab_s","TrenchShirtTex3");
+    GlobalAddPartL(PS_Trench_Shirt_M,8,false,"100%_s","Outfit1_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,52,false,"paul_s","PaulDentonTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,53,false,"bum_s","TrenchShirtTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,54,false,"bum2_s","TrenchShirtTex2");
+    GlobalAddPartL(PS_Trench_Shirt,55,false,"lebedev_s","JuanLebedevTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,56,false,"smuggler_s","SmugglerTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,57,false,"simons_s","WaltonSimonsTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,58,false,"doctor_s","DoctorTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,59,false,"manderley_s","JosephManderleyTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,60,false,"gilbertrenton_s","GilbertRentonTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,61,false,"ford_s","FordSchickTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,62,false,"thug2_s","ThugMaleTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,63,false,"gordonquick_s","GordonQuickTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,64,false,"redarrow_s","TriadRedArrowTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,65,false,"jock_s","JockTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,66,false,"jaime_s","JaimeReyesTex1");
+    GlobalAddPartL(PS_Trench_Shirt,67,false,"toby_s","TobyAtanweTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,68,false,"garysavage_s","GarySavageTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,69,false,"maxchen_s","MaxChenTex1");
+    GlobalAddPartL(PS_Trench_Shirt,161,false,"default_s2","Outfit1F_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_F,8,false,"100%_s","Outfit1_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_F,51,false,"lab_s","TrenchShirtTex3");
+    GlobalAddPartL(PS_Trench_Shirt,162,false,"matrix_s","Outfit4F_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_F,163,false,"goth_s","Outfit3F_Tex1");
+    
+    GlobalAddPartL(PS_Trench_Shirt_M,0,false,"default_s","JCDentonTex1");
+    GlobalAddPartL(PS_Trench_Shirt_F,0,false,"default_s","FemJC.JCDentonFemaleTex1");
+    
+    //Trenchcoats
+    GlobalAddPartL(PS_Trench_M,70,false,"lab_t","LabCoatTex1","LabCoatTex1");
+    GlobalAddPartL(PS_Trench_M,8,false,"100%_t","Outfit1_Tex1","Outfit1_Tex1");
+    GlobalAddPartL(PS_Trench,71,false,"paul_t","PaulDentonTex2","PaulDentonTex2");
+    GlobalAddPartL(PS_Trench,72,false,"bum_t","BumMaleTex2","BumMaleTex2");
+    GlobalAddPartL(PS_Trench,73,false,"bum2_t","BumMale2Tex2","BumMale2Tex2");
+    GlobalAddPartL(PS_Trench,74,false,"bum3_t","BumMale3Tex2","BumMale3Tex2");
+    GlobalAddPartL(PS_Trench,75,false,"lebedev_t","JuanLebedevTex2","JuanLebedevTex2");
+    GlobalAddPartL(PS_Trench,76,false,"smuggler_t","SmugglerTex2","SmugglerTex2");
+    GlobalAddPartL(PS_Trench,77,false,"simons_t","WaltonSimonsTex2","WaltonSimonsTex2");
+    GlobalAddPartL(PS_Trench,78,false,"harleyfilben_t","HarleyFilbenTex2","HarleyFilbenTex2");
+    GlobalAddPartL(PS_Trench,79,false,"gilbertrenton_t","GilbertRentonTex2","GilbertRentonTex2");
+    GlobalAddPartL(PS_Trench,80,false,"ford_t","FordSchickTex2","FordSchickTex2");
+    GlobalAddPartL(PS_Trench_M,81,false,"thug2_t","ThugMaleTex2");
+    GlobalAddPartL(PS_Trench,82,false,"gordonquick_t","GordonQuickTex2","GordonQuickTex2");
+    GlobalAddPartL(PS_Trench,83,false,"redarrow_t","TriadRedArrowTex2","TriadRedArrowTex2");
+    GlobalAddPartL(PS_Trench_M,84,false,"jock_t","JockTex2");
+    GlobalAddPartL(PS_Trench,85,false,"toby_t","TobyAtanweTex2","TobyAtanweTex2");
+    GlobalAddPartL(PS_Trench,86,false,"maxchen_t","MaxChenTex2","MaxChenTex2");
+    GlobalAddPartL(PS_Trench,87,false,"manderley_t","JosephManderleyTex2","JosephManderleyTex2");
+    GlobalAddPartL(PS_Trench,88,false,"gray_t","TrenchCoatTex1","TrenchCoatTex1");
+    GlobalAddPartL(PS_Trench_F,70,false,"lab_t","ScientistFemaleTex2","ScientistFemaleTex2");
+    GlobalAddPartL(PS_Trench_F,8,false,"100%_t","Outfit1_Tex1","Outfit1_Tex1");
+    GlobalAddPartL(PS_Trench,164,false,"goldbrown_t","Outfit2F_Tex2","Outfit2F_Tex2");
+    GlobalAddPartL(PS_Trench,165,false,"matrix_t","Outfit4F_Tex2","Outfit4F_Tex2");
+    GlobalAddPartL(PS_Trench,166,false,"goth_t","Female4Tex2","Female4Tex2");
+    
+    GlobalAddPartL(PS_Trench_M,0,false,"default_t","JCDentonTex2","JCDentonTex2");
+    GlobalAddPartL(PS_Trench_F,0,false,"default_t","FemJC.JCDentonFemaleTex2","FemJC.JCDentonFemaleTex2");
+
     //Dress Pants
     GlobalAddPartL(PS_DressLegs,136,false,"nurse_pf","LegsTex1");
     GlobalAddPartL(PS_DressLegs,137,false,"stockings_pf","LegsTex2");
@@ -490,61 +552,18 @@ function PopulateOutfitsList()
 
     BeginNewPartsGroup("GM_Trench", true, false);
     GroupAddParts(PS_Body_M);
-    //GroupTranspose(PS_Trench,1,5);
-    //GroupTranspose(PS_Torso_M,4);
+    GroupTranspose(PS_Trench,1,5);
+    GroupTranspose2(PS_Trench_M,PS_Trench,1,5);
+    GroupTranspose(PS_Trench_Shirt,4);
+    GroupTranspose2(PS_Trench_Shirt_M,PS_Trench_Shirt,4);
     GroupTranspose(PS_Legs,2);
+    GroupTranspose2(PS_Legs_M,PS_Legs,2);
     GroupTranspose(PS_Glasses,6,7);
 
     //Defaults
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_g");
     
-    //Add Trenchcoat-only Torsos because they can't be used on other outfits, and other torsos can't be used here
-    AddPartL(PS_Torso_M,0,false,"default_s",,,,,"JCDentonTex1");
-    AddPartL(PS_Torso_M,51,false,"lab_s",,,,,"TrenchShirtTex3");
-    AddPartL(PS_Torso_M,8,false,"100%_s",,,,,"Outfit1_Tex1");
-    AddPartL(PS_Torso_M,52,false,"paul_s",,,,,"PaulDentonTex1");
-    AddPartL(PS_Torso_M,53,false,"bum_s",,,,,"TrenchShirtTex1");
-    AddPartL(PS_Torso_M,54,false,"bum2_s",,,,,"TrenchShirtTex2");
-    AddPartL(PS_Torso_M,55,false,"lebedev_s",,,,,"JuanLebedevTex1");
-    AddPartL(PS_Torso_M,56,false,"smuggler_s",,,,,"SmugglerTex1");
-    AddPartL(PS_Torso_M,57,false,"simons_s",,,,,"WaltonSimonsTex1");
-    AddPartL(PS_Torso_M,58,false,"doctor_s",,,,,"DoctorTex1");
-    AddPartL(PS_Torso_M,59,false,"manderley_s",,,,,"JosephManderleyTex1");
-    AddPartL(PS_Torso_M,60,false,"gilbertrenton_s",,,,,"GilbertRentonTex1");
-    AddPartL(PS_Torso_M,61,false,"ford_s",,,,,"FordSchickTex1");
-    AddPartL(PS_Torso_M,62,false,"thug2_s",,,,,"ThugMaleTex1");
-    AddPartL(PS_Torso_M,63,false,"gordonquick_s",,,,,"GordonQuickTex1");
-    AddPartL(PS_Torso_M,64,false,"redarrow_s",,,,,"TriadRedArrowTex1");
-    AddPartL(PS_Torso_M,65,false,"jock_s",,,,,"JockTex1");
-    AddPartL(PS_Torso_M,66,false,"jaime_s",,,,,"JaimeReyesTex1");
-    AddPartL(PS_Torso_M,67,false,"toby_s",,,,,"TobyAtanweTex1");
-    AddPartL(PS_Torso_M,68,false,"garysavage_s",,,,,"GarySavageTex1");
-    AddPartL(PS_Torso_M,69,false,"maxchen_s",,,,,"MaxChenTex1");
-    
-    //Trenchcoats
-    AddPartL(PS_Trench,0,false,"default_t",,"JCDentonTex2",,,,"JCDentonTex2");
-    AddPartL(PS_Trench,70,false,"lab_t",,"LabCoatTex1",,,,"LabCoatTex1");
-    AddPartL(PS_Trench,8,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
-    AddPartL(PS_Trench,71,false,"paul_t",,"PaulDentonTex2",,,,"PaulDentonTex2");
-    AddPartL(PS_Trench,72,false,"bum_t",,"BumMaleTex2",,,,"BumMaleTex2");
-    AddPartL(PS_Trench,73,false,"bum2_t",,"BumMale2Tex2",,,,"BumMale2Tex2");
-    AddPartL(PS_Trench,74,false,"bum3_t",,"BumMale3Tex2",,,,"BumMale3Tex2");
-    AddPartL(PS_Trench,75,false,"lebedev_t",,"JuanLebedevTex2",,,,"JuanLebedevTex2");
-    AddPartL(PS_Trench,76,false,"smuggler_t",,"SmugglerTex2",,,,"SmugglerTex2");
-    AddPartL(PS_Trench,77,false,"simons_t",,"WaltonSimonsTex2",,,,"WaltonSimonsTex2");
-    AddPartL(PS_Trench,78,false,"harleyfilben_t",,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
-    AddPartL(PS_Trench,79,false,"gilbertrenton_t",,"GilbertRentonTex2",,,,"GilbertRentonTex2");
-    AddPartL(PS_Trench,80,false,"ford_t",,"FordSchickTex2",,,,"FordSchickTex2");
-    AddPartL(PS_Trench,81,false,"thug2_t",,"ThugMaleTex2");
-    AddPartL(PS_Trench,82,false,"gordonquick_t",,"GordonQuickTex2",,,,"GordonQuickTex2");
-    AddPartL(PS_Trench,83,false,"redarrow_t",,"TriadRedArrowTex2",,,,"TriadRedArrowTex2");
-    AddPartL(PS_Trench,84,false,"jock_t",,"JockTex2",,,,);
-    AddPartL(PS_Trench,85,false,"toby_t",,"TobyAtanweTex2",,,,"TobyAtanweTex2");
-    AddPartL(PS_Trench,86,false,"maxchen_t",,"MaxChenTex2",,,,"MaxChenTex2");
-    AddPartL(PS_Trench,87,false,"manderley_t",,"JosephManderleyTex2",,,,"JosephManderleyTex2");
-    AddPartL(PS_Trench,88,false,"gray_t",,"TrenchCoatTex1",,,,"TrenchCoatTex1");
-
     //Default M
     BeginNewOutfitL("default",0);
     OutfitAddPartReference("default_t");
@@ -714,6 +733,10 @@ function PopulateOutfitsList()
 
     BeginNewPartsGroup("GFM_Trench", false, true);
     GroupAddParts(PS_Body_F);
+    GroupTranspose(PS_Trench,1,5);
+    GroupTranspose2(PS_Trench_F,PS_Trench,1,5);
+    GroupTranspose(PS_Trench_Shirt,4);
+    GroupTranspose2(PS_Trench_Shirt_F,PS_Trench_Shirt,4);
     GroupTranspose(PS_Legs,2);
     GroupTranspose2(PS_Legs_F,PS_Legs,2);
     GroupTranspose(PS_Glasses,6,7);
@@ -722,22 +745,6 @@ function PopulateOutfitsList()
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_g");
     
-    //Add Trenchcoat-only Torsos because they can't be used on other outfits, and other torsos can't be used here
-    AddPartL(PS_Torso_F,0,false,"default_s",,,,,"default");
-    AddPartL(PS_Torso_F,161,false,"default_s2",,,,,"Outfit1F_Tex1");
-    AddPartL(PS_Torso_F,8,false,"100%_s",,,,,"Outfit1_Tex1");
-    AddPartL(PS_Torso_F,51,false,"lab_s",,,,,"TrenchShirtTex3");
-    AddPartL(PS_Torso_F,162,false,"matrix_s",,,,,"Outfit4F_Tex1");
-    AddPartL(PS_Torso_F,163,false,"goth_s",,,,,"Outfit3F_Tex1");
-
-    //Trenchcoats
-    AddPartL(PS_Trench,0,false,"default_t",,"default",,,,"default");
-    AddPartL(PS_Trench,70,false,"lab_t",,"ScientistFemaleTex2",,,,"ScientistFemaleTex2");
-    AddPartL(PS_Trench,8,false,"100%_t",,"Outfit1_Tex1",,,,"Outfit1_Tex1");
-    AddPartL(PS_Trench,164,false,"goldbrown_t",,"Outfit2F_Tex2",,,,"Outfit2F_Tex2");
-    AddPartL(PS_Trench,165,false,"matrix_t",,"Outfit4F_Tex2",,,,"Outfit4F_Tex2");
-    AddPartL(PS_Trench,166,false,"goth_t",,"Female4Tex2",,,,"Female4Tex2");
-
     //Default
     BeginNewOutfitL("default",0);
     OutfitAddPartReference("default_b");
@@ -772,7 +779,7 @@ function PopulateOutfitsList()
     //Lab Coat
     BeginNewOutfitL("labcoat",4);
     OutfitAddPartReference("sci_g");
-    OutfitAddPartReference("lab_pf");
+    OutfitAddPartReference("lab_p");
     OutfitAddPartReference("lab_t");
     OutfitAddPartReference("lab_s");
     
@@ -988,6 +995,7 @@ function PopulateOutfitsList()
     GroupAddParts(PS_Body_M);
     GroupTranspose(PS_Torso_M,5);
     GroupTranspose(PS_Legs,3);
+    GroupTranspose2(PS_Legs_M,PS_Legs,3);
     GroupTranspose(PS_Glasses,6,7);
     
     //Defaults
@@ -1003,7 +1011,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mib_p");
     
     //Adam Jensen Outfit 2
-    BeginNewOutfitL("adam",67);
+    BeginNewOutfitL("adam",91);
     OutfitAddPartReference("adam_s2");
     OutfitAddPartReference("mib_p");
     
@@ -1547,7 +1555,7 @@ function bool IsUnlocked(string id)
     local int i;
 
     //SARGE: Remove this before release!
-    return true;
+    //return true;
 
     for (i = 0;i < 255 && unlockedOutfits[i] != "";i++)
     {
@@ -1778,98 +1786,99 @@ defaultproperties
      savedOutfitIndex=1
      outfitInfos(0)=(Name="JC Denton's Trenchcoat",Desc="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look")
      outfitInfos(1)=(Name="JC Denton's Trenchcoat (Alt)",Desc="JC Denton's Signature Trenchcoat, now with extra jewellery!")
-     outfitInfos(2)=(Name="100% Black",Desc="The outfit of choice for Malkavians",PickupMessage="We're 100% Black",HighlightName="???")
-     outfitInfos(3)=(Name="Alex Jacobson's Outfit",Desc="Used by hackers everywhere!")
-     outfitInfos(4)=(Name="Lab Coat",Desc="Discovery Awaits!")
-     outfitInfos(5)=(Name="Paul Denton's Outfit")
-     outfitInfos(6)=(Name="Fancy Suit",Desc="For very special agents")
-     outfitInfos(7)=(Name="MIB Black Suit",Desc="For very special agents")
-     outfitInfos(8)=(Name="UNATCO Combat Uniform")
-     outfitInfos(9)=(Name="Mechanic Jumpsuit")
-     outfitInfos(11)=(Name="Chef Outfit",Desc="Something about cooking, IDK") //!!!
-     outfitInfos(13)=(Name="Gold and Brown Business")
-     outfitInfos(14)=(Name="Goth GF Outfit")
-     outfitInfos(15)=(Name="Matrix Outfit",Desc="This outfit is considered one of the classic three. From the immortal Trinity, if you will...")
-     outfitInfos(16)=(Name="Goth GF Outfit") //!!!
-     outfitInfos(17)=(Name="Soldier Outfit")
-     outfitInfos(18)=(Name="Riot Gear")
-     outfitInfos(19)=(Name="WIB Suit",Desc="Dressed to kill")
-     outfitInfos(20)=(Name="NSF Sympathiser",Desc="For the people!")
-     outfitInfos(21)=(Name="Stained Clothes")
-     outfitInfos(22)=(Name="Juan Lebedev's Outfit")
+     outfitInfos(2)=(Name="100% Black",PickupMessage="We're 100% Black",HighlightName="???")
+     outfitInfos(3)=(Name="Alex Jacobson's Outfit",Desc="An outfit adorned with computer parts, keyboards, wires and other tech.")
+     outfitInfos(4)=(Name="Lab Coat",Desc="This sleek turtleneck and extra long lab coat are used by scientists and doctors all over the world")
+     outfitInfos(5)=(Name="Paul Denton's Outfit",Desc="A dark blue trenchcoat matched with an aqua turtleneck gives this outfit a unique and interesting look")
+     outfitInfos(6)=(Name="Business Suit (Brown)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(7)=(Name="Business Suit (MIB)",Desc="This stylish black suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
+     outfitInfos(8)=(Name="UNATCO Combat Uniform",Desc="The standard issue uniform for UNATCO peacekeepers throughout the world, this protective outfit is a significant improvement over the previous UN combat uniform.")
+     outfitInfos(9)=(Name="Mechanic Jumpsuit",Desc="This high-visibility orange jumpsuit ensures safety while working in low visibility conditions.")
+     outfitInfos(11)=(Name="Chef Outfit",Desc="This all-white clothing and traditional toque is often worn as a symbol of pride by experiened chefs.")
+     outfitInfos(13)=(Name="Gold and Brown Business",Desc="This fashionable gold and brown outfit with matching jacket is a symbol of power and status.")
+     outfitInfos(14)=() //Unused???
+     outfitInfos(15)=(Name="Matrix Outfit",Desc="")
+     outfitInfos(16)=(Name="Goth GF Outfit",Desc="This goth-themed outfit with fishnet shirt is often worn by punk rockers, outcasts, and rebels of all kinds.")
+     outfitInfos(17)=(Name="Soldier Outfit",Desc="These green fatigues are standard issue for the American military.")
+     outfitInfos(18)=(Name="Riot Gear",Desc="Worn during riot control, raids and other dangerous crime-fighting activities, this helmet and body-armor provide a high degree of protection for cops in the field.")
+     outfitInfos(19)=(Name="WIB Suit",Desc="This stylish gray suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
+     outfitInfos(20)=(Name="NSF Sympathiser",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
+     outfitInfos(21)=(Name="Stained Clothes",Desc="These filthy clothes smell disgusting, and look even worse.")
+     outfitInfos(22)=(Name="Juan Lebedev's Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional brown trench coat.")
      outfitInfos(23)=(Name="Smuggler's Outfit",Desc="This expensive outfit matches Smuggler's prices")
-     outfitInfos(24)=(Name="FEMA Executive's Outfit",Desc="Just because you work behind a desk doesn't mean you can't be fashionable")
-     outfitInfos(25)=(Name="MJ12 Soldier Uniform")
-     outfitInfos(26)=(Name="Jock's Outfit")
-     outfitInfos(27)=(Name="Maggie's Outfit")
-     outfitInfos(28)=(Name="Nicolette's Outfit")
-     outfitInfos(29)=(Name="JC Clone Outfit")
-     outfitInfos(30)=(Name="Presidential Suit")
-     outfitInfos(31)=(Name="Sailor Outfit")
-     outfitInfos(32)=(Name="Carter's Outfit")
-     outfitInfos(33)=(Name="SCUBA Suit")
-     outfitInfos(34)=(Name="100% Black (Alt)",Desc="OMG! It's just like the memes!")
-     outfitInfos(35)=(Name="Prison Uniform")
+     outfitInfos(24)=(Name="FEMA Executive's Outfit",Desc="Designed for augmented agents, this trenchcoat sports access ports and other advanced technology.")
+     outfitInfos(25)=(Name="MJ12 Soldier Uniform",Desc="The standard issue for Majestic 12 troops worldwide, this uniform strikes fear and contempt into the hearts of many.")
+     outfitInfos(26)=(Name="Jock's Outfit",Desc="A sleek flight suit often worn by pilots, aircraft crew, and others.")
+     outfitInfos(27)=(Name="Maggie's Outfit",Desc="This stylish dragon-themed dress is the height of fashion in Hong Kong.")
+     outfitInfos(28)=(Name="Nicolette's Outfit",Desc="Adorned with punk iconography, this outfit is sure to get anyone noticed.")
+     outfitInfos(29)=(Name="JC Clone Outfit",Desc="A basic covering designed for modesty and not much else.")
+     outfitInfos(30)=(Name="Business Suit (Black)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(31)=(Name="Sailor Outfit",Desc="Standard uniform for sailers and deck hands across the world.")
+     outfitInfos(32)=(Name="Carter's Outfit",Desc="These modified military fatigues with rolled up sleeves are more comfortable than the standard issue uniform.")
+     outfitInfos(33)=(Name="SCUBA Suit",Desc="An underwater suit with a self contained breathing apparatus, this suit is used by recreational divers, explorers, scavengers, military, and many others across the world for a variety of underwater purposes.")
+     outfitInfos(34)=(Name="100% Black (Alt)")
+     outfitInfos(35)=(Name="Prison Uniform",Desc="Standard issue prison uniform, designed to easily distingush inmates from everyone else in the event of an escape.")
      outfitInfos(36)=(Name="100% Black (Augmented Edition)")
-     outfitInfos(37)=(Name="Thug Outfit")
-     outfitInfos(38)=(Name="Anna Navarre's Outfit")
-     outfitInfos(39)=(Name="Tiffany Savage's Outfit")
-     outfitInfos(40)=(Name="Sarah Mead's Outfit")
-     outfitInfos(41)=(Name="Jordan Shea's Outfit")
-     outfitInfos(42)=(Name="Hooker Outfit")
-     outfitInfos(43)=(Name="NSF Sympathiser (Alt)")
-     outfitInfos(44)=(Name="Unwashed Clothes")
-     outfitInfos(45)=(Name="Harley Filben's Outfit")
-     outfitInfos(46)=(Name="White Business Suit")
-     outfitInfos(47)=(Name="Secret Service Suit")
-     outfitInfos(48)=(Name="Doctor's Outfit")
-     outfitInfos(49)=(Name="Nurse's Outfit")
-     outfitInfos(50)=(Name="Gilbert Renton's Outfit")
-     outfitInfos(51)=(Name="Hooker Outfit (Alt)")
-     outfitInfos(52)=(Name="Ford Schick's Outfit")
-     outfitInfos(53)=(Name="Joe Greene's Outfit")
-     outfitInfos(54)=(Name="Soiled Junkie Clothes")
-     outfitInfos(55)=(Name="Rook Member Outfit")
-     outfitInfos(56)=(Name="Alex Denton's Outfit",Desc="Say the line, JC!")
-     outfitInfos(57)=(Name="Vice President's Outfit")
-     outfitInfos(58)=(Name="Rachel Mead's Outfit")
-     outfitInfos(59)=(Name="Business Outfit",Desc="Show them you mean business!")
-     outfitInfos(60)=(Name="Low Class Outfit")
-     outfitInfos(61)=(Name="Sandra Renton's Outfit")
-     outfitInfos(62)=(Name="NSF Leader Outfit") //!!!
-     outfitInfos(63)=(Name="Bartender Outfit")
-     outfitInfos(64)=(Name="Tough Guy Outfit")
-     outfitInfos(65)=(Name="Police Uniform")
+     outfitInfos(37)=(Name="Thug Outfit",Desc="This cold-weather outfit is used by mercenaries and criminals alike. Beloved for it's warmth, freedom of movement, and general style.")
+     outfitInfos(38)=(Name="Anna Navarre's Outfit",Desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.")
+     outfitInfos(39)=(Name="Tiffany Savage's Outfit",Desc="This leather and latex outfit is designed to provide maximum dexterity and comfort during wet-work operations.")
+     outfitInfos(40)=(Name="School Uniform",Desc="This long-sleeve shirt and dress style uniform is used by many religious and private schools across the world.")
+     outfitInfos(41)=(Name="Jordan Shea's Outfit",Desc="This sleeveless shirt combined with dress pants is dirty after a long day of work.")
+     outfitInfos(42)=(Name="Hooker Outfit",Desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
+     outfitInfos(43)=(Name="NSF Sympathiser (Alt)",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
+     outfitInfos(44)=(Name="Unwashed Clothes",Desc="These dirty unwashed clothes smell awful, and look even worse.")
+     outfitInfos(45)=(Name="Harley Filben's Outfit",Desc="This signature green jacket has clearly seen better days.")
+     outfitInfos(46)=(Name="Business Suit (White)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(47)=(Name="Business Suit (Blue)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(48)=(Name="Doctor's Outfit",Desc="This sleek vest, business shirt and extra long lab coat are used by doctors all over the world")
+     outfitInfos(49)=(Name="Nurse's Outfit",Desc="These traditional scrubs have been worn by nurses all over the world for many years.")
+     outfitInfos(50)=(Name="Gilbert Renton's Outfit",Desc="This dirty shirt and dirty jeans are perfect attire for the owner of a dirty hotel.")
+     outfitInfos(51)=(Name="Hooker Outfit (Alt)",Desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
+     outfitInfos(52)=(Name="Ford Schick's Outfit",Desc="")
+     outfitInfos(53)=(Name="Joe Greene's Outfit",Desc="A business suit favored by reporters and journalists all over the world.")
+     outfitInfos(54)=(Name="Soiled Junkie Clothes",Desc="This disgusting clothing reeks of sweat, dirt, and other fowl substances.")
+     outfitInfos(55)=(Name="Rook Member Outfit",Desc="This leather jacket, chains, and other tough-guy attire is often worn by punk rockers, outcasts, and rebels of all kinds.")
+     outfitInfos(56)=(Name="Alex Denton's Outfit",Desc="This unusual purple outfit is the standard attire for all members of the Tarsus Academy.")
+     outfitInfos(57)=(Name="Business Suit (Dark Brown)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(58)=(Name="White-Collar Dress (Red)",Desc="A red dress designed to stand out and get noticed around the office.")
+     outfitInfos(59)=(Name="White-Collar Dress (Dark Gray)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
+     outfitInfos(60)=(Name="Low Class Outfit",Desc="")
+     outfitInfos(61)=(Name="Sandra Renton's Outfit",Desc="These torn and tattered clothes are a staple of someone who has fallen on hard times.")
+     outfitInfos(62)=(Name="JoJo's Outfit",Desc="This over-the-top spectacle of fake augmentations and metal is designed to intimidate others and to show dominance.")
+     outfitInfos(63)=(Name="Bartender Outfit",Desc="A white shirt with a bow tie, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
+     outfitInfos(64)=(Name="Tough Guy Outfit") //Unused
+     outfitInfos(65)=(Name="Police Uniform",Desc="The standard uniform for beat-cops and police on patrol.")
      outfitInfos(66)=(Name="Howard Strong's Outfit")
-     outfitInfos(67)=(Name="Adam Jensen's Outfit")
+     outfitInfos(67)=(Name="Adam Jensen's Outfit",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
      outfitInfos(68)=(Name="Average GEPGUN Enjoyer",Desc="What's it like to stand around revving your actuators while the more fashionable agents complete the mission?")
      outfitInfos(69)=(Name="Morgan Everett's Outfit")
-     outfitInfos(70)=(Name="Boat Person Outfit")
+     outfitInfos(70)=(Name="Boat Person Outfit",Desc="While Singlets and Jeans are often associated with the poor, they are also often worn by physical labourors, unloaders, masonists, and other blue-collar workers.")
      outfitInfos(71)=(Name="Chad's Outfit")
-     outfitInfos(72)=(Name="Janitor Uniform")
+     outfitInfos(72)=(Name="Janitor Uniform",Desc="Designed for comfort while cleaning, these overalls are made of a soft, water-resistant material")
+     //outfitInfos(73)=(Name="Martial Arts Uniform",Desc="These traditional Kasaya are often worn by ordained buddhist monks and martial artists")
      outfitInfos(73)=(Name="Martial Arts Uniform")
      outfitInfos(74)=(Name="Tracer Tong's Outfit")
-     outfitInfos(75)=(Name="Hong Kong Military Uniform")
-     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="Give me Deus Ex")
-     outfitInfos(77)=(Name="Traditional Attire")
+     outfitInfos(75)=(Name="Hong Kong Military Uniform",Desc="These green fatigues are standard issue for the Hong Kong military police.")
+     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their Totalitarian regime.")
+     outfitInfos(77)=(Name="Traditional Attire",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
      outfitInfos(78)=(Name="Luminous Path Uniform")
-     outfitInfos(79)=(Name="Navy Dress Uniform")
-     outfitInfos(80)=(Name="Butler Uniform")
-     outfitInfos(81)=(Name="Bob Page's Signature Suit")
+     outfitInfos(79)=(Name="Navy Dress Uniform",Desc="Formal dress uniform for Navy officers. Normally used for public events such as parades and ceremonies.")
+     outfitInfos(80)=(Name="Butler Uniform",Desc="A black suit with a white shirt, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
+     outfitInfos(81)=(Name="Bob Page's Suit",Desc="Signature suit of one of the richest men in the world.")
      outfitInfos(82)=(Name="Gordon Quick's Outfit")
      outfitInfos(83)=(Name="Red Arrow Uniform")
      outfitInfos(85)=(Name="Jaime's Outfit") //!!!
      outfitInfos(86)=(Name="Illuminati Coat")
-     outfitInfos(87)=(Name="Vandenberg Scientist Outfit")
+     outfitInfos(87)=(Name="Vandenberg Scientist Outfit",Desc="A long labcoat over a suit and tie, the signature outfit of X51.")
      outfitInfos(88)=(Name="Old Clothes")
      outfitInfos(89)=(Name="Dragon Head's Uniform")
-     outfitInfos(90)=(Name="Secretary's Outfit")
-     outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)")
-     outfitInfos(92)=(Name="Office Worker's Outfit")
-     outfitInfos(93)=(Name="Maid Outfit")
+     outfitInfos(90)=(Name="White-Collar Dress (Brown)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
+     outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
+     outfitInfos(92)=(Name="White-Collar Dress (Blue and White)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
+     outfitInfos(93)=(Name="Maid Outfit",Desc="A formal cleaning uniform worn by servants, assistants and house cleaners.")
      outfitInfos(94)=(Name="Manderley's Outfit")
-     outfitInfos(95)=(Name="Traditional Dress")
-     outfitInfos(96)=(Name="Terrorist Commander Outfit")
+     outfitInfos(95)=(Name="Traditional Dress",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
+     outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat.")
 
      //Misc
      partNames(0)="Default"
@@ -2057,7 +2066,7 @@ defaultproperties
      partNames(150)="School Shirt"
      partNames(151)="White Shirt (Open)"
      partNames(152)="Blue Crop Top"
-     partNames(153)="Hooker Top"
+     partNames(153)="Balconette Bolero"
      partNames(154)="Soiled Tank Top"
      partNames(155)="Alex Denton's Tactical Suit"
      partNames(156)="Torn Top"

@@ -14,14 +14,17 @@ var PersonaListWindow         lstOutfits;
 var PersonaScrollAreaWindow   winScroll;
 var PersonaHeaderTextWindow   winOutfitName;
 var PersonaCheckBoxWindow     chkAccessories;
+var PersonaCheckBoxWindow     chkDescriptions;
 var ViewportWindow            winViewport;
 
-var PersonaActionButtonWindow   btnSlotsNext[12];
-var PersonaActionButtonWindow   btnSlotsPrev[12];
-var PersonaHeaderTextWindow     txtSlots[12];
+var PersonaActionButtonWindow   btnSlotsNext[19];
+var PersonaActionButtonWindow   btnSlotsPrev[19];
+var PersonaHeaderTextWindow     txtSlots[19];
+var PersonaHeaderTextWindow     txtDescription;
 
 var localized String ChangeCameraLabel;
 var localized String ShowAccessoriesLabel;
+var localized String ShowDescriptionsLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
 var localized String EditButtonLabel;
@@ -62,6 +65,9 @@ event InitWindow()
         PersonaNavBarWindow(winNavBar).btnOutfits.SetSensitivity(False);
 
 	EnableButtons();
+
+    if (!outfitManager.noDescriptions)
+        txtDescription.SetText(outfitManager.currOutfit.Desc);
 }
 
 // ----------------------------------------------------------------------
@@ -77,8 +83,9 @@ function CreateControls()
 	CreateOutfitsList();
 	CreateOutfitTitle();
 	CreateButtons();
-    CreateAccessoriesCheckbox();
+    CreateCheckboxes();
     CreateOutfitPartButtons();
+    CreateDescriptionTextArea();
 }
 
 // ----------------------------------------------------------------------
@@ -93,15 +100,22 @@ function CreateOutfitPartButtons()
     CreatePartButton(0,"Skin");
     CreatePartButton(1,"Skin");
     CreatePartButton(2,"Coat");
-    CreatePartButton(3,"Torso");
-    CreatePartButton(4,"Torso");
-    CreatePartButton(5,"Legs");
-    CreatePartButton(6,"Legs");
-    CreatePartButton(7,"Skirt");
-    CreatePartButton(8,"Glasses");
-    CreatePartButton(9,"Helmet");
-    CreatePartButton(10,"Main");
-    CreatePartButton(11,"Mask");
+    CreatePartButton(3,"Coat");
+    CreatePartButton(4,"Coat");
+    CreatePartButton(5,"Torso");
+    CreatePartButton(6,"Torso");
+    CreatePartButton(7,"Torso");
+    CreatePartButton(8,"Torso");
+    CreatePartButton(9,"Torso");
+    CreatePartButton(10,"Legs");
+    CreatePartButton(11,"Legs");
+    CreatePartButton(12,"Legs");
+    CreatePartButton(13,"Legs");
+    CreatePartButton(14,"Skirt");
+    CreatePartButton(15,"Glasses");
+    CreatePartButton(16,"Helmet");
+    CreatePartButton(17,"Main");
+    CreatePartButton(18,"Mask");
     UpdateOutfitPartButtons();
 }
 
@@ -120,6 +134,14 @@ function UpdateOutfitPartButtons()
     UpdateOutfitPartButton(9);
     UpdateOutfitPartButton(10);
     UpdateOutfitPartButton(11);
+    UpdateOutfitPartButton(12);
+    UpdateOutfitPartButton(13);
+    UpdateOutfitPartButton(14);
+    UpdateOutfitPartButton(15);
+    UpdateOutfitPartButton(16);
+    UpdateOutfitPartButton(17);
+    UpdateOutfitPartButton(18);
+    UpdateOutfitPartButton(19);
 }
 
 function UpdateOutfitPartButton(int id)
@@ -255,7 +277,7 @@ function CreateOutfitsList()
 	lstOutfits.HideColumn(3, True);
 	lstOutfits.SetSortColumn(0, True);
 	lstOutfits.EnableAutoSort(False);
-	lstOutfits.SetColumnWidth(0, 150);
+	lstOutfits.SetColumnWidth(0, 140);
 	lstOutfits.SetColumnWidth(1, 34);
 	lstOutfits.SetColumnType(2, COLTYPE_Float);
 	lstOutfits.SetColumnFont(1, Font'FontHUDWingDings');
@@ -285,15 +307,27 @@ function CreateButtons()
 }
 
 // ----------------------------------------------------------------------
-// CreateShowNotesCheckbox()
+// CreateCheckboxes()
 // ----------------------------------------------------------------------
 
-function CreateAccessoriesCheckbox()
+function CreateCheckboxes()
 {
     chkAccessories = PersonaCheckBoxWindow(winClient.NewChild(Class'PersonaCheckBoxWindow'));
-
     chkAccessories.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 203, 424);
     chkAccessories.SetText(ShowAccessoriesLabel);
+    
+    chkDescriptions = PersonaCheckBoxWindow(winClient.NewChild(Class'PersonaCheckBoxWindow'));
+    chkDescriptions.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 23, 424);
+    chkDescriptions.SetText(ShowDescriptionsLabel);
+}
+
+function CreateDescriptionTextArea()
+{
+    txtDescription = PersonaHeaderTextWindow(winClient.NewChild(class'PersonaHeaderTextWindow'));
+    txtDescription.SetWindowAlignments(HALIGN_Left, VALIGN_Bottom, 65, 20);
+	txtDescription.SetSize(300, 300);
+    txtDescription.SetTextAlignments(HALIGN_Center, VALIGN_Bottom);
+    txtDescription.SetWordWrap(true);
 }
 
 // ----------------------------------------------------------------------
@@ -346,7 +380,9 @@ function PopulateOutfitsList()
         if (i == 0)
             sortName = "000000" $ O.Name;
         else if (O.bNew)
-            sortName = "111111" $ O.Name;
+            sortName = "000001" $ O.Name;
+        else if (i == 1) //default
+            sortName = "000002" $ O.Name;
         else
             sortName = O.name;
         
@@ -399,6 +435,7 @@ function EquipCustomOutfit()
     outfitManager.ApplyCurrentOutfit();
     PopulateOutfitsList();
     UpdateOutfitPartButtons();
+    txtDescription.SetText("");
 }
 
 // ----------------------------------------------------------------------
@@ -488,6 +525,13 @@ function bool ButtonActivated( Window buttonPressed )
         case btnSlotsPrev[9]: PrevCustomOutfitSlot(9); break;
         case btnSlotsPrev[10]: PrevCustomOutfitSlot(10); break;
         case btnSlotsPrev[11]: PrevCustomOutfitSlot(11); break;
+        case btnSlotsPrev[12]: PrevCustomOutfitSlot(12); break;
+        case btnSlotsPrev[13]: PrevCustomOutfitSlot(13); break;
+        case btnSlotsPrev[14]: PrevCustomOutfitSlot(14); break;
+        case btnSlotsPrev[15]: PrevCustomOutfitSlot(15); break;
+        case btnSlotsPrev[16]: PrevCustomOutfitSlot(16); break;
+        case btnSlotsPrev[17]: PrevCustomOutfitSlot(17); break;
+        case btnSlotsPrev[18]: PrevCustomOutfitSlot(18); break;
 
         case btnSlotsNext[0]: NextCustomOutfitSlot(0); break;
         case btnSlotsNext[1]: NextCustomOutfitSlot(1); break;
@@ -501,6 +545,13 @@ function bool ButtonActivated( Window buttonPressed )
         case btnSlotsNext[9]: NextCustomOutfitSlot(9); break;
         case btnSlotsNext[10]: NextCustomOutfitSlot(10); break;
         case btnSlotsNext[11]: NextCustomOutfitSlot(11); break;
+        case btnSlotsNext[12]: NextCustomOutfitSlot(12); break;
+        case btnSlotsNext[13]: NextCustomOutfitSlot(13); break;
+        case btnSlotsNext[14]: NextCustomOutfitSlot(14); break;
+        case btnSlotsNext[15]: NextCustomOutfitSlot(15); break;
+        case btnSlotsNext[16]: NextCustomOutfitSlot(16); break;
+        case btnSlotsNext[17]: NextCustomOutfitSlot(17); break;
+        case btnSlotsNext[18]: NextCustomOutfitSlot(18); break;
 
 		default:
 			bHandled = False;
@@ -540,7 +591,16 @@ event Bool ToggleChanged(window button, bool bToggleValue)
         outfitManager.noAccessories = !bToggleValue;
         outfitManager.ApplyCurrentOutfit();
     }
+    else if (button == chkDescriptions)
+    {
+        outfitManager.noDescriptions = !bToggleValue;
+        if (bToggleValue)
+            txtDescription.SetText(outfitManager.currOutfit.Desc);
+        else
+            txtDescription.SetText("");
 
+        outfitManager.SaveConfig();
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -563,6 +623,9 @@ function EnableButtons()
 
     chkAccessories.SetToggle(!outfitManager.noAccessories);
 	chkAccessories.SetSensitivity(true);
+    
+    chkDescriptions.SetToggle(!outfitManager.noDescriptions);
+	chkDescriptions.SetSensitivity(true);
 }
 
 // ----------------------------------------------------------------------
@@ -585,6 +648,10 @@ function Equip(int index)
     
     UpdateOutfitPartButtons();
     //PopulateOutfitsList();
+
+    //Update description text
+    if (!outfitManager.noDescriptions)
+        txtDescription.SetText(outfitManager.currOutfit.Desc);
 
     EnableButtons();
 }
@@ -630,6 +697,7 @@ function DestroyImages()
 defaultproperties
 {
      ShowAccessoriesLabel="Show Accessories"
+     ShowDescriptionsLabel="Show Descriptions"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
      EditButtonLabel="Customize Outfit"
