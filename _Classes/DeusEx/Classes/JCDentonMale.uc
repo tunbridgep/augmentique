@@ -62,11 +62,11 @@ function SetupOutfitManager()
         //Call base setup code, required each map load
         outfitManager.Setup(Self);
         
-        //Add additional outfits below this line
-        //---------------------------------------
+        //Add additional outfits between these lines
         //See docs/mod_integration.pdf for more info
         //---------------------------------------
 
+        //---------------------------------------
         //Finish Outfit Setup
         outfitManager.CompleteSetup();
     }
