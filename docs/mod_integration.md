@@ -839,28 +839,6 @@ model:
 | GFM_Dress       | Legs       | Skirt   | Shirt    | Skirt     | Skin                         | Nothing                      | Skin           | Nothing      |
 | GM_ScubaSuit    | Vest       | Suit    | Nothing  | Nothing   | Nothing                      | Nothing                      | Nothing        | Suit         |
 
-### Adding a new outfit with new parts and a new mesh
-
-To add a new mesh, use the following function instead of `GetPartsGroup`:
-
-`function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)`
-
-The function arguments are as follows:
-
-1. The name of the mesh to apply this parts group to. This mesh will be used for all outfits in this group.
-2. Whether or not Male characters are allowed to equip outfits from this group, and use parts from it in their custom outfits
-3. Whether or not Female characters are allowed to equip outfits from this group, and use parts from it in their custom outfits
-
-*Note: Allow Male and Allow Female can both be set to true to allow a fully
-multi-gendered outfit. This is usually not recommended, as it's often better to
-create 2 separate outfits with the same ID to allow using different meshes and
-textures, but for some cases such as the scuba gear, creating a single outfit
-with male and female both set to true is much easier.*
-
-Once parts are setup, new outfits can be added the same as previously.
-
----------
-
 ## Handling Skin Colours
 
 It is possible to create outfits which reflect the players chosen skin colour.
