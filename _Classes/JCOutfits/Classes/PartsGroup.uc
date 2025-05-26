@@ -10,6 +10,16 @@ var int numOutfitParts;
 var DeusExPlayer player;
 var OutfitManager manager;
 
+//add default parts to each outfit that is added to this group
+var transient string defaultParts[50];
+var transient int defaultPartsNum;
+
+function AddDefaultReference(string defRef)
+{
+    defaultParts[defaultPartsNum] = defRef;
+    defaultPartsNum++;
+}
+
 function int CountPartType(int type, optional bool unlockedOnly)
 {
     local int i,c;

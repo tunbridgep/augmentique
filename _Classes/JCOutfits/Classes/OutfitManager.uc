@@ -29,10 +29,6 @@ var globalconfig bool bDebugMode;
 //part names
 var const localized string partNames[1000];
 
-//add default parts - horrible hack
-var transient string defaultParts[50];
-var transient int defaultPartsNum;
-
 //Outfit Information
 
 struct LocalizedOutfitInfo
@@ -230,7 +226,6 @@ function Setup(DeusExPlayer newPlayer)
     //    return;
     
     PopulateOutfitsList();
-    defaultPartsNum = 0;
 }
 
 function SetupCustomOutfit()
@@ -1357,8 +1352,7 @@ function PopulateOutfitsList()
 //Add a reference that will be added to all outfits for this particular parts group
 function AddDefaultReference(string defRef)
 {
-    defaultParts[defaultPartsNum] = defRef;
-    defaultPartsNum++;
+    currentPartsGroup.AddDefaultReference(defRef);
 }
 
 function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
@@ -1389,9 +1383,6 @@ function bool GetPartsGroup(string mesh)
     local Mesh M;
 
     M = findMesh(mesh);
-
-    //Reset the default parts list
-    defaultPartsNum = 0;
 
     //If we find a group with this mesh already set, use it.
     for (i = 0;i < numPartsGroups;i++)
@@ -1460,8 +1451,8 @@ function BeginNewOutfit(string id, string name, optional string desc, optional s
 
     //Dirty Hack
     //Add default references
-    for (i = 0;i < defaultPartsNum;i++)
-        OutfitAddPartReference(defaultParts[i]);
+    for (i = 0;i < currentPartsGroup.defaultPartsNum;i++)
+        OutfitAddPartReference(currentPartsGroup.defaultParts[i]);
 }
 
 function PartsGroup GetPartsGroupByID(string id)
