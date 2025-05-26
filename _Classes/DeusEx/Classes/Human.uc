@@ -402,7 +402,7 @@ simulated function PreBeginPlay()
 	}
 }
 
-//JCOutfits - SARGE
+//Augmentique - SARGE
 //Some outfits don't have animations, so we need to
 //make sure we actually have them before attempting to tween to them,
 //otherwise the log will report lots and lots of errors.

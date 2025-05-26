@@ -190,7 +190,7 @@ function Setup(DeusExPlayer newPlayer)
 
     player = newPlayer;
     dxInfo = player.GetLevelInfo();
-    player.CarcassType=class'JCOutfits.OutfitCarcassReplacer';
+    player.CarcassType=class'Augmentique.OutfitCarcassReplacer';
     
     if (defaultMesh == "")
     {
@@ -1717,7 +1717,7 @@ function ApplyCurrentOutfitToActor(Actor A)
 function Mesh findMesh(string mesh)
 {
     local Mesh m;
-    m = Mesh(DynamicLoadObject("JCOutfits."$mesh, class'Mesh', true));
+    m = Mesh(DynamicLoadObject("Augmentique."$mesh, class'Mesh', true));
 
     if (m == None)
         m = Mesh(DynamicLoadObject(mesh, class'Mesh', true));
@@ -1741,11 +1741,11 @@ function Texture findTexture(string tex)
         //return Texture'DeusExItems.Skins.PinkMaskTex';
         return None;
     
-    //Find a texture in JCOutfits, to allow overriding skins from DX and other mods
-    t = Texture(DynamicLoadObject("JCOutfits."$tex$"_S"$player.PlayerSkin, class'Texture', true));
+    //Find a texture in Augmentique.u, to allow overriding skins from DX and other mods
+    t = Texture(DynamicLoadObject("Augmentique."$tex$"_S"$player.PlayerSkin, class'Texture', true));
 
     if (t == None)
-        t = Texture(DynamicLoadObject("JCOutfits."$tex, class'Texture', true));
+        t = Texture(DynamicLoadObject("Augmentique."$tex, class'Texture', true));
 
     //Otherwise look for exact texture name
     if (t == None)
