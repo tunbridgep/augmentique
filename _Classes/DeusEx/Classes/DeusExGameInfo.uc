@@ -143,5 +143,4 @@ function FailConsoleCheck(PlayerPawn FailPlayer)
 defaultproperties
 {
      bMuteSpectators=True
-     AutoAim=1.000000
 }

@@ -13,14 +13,25 @@ state Activated
 	function BeginState()
 	{
 		local DeusExPlayer player;
+		local Sound BurpSound;
 		
 		Super.BeginState();
 
 		player = DeusExPlayer(Owner);
 		if (player != None)
+		{
 			player.HealPlayer(2, False);
 
-		PlaySound(sound'MaleBurp');
+			//LDDP, 10/25/21: Load sound for burping dynamically.
+			if ((Player.FlagBase != None) && (Player.FlagBase.GetBool('LDDPJCIsFemale')))
+			{
+				BurpSound = Sound(DynamicLoadObject("FemJC.FJCBurp", class'Sound', false));
+			}
+		}
+		
+		if (BurpSound == None) BurpSound = sound'MaleBurp';
+		
+		PlaySound(BurpSound);
 		UseOnce();
 	}
 Begin:

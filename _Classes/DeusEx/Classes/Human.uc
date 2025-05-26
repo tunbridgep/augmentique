@@ -8,6 +8,10 @@ var float mpGroundSpeed;
 var float mpWaterSpeed;
 var float humanAnimRate;
 
+//LDDP, 10/26/21: Female storage, because flags wipe on new game.
+var(LDDP) travel bool bMadeFemale, bFemaleUsesMaleInteractions; //Are we female? Do we want traditionally male interactions? Save this per char, I guess.
+var(LDDP) globalconfig bool bRetroMorpheus, bGaveNewGameTips; //Keep old morpheus lines? Also, did we give a tip yet?
+
 replication 
 {
 	reliable if (( Role == ROLE_Authority ) && bNetOwner )
@@ -24,6 +28,12 @@ function Bool IsFiring()
 
 function Bool HasTwoHandedWeapon()
 {
+	//LDDP, 11/3/2021: Checking bool here because it's faster, and anim functions are called a LOT.
+	if (bMadeFemale)
+	{
+		return false;
+	}
+	
 	if ((Weapon != None) && (Weapon.Mass >= 30))
 		return True;
 	else
@@ -37,13 +47,13 @@ function PlayTurning()
 {
 //	ClientMessage("PlayTurning()");
 	if (bForceDuck || bCrouchOn || IsLeaning())
-		DoTweenAnim('CrouchWalk', 0.1);
+		TweenAnim('CrouchWalk', 0.1);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			DoTweenAnim('Walk2H', 0.1);
+			TweenAnim('Walk2H', 0.1);
 		else
-			DoTweenAnim('Walk', 0.1);
+			TweenAnim('Walk', 0.1);
 	}
 }
 
@@ -51,13 +61,13 @@ function TweenToWalking(float tweentime)
 {
 //	ClientMessage("TweenToWalking()");
 	if (bForceDuck || bCrouchOn)
-		DoTweenAnim('CrouchWalk', tweentime);
+		TweenAnim('CrouchWalk', tweentime);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			DoTweenAnim('Walk2H', tweentime);
+			TweenAnim('Walk2H', tweentime);
 		else
-			DoTweenAnim('Walk', tweentime);
+			TweenAnim('Walk', tweentime);
 	}
 }
 
@@ -73,13 +83,13 @@ function PlayWalking()
 
 	//	ClientMessage("PlayWalking()");
 	if (bForceDuck || bCrouchOn)
-		DoLoopAnim('CrouchWalk', newhumanAnimRate);
+		LoopAnim('CrouchWalk', newhumanAnimRate);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			DoLoopAnim('Walk2H', newhumanAnimRate);
+			LoopAnim('Walk2H', newhumanAnimRate);
 		else
-			DoLoopAnim('Walk', newhumanAnimRate);
+			LoopAnim('Walk', newhumanAnimRate);
 	}
 }
 
@@ -128,26 +138,26 @@ function PlayRunning()
 		if (aStrafe != 0)
 		{
 			if (HasTwoHandedWeapon())
-				DoLoopAnim('Strafe2H', humanAnimRate);
+				LoopAnim('Strafe2H', humanAnimRate);
 			else
-				DoLoopAnim('Strafe', humanAnimRate);
+				LoopAnim('Strafe', humanAnimRate);
 		}
 		else
 		{
 			if (HasTwoHandedWeapon())
-				DoLoopAnim('RunShoot2H', humanAnimRate);
+				LoopAnim('RunShoot2H', humanAnimRate);
 			else
-				DoLoopAnim('RunShoot', humanAnimRate);
+				LoopAnim('RunShoot', humanAnimRate);
 		}
 	}
 	else if (bOnFire)
-		DoLoopAnim('Panic', humanAnimRate);
+		LoopAnim('Panic', humanAnimRate);
 	else
 	{
 		if (HasTwoHandedWeapon())
-			DoLoopAnim('RunShoot2H', humanAnimRate);
+			LoopAnim('RunShoot2H', humanAnimRate);
 		else
-			DoLoopAnim('Run', humanAnimRate);
+			LoopAnim('Run', humanAnimRate);
 	}
 }
 
@@ -157,18 +167,18 @@ function TweenToWaiting(float tweentime)
 	if (IsInState('PlayerSwimming') || (Physics == PHYS_Swimming))
 	{
 		if (IsFiring())
-			DoLoopAnim('TreadShoot');
+			LoopAnim('TreadShoot');
 		else
-			DoLoopAnim('Tread');
+			LoopAnim('Tread');
 	}
 	else if (IsLeaning() || bForceDuck)
-		DoTweenAnim('CrouchWalk', tweentime);
+		TweenAnim('CrouchWalk', tweentime);
 	else if (((AnimSequence == 'Pickup') && bAnimFinished) || ((AnimSequence != 'Pickup') && !IsFiring()))
 	{
 		if (HasTwoHandedWeapon())
-			DoTweenAnim('BreatheLight2H', tweentime);
+			TweenAnim('BreatheLight2H', tweentime);
 		else
-			DoTweenAnim('BreatheLight', tweentime);
+			TweenAnim('BreatheLight', tweentime);
 	}
 }
 
@@ -178,18 +188,18 @@ function PlayWaiting()
 	if (IsInState('PlayerSwimming') || (Physics == PHYS_Swimming))
 	{
 		if (IsFiring())
-			DoLoopAnim('TreadShoot');
+			LoopAnim('TreadShoot');
 		else
-			DoLoopAnim('Tread');
+			LoopAnim('Tread');
 	}
 	else if (IsLeaning() || bForceDuck)
-		DoTweenAnim('CrouchWalk', 0.1);
+		TweenAnim('CrouchWalk', 0.1);
 	else if (!IsFiring())
 	{
 		if (HasTwoHandedWeapon())
-			DoLoopAnim('BreatheLight2H');
+			LoopAnim('BreatheLight2H');
 		else
-			DoLoopAnim('BreatheLight');
+			LoopAnim('BreatheLight');
 	}
 
 }
@@ -197,13 +207,13 @@ function PlayWaiting()
 function PlaySwimming()
 {
 //	ClientMessage("PlaySwimming()");
-	DoLoopAnim('Tread');
+	LoopAnim('Tread');
 }
 
 function TweenToSwimming(float tweentime)
 {
 //	ClientMessage("TweenToSwimming()");
-	DoTweenAnim('Tread', tweentime);
+	TweenAnim('Tread', tweentime);
 }
 
 function PlayInAir()
@@ -232,7 +242,7 @@ function PlayDuck()
 			PlayAnim('Crouch',,0.1);
 	}
 	else
-		DoTweenAnim('CrouchWalk', 0.1);
+		TweenAnim('CrouchWalk', 0.1);
 }
 
 function PlayRising()
@@ -245,9 +255,9 @@ function PlayCrawling()
 {
 //	ClientMessage("PlayCrawling()");
 	if (IsFiring())
-		DoLoopAnim('CrouchShoot');
+		LoopAnim('CrouchShoot');
 	else
-		DoLoopAnim('CrouchWalk');
+		LoopAnim('CrouchWalk');
 }
 
 function PlayFiring()
@@ -261,20 +271,20 @@ function PlayFiring()
 	if (W != None)
 	{
 		if (IsInState('PlayerSwimming') || (Physics == PHYS_Swimming))
-			DoLoopAnim('TreadShoot',,0.1);
+			LoopAnim('TreadShoot',,0.1);
 		else if (W.bHandToHand)
 		{
 			if (bAnimFinished || (AnimSequence != 'Attack'))
 				PlayAnim('Attack',,0.1);
 		}
 		else if (bIsCrouching || IsLeaning())
-			DoLoopAnim('CrouchShoot',,0.1);
+			LoopAnim('CrouchShoot',,0.1);
 		else
 		{
 			if (HasTwoHandedWeapon())
-				DoLoopAnim('Shoot2H',,0.1);
+				LoopAnim('Shoot2H',,0.1);
 			else
-				DoLoopAnim('Shoot',,0.1);
+				LoopAnim('Shoot',,0.1);
 		}
 	}
 }
@@ -320,61 +330,157 @@ function float RandomPitch()
 	return (1.1 - 0.2*FRand());
 }
 
+//LDDP, 10/26/21: These next 3 functions are all modified for unique sound playing based on female stuff
 function Gasp()
 {
-	PlaySound(sound'MaleGasp', SLOT_Pain,,,, RandomPitch());
+	local Sound TSound;
+	
+	if ((FlagBase != None) && (FlagBase.GetBool('LDDPJCIsFemale')))
+	{
+		TSound = Sound(DynamicLoadObject("FemJC.FJCGasp", class'Sound', false));
+		if (TSound != None) PlaySound(TSound, SLOT_Pain,,,, RandomPitch());
+	}
+	else
+	{
+		PlaySound(sound'MaleGasp', SLOT_Pain,,,, RandomPitch());
+	}
 }
 
 function PlayDyingSound()
 {
-	if (Region.Zone.bWaterZone)
-		PlaySound(sound'MaleWaterDeath', SLOT_Pain,,,, RandomPitch());
+	local Sound TSound;
+	
+	if ((FlagBase != None) && (FlagBase.GetBool('LDDPJCIsFemale')))
+	{
+		if (Region.Zone.bWaterZone)
+		{
+			TSound = Sound(DynamicLoadObject("FemJC.FJCWaterDeath", class'Sound', false));
+			if (TSound != None) PlaySound(TSound, SLOT_Pain,,,, RandomPitch());
+		}
+		else
+		{
+			TSound = Sound(DynamicLoadObject("FemJC.FJCDeath", class'Sound', false));
+			if (TSound != None) PlaySound(TSound, SLOT_Pain,,,, RandomPitch());
+		}
+	}
 	else
-		PlaySound(sound'MaleDeath', SLOT_Pain,,,, RandomPitch());
+	{
+		if (Region.Zone.bWaterZone)
+		{
+			PlaySound(sound'MaleWaterDeath', SLOT_Pain,,,, RandomPitch());
+		}
+		else
+		{
+			PlaySound(sound'MaleDeath', SLOT_Pain,,,, RandomPitch());
+		}
+	}
 }
 
 function PlayTakeHitSound(int Damage, name damageType, int Mult)
 {
 	local float rnd;
+	
+	local sound TSound;
 
 	if ( Level.TimeSeconds - LastPainSound < FRand() + 0.5)
 		return;
 
 	LastPainSound = Level.TimeSeconds;
 
-	if (Region.Zone.bWaterZone)
+	if ((FlagBase != None) && (FlagBase.GetBool('LDDPJCIsFemale')))
 	{
-		if (damageType == 'Drowned')
+		if (Region.Zone.bWaterZone)
 		{
-			if (FRand() < 0.8)
-				PlaySound(sound'MaleDrown', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			if (damageType == 'Drowned')
+			{
+				if (FRand() < 0.8)
+				{
+					TSound = Sound(DynamicLoadObject("FemJC.FJCDrown", class'Sound', false));
+					if (TSound != None) PlaySound(TSound, SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+				}
+			}
+			else
+			{
+				TSound = Sound(DynamicLoadObject("FemJC.FJCPainSmall", class'Sound', false));
+				if (TSound != None) PlaySound(TSound, SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			}
 		}
 		else
-			PlaySound(sound'MalePainSmall', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+		{
+			// Body hit sound for multiplayer only
+			if (((damageType == 'Shot') || (damageType == 'AutoShot'))  && (Level.NetMode != NM_Standalone))
+			{
+				PlaySound(sound'BodyHit', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			}
+			
+			if ((damageType == 'TearGas') || (damageType == 'HalonGas'))
+			{
+				TSound = Sound(DynamicLoadObject("FemJC.FJCEyePain", class'Sound', false));
+				if (TSound != None) PlaySound(TSound, SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			}
+			else if (damageType == 'PoisonGas')
+			{
+				TSound = Sound(DynamicLoadObject("FemJC.FJCCough", class'Sound', false));
+				if (TSound != None) PlaySound(TSound, SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			}
+			else
+			{
+				rnd = FRand();
+				if (rnd < 0.33)
+				{
+					TSound = Sound(DynamicLoadObject("FemJC.FJCPainSmall", class'Sound', false));
+					if (TSound != None) PlaySound(TSound, SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+				}
+				else if (rnd < 0.66)
+				{
+					TSound = Sound(DynamicLoadObject("FemJC.FJCPainMedium", class'Sound', false));
+					if (TSound != None) PlaySound(TSound, SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+				}
+				else
+				{
+					TSound = Sound(DynamicLoadObject("FemJC.FJCPainLarge", class'Sound', false));
+					if (TSound != None) PlaySound(TSound, SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+				}
+			}
+			AISendEvent('LoudNoise', EAITYPE_Audio, FMax(Mult * TransientSoundVolume, Mult * 2.0));
+		}
 	}
 	else
 	{
-		// Body hit sound for multiplayer only
-		if (((damageType=='Shot') || (damageType=='AutoShot'))  && ( Level.NetMode != NM_Standalone ))
+		if (Region.Zone.bWaterZone)
 		{
-			PlaySound(sound'BodyHit', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			if (damageType == 'Drowned')
+			{
+				if (FRand() < 0.8)
+					PlaySound(sound'MaleDrown', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			}
+			else
+				PlaySound(sound'MalePainSmall', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
 		}
-
-		if ((damageType == 'TearGas') || (damageType == 'HalonGas'))
-			PlaySound(sound'MaleEyePain', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
-		else if (damageType == 'PoisonGas')
-			PlaySound(sound'MaleCough', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
 		else
 		{
-			rnd = FRand();
-			if (rnd < 0.33)
-				PlaySound(sound'MalePainSmall', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
-			else if (rnd < 0.66)
-				PlaySound(sound'MalePainMedium', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			// Body hit sound for multiplayer only
+			if (((damageType=='Shot') || (damageType=='AutoShot'))  && ( Level.NetMode != NM_Standalone ))
+			{
+				PlaySound(sound'BodyHit', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			}
+			
+			if ((damageType == 'TearGas') || (damageType == 'HalonGas'))
+				PlaySound(sound'MaleEyePain', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			else if (damageType == 'PoisonGas')
+				PlaySound(sound'MaleCough', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
 			else
-				PlaySound(sound'MalePainLarge', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			{
+				rnd = FRand();
+				if (rnd < 0.33)
+					PlaySound(sound'MalePainSmall', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+				else if (rnd < 0.66)
+					PlaySound(sound'MalePainMedium', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+				else
+					PlaySound(sound'MalePainLarge', SLOT_Pain, FMax(Mult * TransientSoundVolume, Mult * 2.0),,, RandomPitch());
+			}
+			AISendEvent('LoudNoise', EAITYPE_Audio, FMax(Mult * TransientSoundVolume, Mult * 2.0));
 		}
-		AISendEvent('LoudNoise', EAITYPE_Audio, FMax(Mult * TransientSoundVolume, Mult * 2.0));
 	}
 }
 
@@ -402,19 +508,70 @@ simulated function PreBeginPlay()
 	}
 }
 
-//Augmentique - SARGE
-//Some outfits don't have animations, so we need to
-//make sure we actually have them before attempting to tween to them,
-//otherwise the log will report lots and lots of errors.
-function DoTweenAnim(name Sequence, float Time)
+//LDDP, 10/28/21: Use this command to summon a debug dood with helpful advice.
+exec function LDDPDebugDude()
 {
-    if (HasAnim(Sequence))
-        TweenAnim(Sequence,Time);
+	local Vector TLoc;
+	local Rotator TRot;
+	local ScriptedPawn SP;
+	local class<ScriptedPawn> TClass;
+	
+	TClass = class<ScriptedPawn>(DynamicLoadObject("FemJC.LDDPCRohan", class'Class', false));
+	if (TClass != None)
+	{
+		TLoc = Location + (vector(Rotation) * 128);
+		TRot = Rotation + Rot(0,32768,0);
+		
+		SP = Spawn(TClass,,, TLoc, TRot);
+		
+		//LDDP, 10/28/21: We're leaving him at wandering for now. Whatevs. If this is more your speed, modder, knock yourself out.
+		//SP.SetOrders('Standing', 'None', true);
+	}
 }
-function DoLoopAnim(name Sequence, optional float Rate, optional float TweenTime, optional float MinRate)
+
+//LDDP, 10/26/21: Fix for using "Walk" command resetting collision height in a way that is wrong.
+function ClientReStart()
 {
-    if (HasAnim(Sequence))
-        LoopAnim(Sequence,Rate,TweenTime,MinRate);
+	Super.ClientRestart();
+	
+	if ((FlagBase != None) && (FlagBase.GetBool('LDDPJCIsFemale')))
+	{
+		BaseEyeHeight = CollisionHeight - (GetDefaultCollisionHeight() - Default.BaseEyeHeight) - 2.0;
+	}
+	else
+	{
+		BaseEyeHeight = CollisionHeight - (GetDefaultCollisionHeight() - Default.BaseEyeHeight);
+	}
+}
+
+
+//LDDP, 10/26/21: We tweak this because in theory feign death breaks dynamic collision size. That's bad, M'kay.
+state FeigningDeath
+{
+ignores SeePlayer, HearNoise, Bump;
+
+	function Rise()
+	{
+		if ( !bRising )
+		{
+			Enable('AnimEnd');
+			
+			//LDDP, 10/26/21: Yeah, this is on its way out. Thanks.
+			//BaseEyeHeight = Default.BaseEyeHeight;
+			
+			//LDDP, 10/26/21: Update female sounds a bit here.
+			if ((FlagBase != None) && (FlagBase.GetBool('LDDPJCIsFemale')))
+			{
+				BaseEyeHeight = CollisionHeight - (GetDefaultCollisionHeight() - Default.BaseEyeHeight) - 2.0;
+			}
+			else
+			{
+				BaseEyeHeight = CollisionHeight - (GetDefaultCollisionHeight() - Default.BaseEyeHeight);
+			}
+			bRising = true;
+			PlayRising();
+		}
+	}
 }
 
 defaultproperties

@@ -356,10 +356,6 @@ const			NintendoDelay = 6.0;
 // For closing comptuers if the server quits
 var Computers ActiveComputer;
 
-// OUTFIT STUFF
-var travel OutfitManagerBase outfitManager;
-var globalconfig string unlockedOutfits[255];
-
 // native Functions
 native(1099) final function string GetDeusExVersion();
 native(2100) final function ConBindEvents();
@@ -775,6 +771,7 @@ function UpdatePlayerSkin()
 	local PaulDentonCarcass paulCarcass;
 	local JCDentonMaleCarcass jcCarcass;
 	local JCDouble jc;
+	local DentonClone DC;
 
 	// Paul Denton
 	foreach AllActors(class'PaulDenton', paul)
@@ -803,6 +800,12 @@ function UpdatePlayerSkin()
 
 	if (jc != None)
 		jc.SetSkin(Self);
+	
+	//LDDP, 10/26/21: Reskin denton clone on the fly
+	forEach AllActors(class'DentonClone', DC)
+	{
+		DC.SetSkin(Human(Self));
+	}
 }
 
 
@@ -3261,7 +3264,17 @@ function bool SetBasedPawnSize(float newRadius, float newHeight)
 		PrePivot        -= centerDelta;
 //		DesiredPrePivot -= centerDelta;
 		BaseEyeHeight   = newHeight - deltaEyeHeight;
-
+		
+		//LDDP, 10/26/21: We use this to dynamically adjust our collision height. Bear this in mind.
+		if ((FlagBase != None) && (FlagBase.GetBool('LDDPJCIsFemale')))
+		{
+			if (PrePivot.Z ~= 4.5)
+			{
+				PrePivot.Z -= 4.5;
+			}
+			BaseEyeHeight -= 2;
+		}
+		
 		// Complaints that eye height doesn't seem like your crouching in multiplayer
 		if (( Level.NetMode != NM_Standalone ) && (bIsCrouching || bForceDuck) )
 			EyeHeight		-= (centerDelta.Z * 2.5);
@@ -3286,6 +3299,10 @@ function bool ResetBasedPawnSize()
 
 function float GetDefaultCollisionHeight()
 {
+	if ((FlagBase != None) && (FlagBase.GetBool('LDDPJCIsFemale')))
+	{
+		return Default.CollisionHeight-9.0;
+	}
 	return (Default.CollisionHeight-4.5);
 }
 
@@ -7677,7 +7694,7 @@ function bool StartConversationByName(
 	local Conversation con;
 	local Int  dist;
 	local Bool bConversationStarted;
-
+	
 	bConversationStarted = False;
 
 	if (conOwner == None)
@@ -7754,7 +7771,7 @@ function bool StartConversation(
 
 	// First check to see the actor has any conversations or if for some
 	// other reason we're unable to start a conversation (typically if 
-	// we're alread in a conversation or there's a UI screen visible)
+	// we're already in a conversation or there's a UI screen visible)
 
 	if ((!bForcePlay) && ((invokeActor.conListItems == None) || (!CanStartConversation())))
 		return False;
@@ -11073,6 +11090,7 @@ function CreateColorThemeManager()
 
 		// Menus
 		ThemeManager.AddTheme(Class'ColorThemeMenu_Default');
+		ThemeManager.AddTheme(Class'ColorThemeMenu_LDDP');
 		ThemeManager.AddTheme(Class'ColorThemeMenu_BlueAndGold');
 		ThemeManager.AddTheme(Class'ColorThemeMenu_CoolGreen');
 		ThemeManager.AddTheme(Class'ColorThemeMenu_Cops');
@@ -11105,6 +11123,7 @@ function CreateColorThemeManager()
 
 		// HUD
 		ThemeManager.AddTheme(Class'ColorThemeHUD_Default');
+		ThemeManager.AddTheme(Class'ColorThemeHUD_LDDP');
 		ThemeManager.AddTheme(Class'ColorThemeHUD_Amber');
 		ThemeManager.AddTheme(Class'ColorThemeHUD_Cops');
 		ThemeManager.AddTheme(Class'ColorThemeHUD_Cyan');

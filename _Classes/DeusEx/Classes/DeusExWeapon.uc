@@ -3127,7 +3127,7 @@ simulated function bool HasAccuracyMod()
 
 simulated function bool HasMaxAccuracyMod()
 {
-	return (ModBaseAccuracy >= 0.25);
+	return (ModBaseAccuracy == 0.5);
 }
 
 // ----------------------------------------------------------------------
@@ -3145,7 +3145,7 @@ simulated function bool HasRecoilMod()
 
 simulated function bool HasMaxRecoilMod()
 {
-	return (ModRecoilStrength <= -0.25);
+	return (ModRecoilStrength == -0.5);
 }
 
 // ----------------------------------------------------------------------

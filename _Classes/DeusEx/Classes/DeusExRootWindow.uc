@@ -14,7 +14,7 @@ var DeusExScopeView     scopeView;
 
 // Window Stack
 var int					MaxWinStack;
-var DeusExBaseWindow	winStack[6];		// Array of Windows
+var DeusExBaseWindow	winStack[8];		// Array of Windows, LDDP, 10/28/21: Like many mods, we're expanding this. In our case, for new game tips.
 var int					winCount;			// Number of Windows
 var Bool				bIgnoreHotkeys;		// Ignore Hotkeys
 
@@ -1085,7 +1085,7 @@ function S_ColorScheme GetCurrentHUDColorScheme()
 
 defaultproperties
 {
-     MaxWinStack=6
+     MaxWinStack=8
      colSnapshot=(R=128,G=128,B=128)
      snapshotWidth=256.000000
      snapshotHeight=192.000000

@@ -21,12 +21,6 @@ var localized String ConsButtonLabel;
 var localized String ImagesButtonLabel;
 var localized String LogsButtonLabel;
 
-//Sarge: Outfits Stuff
-var PersonaNavButtonWindow btnOutfits;
-
-var localized String ConsButtonLabelShort; //Sarge: Added
-var localized String OutfitsButtonLabel;
-
 // ----------------------------------------------------------------------
 // CreateButtons()
 // ----------------------------------------------------------------------
@@ -41,27 +35,8 @@ function CreateButtons()
 	btnAugs      = CreateNavButton(winNavButtons, AugsButtonLabel);
 	btnHealth    = CreateNavButton(winNavButtons, HealthButtonLabel);
 	btnInventory = CreateNavButton(winNavButtons, InventoryButtonLabel);
-    CreateOutfitsButton();                  //Sarge: Added
 
 	Super.CreateButtons();
-}
-
-// ----------------------------------------------------------------------
-// CreateOutfitsButton()
-// Will shorten the Conversations button to fit it in
-// ----------------------------------------------------------------------
-
-function CreateOutfitsButton()
-{
-    local class<PersonaScreenBaseWindow> test;
-    test = class<PersonaScreenBaseWindow>(DynamicLoadObject("Augmentique.PersonaScreenOutfits", class'Class'));
-
-    //Only create the Outfits button if the outfits window is actually available
-    if (test != None)
-    {
-    	btnOutfits   = CreateNavButton(winNavButtons, OutfitsButtonLabel);
-        btnCons.SetButtonText(ConsButtonLabelShort);
-    }
 }
 
 // ----------------------------------------------------------------------
@@ -109,11 +84,6 @@ function bool ButtonActivated( Window buttonPressed )
 			winClass = Class'PersonaScreenLogs';
 			break;
 
-        //Sarge: Add new button for Outfits
-		case btnOutfits:
-            winClass = class<PersonaScreenBaseWindow>(DynamicLoadObject("Augmentique.PersonaScreenOutfits", class'Class'));
-			break;
-
 		default:
 			bHandled = False;
 			break;
@@ -144,6 +114,4 @@ defaultproperties
      ConsButtonLabel="|&Conversations"
      ImagesButtonLabel="I|&mages"
      LogsButtonLabel="|&Logs"
-     OutfitsButtonLabel="|&Outfits"
-     ConsButtonLabelShort="|&Conv."
 }

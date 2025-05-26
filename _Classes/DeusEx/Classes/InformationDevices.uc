@@ -4,7 +4,7 @@
 class InformationDevices extends DeusExDecoration
 	abstract;
 
-var() name					textTag;
+var() name					textTag, FemaleTextTag; //LDDP, 10/25/21: Added female equivalent text tag. Set automatically.
 var() string				TextPackage;
 var() class<DataVaultImage>	imageClass;
 
@@ -117,44 +117,64 @@ function CreateInfoWindow()
 	local DeusExNote note;
 	local DataVaultImage image;
 	local bool bImageAdded;
+	
+	local name UseTextTag;
+	local bool bWon;
 
 	rootWindow = DeusExRootWindow(aReader.rootWindow);
 
+	//LDDP, 10/25/21: Convert usage to female text flag when female.
+	if ((aReader != None) && (aReader.FlagBase != None) && (aReader.FlagBase.GetBool('LDDPJCIsFemale')))
+	{
+		UseTextTag = FemaleTextTag;
+	}
+	if (!bool(UseTextTag)) UseTextTag = TextTag;
+	
 	// First check to see if we have a name
-	if ( textTag != '' )
+	if ( UseTextTag != '' )
 	{
 		// Create the text parser
 		parser = new(None) Class'DeusExTextParser';
-								    
+		
 		// Attempt to find the text object
-		if ((aReader != None) && (parser.OpenText(textTag,TextPackage)))
+		if (aReader != None)
 		{
-			parser.SetPlayerName(aReader.TruePlayerName);
-
-			infoWindow = rootWindow.hud.ShowInfoWindow();
-			infoWindow.ClearTextWindows();
-
-			vaultString = "";
-			bFirstParagraph = True;
-
-			while(parser.ProcessText())
-				ProcessTag(parser);
-
-			parser.CloseText();
-
-			// Check to see if we need to save this string in the 
-			// DataVault
-			if (bAddToVault)
+			bWon = (parser.OpenText(UseTextTag,TextPackage));
+			if (!bWon)
 			{
-				note = aReader.GetNote(textTag);
-
-				if (note == None)
-				{
-					note = aReader.AddNote(vaultString,, True);
-					note.SetTextTag(textTag);
-				}
-
+				UseTextTag = TextTag;
+				bWon = (parser.OpenText(UseTextTag,TextPackage));
+			}
+			
+			if (bWon)
+			{
+				parser.SetPlayerName(aReader.TruePlayerName);
+				
+				infoWindow = rootWindow.hud.ShowInfoWindow();
+				infoWindow.ClearTextWindows();
+				
 				vaultString = "";
+				bFirstParagraph = True;
+				
+				while(parser.ProcessText())
+					ProcessTag(parser);
+				
+				parser.CloseText();
+				
+				// Check to see if we need to save this string in the 
+				// DataVault
+				if (bAddToVault)
+				{
+					note = aReader.GetNote(UseTextTag);
+					
+					if (note == None)
+					{
+						note = aReader.AddNote(vaultString,, True);
+						note.SetTextTag(UseTextTag);
+					}
+					
+					vaultString = "";
+				}
 			}
 		}
 		CriticalDelete(parser);
@@ -265,6 +285,20 @@ function ProcessTag(DeusExTextParser parser)
 		case 17:			// TT_RevertColor:
 			winText.SetTextColor(parser.GetColor());
 			break;
+	}
+}
+
+function PostBeginPlay()
+{
+	local string TS;
+	
+	Super.PostBeginPlay();
+	
+	//LDDP, 10/25/21: We now have a female text tag variable. Conjure one based off our base text flag, assuming it's not blank.
+	if (bool(TextTag))
+	{
+		TS = "FemJC"$string(TextTag);
+		SetPropertyText("FemaleTextTag", TS);
 	}
 }
 

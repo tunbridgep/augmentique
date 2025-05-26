@@ -11,7 +11,7 @@ struct BodyPart
 	var int    displayedHealth;
 	var float  damageCounter;
 	var float  healCounter;
-   var float  refreshCounter;
+   	var float  refreshCounter;
 };
 
 var BodyPart head;
@@ -50,14 +50,15 @@ var Texture texBorder;
 var localized string O2Text;
 var localized string EnergyText;
 
+//LDDP, 10/27/21: Store this now, so we can change its texture on the fly!
+var Window BodyWin;
+
 // ----------------------------------------------------------------------
 // InitWindow()
 // ----------------------------------------------------------------------
 
 event InitWindow()
 {
-	local window bodyWin;
-
 	Super.InitWindow();
 
 	bTickEnabled = True;
@@ -129,7 +130,7 @@ function CreateBodyPart(out BodyPart part, texture tx, float newX, float newY,
 	part.healHealth      = 0;
 	part.damageCounter   = 0;
 	part.healCounter     = 0;
-   part.refreshCounter  = 0;
+   	part.refreshCounter  = 0;
 }
 
 // ----------------------------------------------------------------------
@@ -148,13 +149,13 @@ function SetHitColor(out BodyPart part, float deltaSeconds, bool bHide, int hitV
 	if (part.healCounter < 0)
 		part.healCounter = 0;
 
-   part.refreshCounter -= deltaSeconds;
+   	part.refreshCounter -= deltaSeconds;
+	
+   	if ((part.healCounter == 0) && (part.damageCounter == 0) && (part.lastHealth == hitValue) && (part.refreshCounter > 0))
+      		return;
 
-   if ((part.healCounter == 0) && (part.damageCounter == 0) && (part.lastHealth == hitValue) && (part.refreshCounter > 0))
-      return;
-
-   if (part.refreshCounter <= 0)
-      part.refreshCounter = 0.5;
+  	if (part.refreshCounter <= 0)
+      		part.refreshCounter = 0.5;
   
 	if (hitValue < part.lastHealth)
 	{
@@ -272,12 +273,12 @@ function DrawBorder(GC gc)
 
 event Tick(float deltaSeconds)
 {
-   // DEUS_EX AMSD Server doesn't need to do this.
-   if ((player.Level.NetMode != NM_Standalone)  && (!Player.PlayerIsClient()))
-   {
-      Hide();
-      return;
-   }
+   	// DEUS_EX AMSD Server doesn't need to do this.
+   	if ((player.Level.NetMode != NM_Standalone)  && (!Player.PlayerIsClient()))
+   	{
+      		Hide();
+      		return;
+   	}
 	if ((player != None) && ( bVisible ))
 	{
 		SetHitColor(head,     deltaSeconds, false, player.HealthHead);
@@ -342,6 +343,47 @@ event Tick(float deltaSeconds)
 function SetVisibility( bool bNewVisibility )
 {
 	bVisible = bNewVisibility;
+}
+
+//LDDP, 10/26/21: Update textures on the fly. Easy one.
+function UpdateAsFemale(bool NewbFemale)
+{
+	local Texture TTex;
+	
+	if (NewbFemale)
+	{
+		TTex = Texture(DynamicLoadObject("FemJC.HUDHitDisplay_HeadFem", class'Texture', false));
+		if (TTex != None) Head.PartWindow.SetBackground(TTex);
+		TTex = Texture(DynamicLoadObject("FemJC.HUDHitDisplay_TorsoFem", class'Texture', false));
+		if (TTex != None) Torso.PartWindow.SetBackground(TTex);
+		TTex = Texture(DynamicLoadObject("FemJC.HUDHitDisplay_ArmLeftFem", class'Texture', false));
+		if (TTex != None) ArmLeft.PartWindow.SetBackground(TTex);
+		TTex = Texture(DynamicLoadObject("FemJC.HUDHitDisplay_ArmRightFem", class'Texture', false));
+		if (TTex != None) ArmRight.PartWindow.SetBackground(TTex);
+		TTex = Texture(DynamicLoadObject("FemJC.HUDHitDisplay_LegLeftFem", class'Texture', false));
+		if (TTex != None) LegLeft.PartWindow.SetBackground(TTex);
+		TTex = Texture(DynamicLoadObject("FemJC.HUDHitDisplay_LegRightFem", class'Texture', false));
+		if (TTex != None) LegRight.PartWindow.SetBackground(TTex);
+	}
+	else
+	{
+		Head.PartWindow.SetBackground(Texture'HUDHitDisplay_Head');
+		Torso.PartWindow.SetBackground(Texture'HUDHitDisplay_Torso');
+		ArmLeft.PartWindow.SetBackground(Texture'HUDHitDisplay_ArmLeft');
+		ArmRight.PartWindow.SetBackground(Texture'HUDHitDisplay_ArmRight');
+		LegLeft.PartWindow.SetBackground(Texture'HUDHitDisplay_LegLeft');
+		LegRight.PartWindow.SetBackground(Texture'HUDHitDisplay_LegRight');
+	}
+	
+	if (NewbFemale)
+	{
+		TTex = Texture(DynamicLoadObject("FemJC.HUDHitDisplay_BodyFem", class'Texture', false));
+		if (TTex != None) bodyWin.SetBackground(TTex);
+	}
+	else
+	{
+		bodyWin.SetBackground(Texture'HUDHitDisplay_Body');
+	}
 }
 
 // ----------------------------------------------------------------------

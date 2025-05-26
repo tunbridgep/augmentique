@@ -17,6 +17,9 @@ state Activated
 		local rotator rot;
 		local SmokeTrail puff;
 		
+		local Sound CoughSound;
+		local DeusExPlayer Player;
+		
 		Super.BeginState();
 
 		P = Pawn(Owner);
@@ -33,7 +36,16 @@ state Activated
 				puff.DrawScale = 1.0;
 				puff.origScale = puff.DrawScale;
 			}
-			PlaySound(sound'MaleCough');
+			
+			//LDDP, 10/25/21: Load cough sound dynamically.
+			Player = DeusExPlayer(Owner);
+			if ((Player != None) && (Player.FlagBase != None) && (Player.FlagBase.GetBool('LDDPJCIsFemale')))
+			{
+				CoughSound = Sound(DynamicLoadObject("FemJC.FJCCough", class'Sound', false));
+			}
+			if (CoughSound == None) CoughSound = sound'MaleCough';
+			
+			PlaySound(CoughSound);
 		}
 
 		UseOnce();
