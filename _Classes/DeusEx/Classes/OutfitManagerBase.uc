@@ -8,6 +8,10 @@ enum PartSlot
 {
     PS_Body_M,
     PS_Body_F,
+    PS_Main,             //Main model texture
+    PS_Glasses,
+    PS_Hat,
+    PS_Mask,
     PS_Trench, //Common trench coats
     PS_Trench_F, //Female Exclusive trench coats
     PS_Trench_M, //Male Exclusive trench coats
@@ -16,15 +20,11 @@ enum PartSlot
     PS_Trench_Shirt_F, //Female Exclusive Trench Shirts
     PS_Torso_M,
     PS_Torso_F,
+    PS_Skirt,
     PS_Legs, //Common Legs
     PS_Legs_M, //Male exclusive legs
     PS_Legs_F, //Female exclusive legs
-    PS_DressLegs, //Legs used for dresses, stockings etc.
-    PS_Skirt,
-    PS_Glasses,
-    PS_Hat,
-    PS_Main,             //Main model texture
-    PS_Mask
+    PS_DressLegs //Legs used for dresses, stockings etc.
 };
 
 
