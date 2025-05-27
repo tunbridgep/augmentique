@@ -141,7 +141,6 @@ function UpdateOutfitPartButtons()
     UpdateOutfitPartButton(16);
     UpdateOutfitPartButton(17);
     UpdateOutfitPartButton(18);
-    UpdateOutfitPartButton(19);
 }
 
 function UpdateOutfitPartButton(int id)

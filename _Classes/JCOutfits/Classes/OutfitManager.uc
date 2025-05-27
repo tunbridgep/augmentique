@@ -306,6 +306,9 @@ function SpawnerPickup(OutfitSpawner S)
     local int index;
     index = GetOutfitIndexByID(S.id);
 
+    if (index == -1)
+        return;
+
     //Stop percentages being broken when using custom pickup messages
     if (InStr(outfits[index].PickupMessage,"%s") != -1)
         player.ClientMessage(sprintf(outfits[index].PickupMessage,outfits[index].PickupArticle,outfits[index].PickupName), 'Pickup');
@@ -1547,7 +1550,7 @@ function int GetOutfitIndexByID(string id)
 {
     local int i;
     for (i = 0;i < numOutfits;i++)
-        if (outfits[i].id == id && IsCorrectGender(i))
+        if (outfits[i] != None && outfits[i].id == id && IsCorrectGender(i))
             return i;
 
     return -1;
@@ -1620,7 +1623,9 @@ function CopyOutfitsToPlayer()
 
 function bool IsCorrectGender(int index)
 {
-    return outfits[index].partsGroup.IsCorrectGender();
+    if (index < numOutfits && outfits[index].partsGroup != None)
+        return outfits[index].partsGroup.IsCorrectGender();
+    return false;
 }
 
 function bool IsEquippable(int index)
@@ -1658,7 +1663,7 @@ function Unlock(string id)
         //Unlock any outfits matching this ID
         for (i = 1;i<numOutfits;i++)
         {
-            if (outfits[i].id == id)
+            if (outfits[i] != None && outfits[i].id == id)
                 outfits[i].SetUnlocked();
         }
     }
@@ -1669,7 +1674,6 @@ function CompleteSetup()
     local int i;
 
     //Set unlocked on all outfits which are unlocked
-    outfits[0].SetUnlocked();
     Unlock("default");
     for (i = 1;i<numOutfits;i++)
     {
@@ -1737,7 +1741,8 @@ function ApplyCurrentOutfitToActor(Actor A)
     //if (!IsEquippable(currOutfit.index))
     //    return;
 
-    currOutfit.ApplyOutfitToActor(A,!noAccessories);
+    if (currOutfit != None)
+        currOutfit.ApplyOutfitToActor(A,!noAccessories);
 }
 
 function Mesh findMesh(string mesh)
@@ -1896,7 +1901,7 @@ defaultproperties
      outfitInfos(93)=(Name="Maid Outfit",Desc="A formal cleaning uniform worn by servants, assistants and house cleaners.")
      outfitInfos(94)=(Name="Manderley's Outfit")
      outfitInfos(95)=(Name="Traditional Dress",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
-     outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat.")
+     outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat and blue dress pants.")
 
      //Misc
      partNames(0)="Default"

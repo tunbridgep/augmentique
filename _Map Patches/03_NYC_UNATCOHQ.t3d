@@ -82,8 +82,9 @@ Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner1
     LastRenderTime=164.807663
     Level=LevelInfo'MyLevel.LevelInfo0'
     Tag=OutfitSpawner2
-    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=3174,ZoneNumber=4)
-    Location=(X=276.725006,Y=484.632935,Z=374.099640)
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=1339,ZoneNumber=2)
+    Location=(X=128.725006,Y=400.632935,Z=259.099640)
+    Rotation=(Yaw=15444)
     OldLocation=(X=276.725006,Y=484.632935,Z=374.099640)
     Name=OutfitSpawner1
 End Actor
