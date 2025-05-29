@@ -49,6 +49,10 @@ var const localized string CustomOutfitName;
 //Default Name
 var const localized string NothingName;
 
+//Default pickup message
+var const localized string DefaultPickupMessage;
+var const localized string DefaultPickupMessage2;
+
 //TODO: Replace these with outfit 0
 var travel string defaultTextures[8];
 var travel string defaultMesh;
@@ -311,7 +315,12 @@ function SpawnerPickup(OutfitSpawner S)
 
     //Stop percentages being broken when using custom pickup messages
     if (InStr(outfits[index].PickupMessage,"%s") != -1)
-        player.ClientMessage(sprintf(outfits[index].PickupMessage,outfits[index].PickupArticle,outfits[index].PickupName), 'Pickup');
+    {
+        if (outfits[index].PickupArticle != "")
+            player.ClientMessage(sprintf(outfits[index].PickupMessage,outfits[index].PickupArticle,outfits[index].PickupName), 'Pickup');
+        else
+            player.ClientMessage(sprintf(outfits[index].PickupMessage,outfits[index].PickupName), 'Pickup');
+    }
     else
         player.ClientMessage(outfits[index].PickupMessage, 'Pickup');
         
@@ -443,7 +452,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Trench_Shirt,67,false,"toby_s","TobyAtanweTex1");
     GlobalAddPartL(PS_Trench_Shirt_M,68,false,"garysavage_s","GarySavageTex1");
     GlobalAddPartL(PS_Trench_Shirt_M,69,false,"maxchen_s","MaxChenTex1");
-    GlobalAddPartL(PS_Trench_Shirt,161,false,"default_s2","Outfit1F_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_F,161,false,"default_s2","Outfit1F_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_F,8,false,"100%_s","Outfit1_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_F,51,false,"lab_s","TrenchShirtTex3");
     GlobalAddPartL(PS_Trench_Shirt,162,false,"matrix_s","Outfit4F_Tex1");
@@ -1437,9 +1446,14 @@ function BeginNewOutfit(string id, string name, optional string desc, optional s
 
     if (pickupArticle == "")
         pickupArticle = "a";
+    
+    if (pickupArticle == "-") //Hack for "no" article
+        pickupArticle = "";
 
-    if (pickupMessage == "")
-        pickupMessage = "You found %s %s";
+    if (pickupMessage == "" && pickupArticle != "")
+        pickupMessage = DefaultPickupMessage;
+    else if (pickupMessage == "")
+        pickupMessage = DefaultPickupMessage;
 
     O.PickupMessage = pickupMessage;
     O.PickupName = pickupName;
@@ -1643,7 +1657,7 @@ function bool IsUnlockedAt(int index)
     return outfits[index].unlocked;
 }
 
-function Unlock(string id)
+function Unlock(string id, optional bool bPrintMessage)
 {
     local int i;
     if (!IsUnlocked(id))
@@ -1807,99 +1821,99 @@ function bool ValidateSpawn(string id)
 defaultproperties
 {
      savedOutfitIndex=1
-     outfitInfos(0)=(Name="JC Denton's Trenchcoat",Desc="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look")
-     outfitInfos(1)=(Name="JC Denton's Trenchcoat (Alt)",Desc="JC Denton's Signature Trenchcoat, now with extra jewellery!")
+     outfitInfos(0)=(Name="JC Denton's Trenchcoat",Article="-",Desc="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look")
+     outfitInfos(1)=(Name="JC Denton's Trenchcoat (Alt)",Article="-",Desc="JC Denton's Signature Trenchcoat, now with extra jewellery!")
      outfitInfos(2)=(Name="100% Black",PickupMessage="We're 100% Black",HighlightName="???")
-     outfitInfos(3)=(Name="Alex Jacobson's Outfit",Desc="An outfit adorned with computer parts, keyboards, wires and other tech.")
+     outfitInfos(3)=(Name="Alex Jacobson's Outfit",Article="-",Desc="An outfit adorned with computer parts, keyboards, wires and other tech.")
      outfitInfos(4)=(Name="Lab Coat",Desc="This sleek turtleneck and extra long lab coat are used by scientists and doctors all over the world")
-     outfitInfos(5)=(Name="Paul Denton's Outfit",Desc="A dark blue trenchcoat matched with an aqua turtleneck gives this outfit a unique and interesting look")
+     outfitInfos(5)=(Name="Paul Denton's Outfit",Article="-",Desc="A dark blue trenchcoat matched with an aqua turtleneck gives this outfit a unique and interesting look")
      outfitInfos(6)=(Name="Business Suit (Brown)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
      outfitInfos(7)=(Name="Business Suit (MIB)",Desc="This stylish black suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
      outfitInfos(8)=(Name="UNATCO Combat Uniform",Desc="The standard issue uniform for UNATCO peacekeepers throughout the world, this protective outfit is a significant improvement over the previous UN combat uniform.")
      outfitInfos(9)=(Name="Mechanic Jumpsuit",Desc="This high-visibility orange jumpsuit ensures safety while working in low visibility conditions.")
      outfitInfos(11)=(Name="Chef Outfit",Desc="This all-white clothing and traditional toque is often worn as a symbol of pride by experiened chefs.")
-     outfitInfos(13)=(Name="Gold and Brown Business",Desc="This fashionable gold and brown outfit with matching jacket is a symbol of power and status.")
+     outfitInfos(13)=(Name="Gold and Brown Business",PickupName="Gold and Brown Business Outfit",Desc="This fashionable gold and brown outfit with matching jacket is a symbol of power and status.")
      outfitInfos(14)=() //Unused???
      outfitInfos(15)=(Name="Matrix Outfit",Desc="")
      outfitInfos(16)=(Name="Goth GF Outfit",Desc="This goth-themed outfit with fishnet shirt is often worn by punk rockers, outcasts, and rebels of all kinds.")
      outfitInfos(17)=(Name="Soldier Outfit",Desc="These green fatigues are standard issue for the American military.")
-     outfitInfos(18)=(Name="Riot Gear",Desc="Worn during riot control, raids and other dangerous crime-fighting activities, this helmet and body-armor provide a high degree of protection for cops in the field.")
+     outfitInfos(18)=(Name="Riot Gear",Article="some",Desc="Worn during riot control, raids and other dangerous crime-fighting activities, this helmet and body-armor provide a high degree of protection for cops in the field.")
      outfitInfos(19)=(Name="WIB Suit",Desc="This stylish gray suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
-     outfitInfos(20)=(Name="NSF Sympathiser",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
-     outfitInfos(21)=(Name="Stained Clothes",Desc="These filthy clothes smell disgusting, and look even worse.")
-     outfitInfos(22)=(Name="Juan Lebedev's Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional brown trench coat.")
-     outfitInfos(23)=(Name="Smuggler's Outfit",Desc="This expensive outfit matches Smuggler's prices")
+     outfitInfos(20)=(Name="NSF Sympathiser",PickupName="NSF Uniform",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
+     outfitInfos(21)=(Name="Stained Clothes",Article="some",Desc="These filthy clothes smell disgusting, and look even worse.")
+     outfitInfos(22)=(Name="Juan Lebedev's Outfit",Article="-",Desc="A variant of the standard NSF combat uniform sporting an additional brown trench coat.")
+     outfitInfos(23)=(Name="Smuggler's Outfit",Article="-",Desc="This expensive outfit matches Smuggler's prices")
      outfitInfos(24)=(Name="FEMA Executive's Outfit",Desc="Designed for augmented agents, this trenchcoat sports access ports and other advanced technology.")
      outfitInfos(25)=(Name="MJ12 Soldier Uniform",Desc="The standard issue for Majestic 12 troops worldwide, this uniform strikes fear and contempt into the hearts of many.")
-     outfitInfos(26)=(Name="Jock's Outfit",Desc="A sleek flight suit often worn by pilots, aircraft crew, and others.")
-     outfitInfos(27)=(Name="Maggie's Outfit",Desc="This stylish dragon-themed dress is the height of fashion in Hong Kong.")
-     outfitInfos(28)=(Name="Nicolette's Outfit",Desc="Adorned with punk iconography, this outfit is sure to get anyone noticed.")
-     outfitInfos(29)=(Name="JC Clone Outfit",Desc="A basic covering designed for modesty and not much else.")
+     outfitInfos(26)=(Name="Jock's Outfit",Article="-",Desc="A sleek flight suit often worn by pilots, aircraft crew, and others.")
+     outfitInfos(27)=(Name="Maggie's Outfit",Article="-",Desc="This stylish dragon-themed dress is the height of fashion in Hong Kong.")
+     outfitInfos(28)=(Name="Nicolette's Outfit",Article="-",Desc="Adorned with punk iconography, this outfit is sure to get anyone noticed.")
+     outfitInfos(29)=(Name="Bare Necessities",Article="some",Desc="A basic covering designed for modesty and not much else.")
      outfitInfos(30)=(Name="Business Suit (Black)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
      outfitInfos(31)=(Name="Sailor Outfit",Desc="Standard uniform for sailers and deck hands across the world.")
-     outfitInfos(32)=(Name="Carter's Outfit",Desc="These modified military fatigues with rolled up sleeves are more comfortable than the standard issue uniform.")
+     outfitInfos(32)=(Name="Carter's Outfit",Article="-",Desc="These modified military fatigues with rolled up sleeves are more comfortable than the standard issue uniform.")
      outfitInfos(33)=(Name="SCUBA Suit",Desc="An underwater suit with a self contained breathing apparatus, this suit is used by recreational divers, explorers, scavengers, military, and many others across the world for a variety of underwater purposes.")
      outfitInfos(34)=(Name="100% Black (Alt)")
      outfitInfos(35)=(Name="Prison Uniform",Desc="Standard issue prison uniform, designed to easily distingush inmates from everyone else in the event of an escape.")
      outfitInfos(36)=(Name="100% Black (Augmented Edition)")
      outfitInfos(37)=(Name="Thug Outfit",Desc="This cold-weather outfit is used by mercenaries and criminals alike. Beloved for it's warmth, freedom of movement, and general style.")
-     outfitInfos(38)=(Name="Anna Navarre's Outfit",Desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.")
-     outfitInfos(39)=(Name="Tiffany Savage's Outfit",Desc="This leather and latex outfit is designed to provide maximum dexterity and comfort during wet-work operations.")
+     outfitInfos(38)=(Name="Anna Navarre's Outfit",Article="-",Desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.")
+     outfitInfos(39)=(Name="Tiffany Savage's Outfit",Article="-",Desc="This leather and latex outfit is designed to provide maximum dexterity and comfort during wet-work operations.")
      outfitInfos(40)=(Name="School Uniform",Desc="This long-sleeve shirt and dress style uniform is used by many religious and private schools across the world.")
-     outfitInfos(41)=(Name="Jordan Shea's Outfit",Desc="This sleeveless shirt combined with dress pants is dirty after a long day of work.")
+     outfitInfos(41)=(Name="Jordan Shea's Outfit",Article="-",Desc="This sleeveless shirt combined with dress pants is dirty after a long day of work.")
      outfitInfos(42)=(Name="Hooker Outfit",Desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
-     outfitInfos(43)=(Name="NSF Sympathiser (Alt)",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
-     outfitInfos(44)=(Name="Unwashed Clothes",Desc="These dirty unwashed clothes smell awful, and look even worse.")
-     outfitInfos(45)=(Name="Harley Filben's Outfit",Desc="This signature green jacket has clearly seen better days.")
+     outfitInfos(43)=(Name="NSF Sympathiser (Alt)",Article="-",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
+     outfitInfos(44)=(Name="Unwashed Clothes",Article="some",Desc="These dirty unwashed clothes smell awful, and look even worse.")
+     outfitInfos(45)=(Name="Harley Filben's Outfit",Article="-",Desc="This signature green jacket has clearly seen better days.")
      outfitInfos(46)=(Name="Business Suit (White)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
      outfitInfos(47)=(Name="Business Suit (Blue)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
      outfitInfos(48)=(Name="Doctor's Outfit",Desc="This sleek vest, business shirt and extra long lab coat are used by doctors all over the world")
      outfitInfos(49)=(Name="Nurse's Outfit",Desc="These traditional scrubs have been worn by nurses all over the world for many years.")
-     outfitInfos(50)=(Name="Gilbert Renton's Outfit",Desc="This dirty shirt and dirty jeans are perfect attire for the owner of a dirty hotel.")
+     outfitInfos(50)=(Name="Gilbert Renton's Outfit",Article="-",Desc="This dirty shirt and dirty jeans are perfect attire for the owner of a dirty hotel.")
      outfitInfos(51)=(Name="Hooker Outfit (Alt)",Desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
-     outfitInfos(52)=(Name="Ford Schick's Outfit",Desc="")
-     outfitInfos(53)=(Name="Joe Greene's Outfit",Desc="A business suit favored by reporters and journalists all over the world.")
-     outfitInfos(54)=(Name="Soiled Junkie Clothes",Desc="This disgusting clothing reeks of sweat, dirt, and other fowl substances.")
+     outfitInfos(52)=(Name="Ford Schick's Outfit",Article="-",Desc="")
+     outfitInfos(53)=(Name="Joe Greene's Outfit",Article="-",Desc="A business suit favored by reporters and journalists all over the world.")
+     outfitInfos(54)=(Name="Soiled Junkie Clothes",Article="some",Desc="This disgusting clothing reeks of sweat, dirt, and other fowl substances.")
      outfitInfos(55)=(Name="Rook Member Outfit",Desc="This leather jacket, chains, and other tough-guy attire is often worn by punk rockers, outcasts, and rebels of all kinds.")
-     outfitInfos(56)=(Name="Alex Denton's Outfit",Desc="This unusual purple outfit is the standard attire for all members of the Tarsus Academy.")
+     outfitInfos(56)=(Name="Alex Denton's Outfit",Article="-",Desc="This unusual purple outfit is the standard attire for all members of the Tarsus Academy.")
      outfitInfos(57)=(Name="Business Suit (Dark Brown)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
      outfitInfos(58)=(Name="White-Collar Dress (Red)",Desc="A red dress designed to stand out and get noticed around the office.")
      outfitInfos(59)=(Name="White-Collar Dress (Dark Gray)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
      outfitInfos(60)=(Name="Low Class Outfit",Desc="")
-     outfitInfos(61)=(Name="Sandra Renton's Outfit",Desc="These torn and tattered clothes are a staple of someone who has fallen on hard times.")
-     outfitInfos(62)=(Name="JoJo's Outfit",Desc="This over-the-top spectacle of fake augmentations and metal is designed to intimidate others and to show dominance.")
+     outfitInfos(61)=(Name="Sandra Renton's Outfit",Article="-",Desc="These torn and tattered clothes are a staple of someone who has fallen on hard times.")
+     outfitInfos(62)=(Name="JoJo's Outfit",Article="-",Desc="This over-the-top spectacle of fake augmentations and metal is designed to intimidate others and to show dominance.")
      outfitInfos(63)=(Name="Bartender Outfit",Desc="A white shirt with a bow tie, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
      outfitInfos(64)=(Name="Tough Guy Outfit") //Unused
      outfitInfos(65)=(Name="Police Uniform",Desc="The standard uniform for beat-cops and police on patrol.")
-     outfitInfos(66)=(Name="Howard Strong's Outfit")
-     outfitInfos(67)=(Name="Adam Jensen's Outfit",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
-     outfitInfos(68)=(Name="Average GEPGUN Enjoyer",Desc="What's it like to stand around revving your actuators while the more fashionable agents complete the mission?")
-     outfitInfos(69)=(Name="Morgan Everett's Outfit")
+     outfitInfos(66)=(Name="Howard Strong's Outfit",Article="-")
+     outfitInfos(67)=(Name="Adam Jensen's Outfit",Article="-",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
+     outfitInfos(68)=(Name="Average GEPGUN Enjoyer",PickupName="Bare Necessities",Article="some",Desc="What's it like to stand around revving your actuators while the more fashionable agents complete the mission?")
+     outfitInfos(69)=(Name="Morgan Everett's Outfit",Article="-")
      outfitInfos(70)=(Name="Boat Person Outfit",Desc="While Singlets and Jeans are often associated with the poor, they are also often worn by physical labourors, unloaders, masonists, and other blue-collar workers.")
-     outfitInfos(71)=(Name="Chad's Outfit")
+     outfitInfos(71)=(Name="Chad's Outfit",Article="-")
      outfitInfos(72)=(Name="Janitor Uniform",Desc="Designed for comfort while cleaning, these overalls are made of a soft, water-resistant material")
      //outfitInfos(73)=(Name="Martial Arts Uniform",Desc="These traditional Kasaya are often worn by ordained buddhist monks and martial artists")
      outfitInfos(73)=(Name="Martial Arts Uniform")
-     outfitInfos(74)=(Name="Tracer Tong's Outfit")
+     outfitInfos(74)=(Name="Tracer Tong's Outfit",Article="-")
      outfitInfos(75)=(Name="Hong Kong Military Uniform",Desc="These green fatigues are standard issue for the Hong Kong military police.")
-     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their Totalitarian regime.")
-     outfitInfos(77)=(Name="Traditional Attire",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
+     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their totalitarian regime.")
+     outfitInfos(77)=(Name="Traditional Attire",Article="some",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
      outfitInfos(78)=(Name="Luminous Path Uniform")
      outfitInfos(79)=(Name="Navy Dress Uniform",Desc="Formal dress uniform for Navy officers. Normally used for public events such as parades and ceremonies.")
      outfitInfos(80)=(Name="Butler Uniform",Desc="A black suit with a white shirt, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
-     outfitInfos(81)=(Name="Bob Page's Suit",Desc="Signature suit of one of the richest men in the world.")
-     outfitInfos(82)=(Name="Gordon Quick's Outfit")
+     outfitInfos(81)=(Name="Bob Page's Suit",Article="-",Desc="Signature suit of one of the richest men in the world.")
+     outfitInfos(82)=(Name="Gordon Quick's Outfit",Article="-")
      outfitInfos(83)=(Name="Red Arrow Uniform")
-     outfitInfos(85)=(Name="Jaime's Outfit") //!!!
+     outfitInfos(85)=(Name="Jaime's Outfit",Article="-") //!!!
      outfitInfos(86)=(Name="Illuminati Coat")
      outfitInfos(87)=(Name="Vandenberg Scientist Outfit",Desc="A long labcoat over a suit and tie, the signature outfit of X51.")
-     outfitInfos(88)=(Name="Old Clothes")
-     outfitInfos(89)=(Name="Dragon Head's Uniform")
+     outfitInfos(88)=(Name="Old Clothes",Article="some")
+     outfitInfos(89)=(Name="Dragon Head's Uniform",Article="the")
      outfitInfos(90)=(Name="White-Collar Dress (Brown)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
-     outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
+     outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)",Article="-",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
      outfitInfos(92)=(Name="White-Collar Dress (Blue and White)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
      outfitInfos(93)=(Name="Maid Outfit",Desc="A formal cleaning uniform worn by servants, assistants and house cleaners.")
-     outfitInfos(94)=(Name="Manderley's Outfit")
+     outfitInfos(94)=(Name="Manderley's Outfit",Article="-")
      outfitInfos(95)=(Name="Traditional Dress",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
      outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat and blue dress pants.")
 
@@ -2117,4 +2131,6 @@ defaultproperties
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
+     DefaultPickupMessage="You found %s %s";
+     DefaultPickupMessage2="You found %s";
 }
