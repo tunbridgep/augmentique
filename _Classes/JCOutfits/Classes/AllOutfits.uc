@@ -95,6 +95,9 @@ class AllOutfits expands Object abstract;
 
 ////Male
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\PonyTailTex1_S1.pcx"                           NAME="PonyTailTex1_S1"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\PonyTailTex1_S4.pcx"                           NAME="PonyTailTex1_S4"                     GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\BoatPersonTex1_S0.bmp"                         NAME="BoatPersonTex1"                      GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\BoatPersonTex1_S1.bmp"                         NAME="BoatPersonTex1_S1"                   GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\BoatPersonTex1_S2.bmp"                         NAME="BoatPersonTex1_S2"                   GROUP="Outfits"
@@ -119,6 +122,30 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\DentonCloneTex3_S3.bmp"                        NAME="DentonCloneTex3_S3"                   GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\DentonCloneTex3_S4.bmp"                        NAME="DentonCloneTex3_S4"                   GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\DoctorTex1_S0.bmp"                             NAME="DoctorTex1"                           GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\DoctorTex1_S1.bmp"                             NAME="DoctorTex1_S1"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\DoctorTex1_S2.bmp"                             NAME="DoctorTex1_S2"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\DoctorTex1_S3.bmp"                             NAME="DoctorTex1_S3"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\DoctorTex1_S4.bmp"                             NAME="DoctorTex1_S4"                        GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\FordSchickTex1_S0.bmp"                         NAME="FordSchickTex1"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\FordSchickTex1_S1.bmp"                         NAME="FordSchickTex1_S1"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\FordSchickTex1_S2.bmp"                         NAME="FordSchickTex1_S2"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\FordSchickTex1_S3.bmp"                         NAME="FordSchickTex1_S3"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\FordSchickTex1_S4.bmp"                         NAME="FordSchickTex1_S4"                    GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GarySavageTex1_S0.bmp"                         NAME="GarySavageTex1"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GarySavageTex1_S1.bmp"                         NAME="GarySavageTex1_S1"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GarySavageTex1_S2.bmp"                         NAME="GarySavageTex1_S2"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GarySavageTex1_S3.bmp"                         NAME="GarySavageTex1_S3"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GarySavageTex1_S4.bmp"                         NAME="GarySavageTex1_S4"                    GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GilbertRentonTex1_S0.bmp"                      NAME="GilbertRentonTex1"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GilbertRentonTex1_S1.bmp"                      NAME="GilbertRentonTex1_S1"                 GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GilbertRentonTex1_S2.bmp"                      NAME="GilbertRentonTex1_S2"                 GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GilbertRentonTex1_S3.bmp"                      NAME="GilbertRentonTex1_S3"                 GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GilbertRentonTex1_S4.bmp"                      NAME="GilbertRentonTex1_S4"                 GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GordonQuickTex1_S0.bmp"                        NAME="GordonQuickTex1"                      GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GordonQuickTex1_S1.bmp"                        NAME="GordonQuickTex1_S1"                   GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GordonQuickTex1_S2.bmp"                        NAME="GordonQuickTex1_S2"                   GROUP="Outfits"
@@ -137,6 +164,24 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JoJoFineTex1_S3.bmp"                           NAME="JoJoFineTex1_S3"                      GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JoJoFineTex1_S4.bmp"                           NAME="JoJoFineTex1_S4"                      GROUP="Outfits"
 
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JaimeReyesTex1_S0.bmp"                         NAME="JaimeReyesTex1"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JaimeReyesTex1_S1.bmp"                         NAME="JaimeReyesTex1_S1"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JaimeReyesTex1_S2.bmp"                         NAME="JaimeReyesTex1_S2"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JaimeReyesTex1_S3.bmp"                         NAME="JaimeReyesTex1_S3"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JaimeReyesTex1_S4.bmp"                         NAME="JaimeReyesTex1_S4"                    GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JosephManderleyTex1_S0.bmp"                    NAME="JosephManderleyTex1"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JosephManderleyTex1_S1.bmp"                    NAME="JosephManderleyTex1_S1"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JosephManderleyTex1_S2.bmp"                    NAME="JosephManderleyTex1_S2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JosephManderleyTex1_S3.bmp"                    NAME="JosephManderleyTex1_S3"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JosephManderleyTex1_S4.bmp"                    NAME="JosephManderleyTex1_S4"               GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JuanLebedevTex1_S0.bmp"                        NAME="JuanLebedevTex1"                      GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JuanLebedevTex1_S1.bmp"                        NAME="JuanLebedevTex1_S1"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JuanLebedevTex1_S2.bmp"                        NAME="JuanLebedevTex1_S2"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JuanLebedevTex1_S3.bmp"                        NAME="JuanLebedevTex1_S3"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JuanLebedevTex1_S4.bmp"                        NAME="JuanLebedevTex1_S4"                   GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S0.bmp"                         NAME="JunkieMaleTex1"                       GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S1.bmp"                         NAME="JunkieMaleTex1_S1"                    GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\JunkieMaleTex1_S2.bmp"                         NAME="JunkieMaleTex1_S2"                    GROUP="Outfits"
@@ -148,6 +193,42 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\LowerClassMaleTex1_S2.bmp"                     NAME="LowerClassMaleTex1_S2"                GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\LowerClassMaleTex1_S3.bmp"                     NAME="LowerClassMaleTex1_S3"                GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\LowerClassMaleTex1_S4.bmp"                     NAME="LowerClassMaleTex1_S4"                GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaxChenTex1_S0.bmp"                            NAME="MaxChenTex1"                          GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaxChenTex1_S1.bmp"                            NAME="MaxChenTex1_S1"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaxChenTex1_S2.bmp"                            NAME="MaxChenTex1_S2"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaxChenTex1_S3.bmp"                            NAME="MaxChenTex1_S3"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaxChenTex1_S4.bmp"                            NAME="MaxChenTex1_S4"                       GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\StantonDowdTex1_S0.bmp"                        NAME="StandonDowdTex1"                      GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\StantonDowdTex1_S1.bmp"                        NAME="StandonDowdTex1_S1"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\StantonDowdTex1_S2.bmp"                        NAME="StandonDowdTex1_S2"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\StantonDowdTex1_S3.bmp"                        NAME="StandonDowdTex1_S3"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\StantonDowdTex1_S4.bmp"                        NAME="StandonDowdTex1_S4"                   GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugMaleTex1_S0.bmp"                           NAME="ThugMaleTex1"                         GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugMaleTex1_S1.bmp"                           NAME="ThugMaleTex1_S1"                      GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugMaleTex1_S2.bmp"                           NAME="ThugMaleTex1_S2"                      GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugMaleTex1_S3.bmp"                           NAME="ThugMaleTex1_S3"                      GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\ThugMaleTex1_S4.bmp"                           NAME="ThugMaleTex1_S4"                      GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex1_S0.bmp"                        NAME="TrenchShirtTex1"                      GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex1_S1.bmp"                        NAME="TrenchShirtTex1_S1"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex1_S2.bmp"                        NAME="TrenchShirtTex1_S2"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex1_S3.bmp"                        NAME="TrenchShirtTex1_S3"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex1_S4.bmp"                        NAME="TrenchShirtTex1_S4"                   GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex2_S0.bmp"                        NAME="TrenchShirtTex2"                      GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex2_S1.bmp"                        NAME="TrenchShirtTex2_S1"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex2_S2.bmp"                        NAME="TrenchShirtTex2_S2"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex2_S3.bmp"                        NAME="TrenchShirtTex2_S3"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TrenchShirtTex2_S4.bmp"                        NAME="TrenchShirtTex2_S4"                   GROUP="Outfits"
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WaltonSimonsTex1_S0.bmp"                       NAME="WaltonSimonsTex1"                     GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WaltonSimonsTex1_S1.bmp"                       NAME="WaltonSimonsTex1_S1"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WaltonSimonsTex1_S2.bmp"                       NAME="WaltonSimonsTex1_S2"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WaltonSimonsTex1_S3.bmp"                       NAME="WaltonSimonsTex1_S3"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WaltonSimonsTex1_S4.bmp"                       NAME="WaltonSimonsTex1_S4"                  GROUP="Outfits"
 
 //Martial Artist
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Male4Tex1_S0.bmp"                              NAME="Male4Tex1"                            GROUP="Outfits"
