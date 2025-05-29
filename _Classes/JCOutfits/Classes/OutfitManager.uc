@@ -367,6 +367,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Body_M,8,false,"100%_b","Outfit1_Tex1");
     GlobalAddPartL(PS_Body_M,9,false,"beanie_b","ThugSkin");
     GlobalAddPartL(PS_Body_M,10,false,"adam_b","AdamJensenTex0");
+    GlobalAddPartL(PS_Body_M,167,false,"bald_b","JCDentonTex0Bald");
 
     //GlobalAddPartLO(PS_Body_F,2,false,"100%_b","Outfit1_Tex1",,,"Outfit1_Tex1");
     GlobalAddPartL(PS_Body_F,2,false,"100%_b","Outfit1_Tex1");
@@ -457,6 +458,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Trench_Shirt_F,51,false,"lab_s","TrenchShirtTex3");
     GlobalAddPartL(PS_Trench_Shirt,162,false,"matrix_s","Outfit4F_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_F,163,false,"goth_s","Outfit3F_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,169,false,"agent47_s","HitmanTex1");
     
     GlobalAddPartL(PS_Trench_Shirt_M,0,false,"default_s","JCDentonTex1");
     GlobalAddPartL(PS_Trench_Shirt_F,0,false,"default_s","FemJC.JCDentonFemaleTex1");
@@ -634,6 +636,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("gordonquick_p");
     OutfitAddPartReference("gordonquick_s");
     OutfitAddPartReference("gordonquick_t");
+    
+    //Hitman Suit
+    BeginNewOutfitL("agent47",97);
+    OutfitAddPartReference("bald_b");
+    OutfitAddPartReference("agent47_s");
+    OutfitAddPartReference("manderley_t");
+    OutfitAddPartReference("mib_p");
 
     //Bum
     BeginNewOutfitL("bum",21);
@@ -1916,6 +1925,7 @@ defaultproperties
      outfitInfos(94)=(Name="Manderley's Outfit",Article="-")
      outfitInfos(95)=(Name="Traditional Dress",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
      outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat and blue dress pants.")
+     outfitInfos(97)=(Name="Hitman Suit",Desc="The signature suit of a professional killer.")
 
      //Misc
      partNames(0)="Default"
@@ -1933,6 +1943,7 @@ defaultproperties
      partNames(8)="100% Black"
      partNames(9)="Beanie"
      partNames(10)="Jensen"
+     partNames(167)="Bald"
      
      //Pants (Male)
      partNames(11)="Blue Tactical Pants with Boots"
@@ -1992,7 +2003,7 @@ defaultproperties
      partNames(63)="Bare Chest"
      partNames(64)="Dark Blue Turtleneck"
      partNames(65)="Aviator Shirt"
-     partNames(66)="White Shirt and Black Tie"
+     partNames(66)="Pink Shirt and Black Tie"
      partNames(67)="Toby Atanwe's Shirt"
      partNames(68)="Blue Shirt and Red Tie"
      partNames(69)="Max Chen's Shirt"
@@ -2128,6 +2139,10 @@ defaultproperties
 
      //SuitSkirt Torsos
      //EDIT: Leave these as the outfits for now
+
+     //Extras
+     partNames(168)="Agent 47"
+     partNames(169)="White Shirt and Red Tie"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"

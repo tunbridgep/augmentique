@@ -17,6 +17,20 @@ class AllOutfits expands Object abstract;
 
 //Male Textures
 
+//Bald JC Skin
+#exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S0.bmp"                                              NAME="JCDentonTex0Bald"            GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S1.bmp"                                              NAME="JCDentonTex0Bald_S1"         GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S2.bmp"                                              NAME="JCDentonTex0Bald_S2"         GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S3.bmp"                                              NAME="JCDentonTex0Bald_S3"         GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S4.bmp"                                              NAME="JCDentonTex0Bald_S4"         GROUP="Outfits"
+
+//Hitman (Agent 47)
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S0.bmp"                                           NAME="HitmanTex1"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S1.bmp"                                           NAME="HitmanTex1_S1"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S2.bmp"                                           NAME="HitmanTex1_S2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S3.bmp"                                           NAME="HitmanTex1_S3"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S4.bmp"                                           NAME="HitmanTex1_S4"               GROUP="Outfits"
+
 //MJ12 Elite (GMDX)
 #exec TEXTURE IMPORT FILE="Textures\MJ12Elite\Tex0_S0.bmp"                                         NAME="MJ12EliteTex0"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\MJ12Elite\Tex0_S1.bmp"                                         NAME="MJ12EliteTex0_S1"            GROUP="Outfits"
