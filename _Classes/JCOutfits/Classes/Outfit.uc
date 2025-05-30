@@ -40,16 +40,18 @@ function ReplacePart(int type, OutfitPart part)
     }
 }
 
+//Returns the last part of a given type
 function OutfitPart GetPartOfType(int type)
 {
     local int i;
+    local OutfitPart P;
     for (i = 0;i < numParts;i++)
     {
         if (parts[i].bodySlot == type)
-            return parts[i];
+            P = parts[i];
     }
         
-    return None;
+    return P;
 }
 
 function CopyPartsListTo(Outfit O)
@@ -68,6 +70,13 @@ function UpdatePartsGroup(PartsGroup PG)
     partsGroup = PG;
 }
 
+//Remove all parts from an outfit.
+//Really only used by Custom...
+function ResetParts()
+{
+    numParts = 0;
+}
+
 function AddPartFromID(string partID)
 {
     local OutfitPart P;
@@ -82,18 +91,7 @@ function AddPartFromID(string partID)
 
 
     if (P != None)
-    {
-        //Replace any parts in the same slot
-        for (i = 0;i < numParts;i++)
-        {
-            if (parts[i].bodySlot == P.bodySlot)
-            {
-                parts[i] = P;
-                return;
-            }
-        }
         parts[numParts++] = P;
-    }
     else
         player.ClientMessage("Warning: Outfit " $ id $ " could not find part with id " $ partID);
 }

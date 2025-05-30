@@ -243,6 +243,7 @@ function SetupCustomOutfit()
     }
 
     customOutfit.player = player;
+    customOutfit.ResetParts();
     customOutfit.PopulateFromSaved(GetPartsGroupByID(customOutfit.partsGroupID));
     customOutfit.id = "custom";
     customOutfit.index = 0;
@@ -368,6 +369,8 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Body_M,9,false,"beanie_b","ThugSkin");
     GlobalAddPartL(PS_Body_M,10,false,"adam_b","AdamJensenTex0");
     GlobalAddPartL(PS_Body_M,167,false,"bald_b","JCDentonTex0Bald");
+    GlobalAddPartL(PS_Body_M,168,false,"agent47_b","HitmanTex0");
+    GlobalAddPartL(PS_Body_M,170,false,"blackgloves_b","HarleyFilbenTex0");
 
     //GlobalAddPartLO(PS_Body_F,2,false,"100%_b","Outfit1_Tex1",,,"Outfit1_Tex1");
     GlobalAddPartL(PS_Body_F,2,false,"100%_b","Outfit1_Tex1");
@@ -376,7 +379,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
     GlobalAddPartL(PS_Legs_M,12,false,"lab_p","PantsTex1");
     GlobalAddPartL(PS_Legs,13,false,"gilbertrenton_p","PantsTex3"); //Also used by Ford Schick and Boat Person
-    GlobalAddPartL(PS_Legs,3,false,"100%_p","Outfit1_Tex1");
+    GlobalAddPartL(PS_Legs,8,false,"100%_p","Outfit1_Tex1");
     GlobalAddPartL(PS_Legs,14,false,"paul_p","PantsTex8"); //Also used by Toby Atanwe and others
     GlobalAddPartL(PS_Legs,15,false,"businessman1_p","Businessman1Tex2");
     GlobalAddPartL(PS_Legs,16,false,"businessman2_p","Businessman2Tex2");
