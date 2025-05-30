@@ -18,9 +18,6 @@ function Timer()
 
     //Setup Outfit Manager
     SetupOutfitManager();
-
-    //Apply Current Outfit
-    outfitManager.ApplyCurrentOutfit();
 }
 
 // ----------------------------------------------------------------------

@@ -29,6 +29,8 @@ var globalconfig bool bDebugMode;
 //part names
 var const localized string partNames[1000];
 
+var transient bool bIsSetup;            //Has the outfit manager been setup for this session
+
 //Outfit Information
 
 struct LocalizedOutfitInfo
@@ -193,6 +195,9 @@ function Setup(DeusExPlayer newPlayer)
 {
     local DeusExLevelInfo dxInfo;
     local string t0, t1, t2, t3, t4, t5, t6, t7, mesh;
+
+    if (bIsSetup)
+        return;
 
     player = newPlayer;
     dxInfo = player.GetLevelInfo();
@@ -1703,6 +1708,9 @@ function CompleteSetup()
 {
     local int i;
 
+    if (bIsSetup)
+        return;
+
     //Set unlocked on all outfits which are unlocked
     Unlock("default");
     for (i = 1;i<numOutfits;i++)
@@ -1739,6 +1747,8 @@ function CompleteSetup()
 
     //Apply our current outfit
     ApplyCurrentOutfit();
+
+    bIsSetup = true;
 }
 
 function ApplyCurrentOutfit()
