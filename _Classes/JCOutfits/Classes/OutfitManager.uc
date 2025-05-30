@@ -640,6 +640,7 @@ function PopulateOutfitsList()
     //Hitman Suit
     BeginNewOutfitL("agent47",97);
     OutfitAddPartReference("bald_b");
+    OutfitAddPartReference("agent47_b");
     OutfitAddPartReference("agent47_s");
     OutfitAddPartReference("manderley_t");
     OutfitAddPartReference("mib_p");
@@ -718,6 +719,7 @@ function PopulateOutfitsList()
     
     //Harley Filben Outfit
     BeginNewOutfitL("harleyfilben",45);
+    OutfitAddPartReference("blackgloves_b");
     OutfitAddPartReference("brown_p");
     OutfitAddPartReference("bum_s");
     OutfitAddPartReference("harleyfilben_t");
@@ -1258,6 +1260,7 @@ function PopulateOutfitsList()
     
     //Masks
     //Can only realistically be used on this model
+    //because no other model supports the "mouth covering" texture.
     //TODO: Either make these not count as accessories (set arg 3 to false), or
     //add in a system whereby we always assign a default texture
     AddPartL(PS_Body_M,116,false,"unatco_b",,,,"MiscTex1JC","MiscTex1JC","GrayMaskTex");
@@ -1266,8 +1269,8 @@ function PopulateOutfitsList()
 
     //Jumpsuit specific helmets
     AddPartL(PS_Hat,119,true,"unatco_h",,,,,,,"UNATCOTroopTex3");
-    AddPartL(PS_Hat,120,true,"soldier_h",,,,"SoldierTex0","PinkMaskTex","PinkMaskTex","SoldierTex3","PinkMaskTex");
-    //AddPartL(PS_Hat,120,true,"soldier_h",,,,,,,"SoldierTex3");
+    AddPartL(PS_Hat,120,true,"soldier_h",,,,,,,"SoldierTex3");
+    AddPartL(PS_Hat,171,true,"soldier_h2",,,,"SoldierTex0","PinkMaskTex","PinkMaskTex","SoldierTex3","PinkMaskTex"); //Version with chin strap.
     AddPartL(PS_Hat,121,true,"mechanic_h",,,,,,,"MechanicTex3");
     AddPartL(PS_Hat,122,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
     AddPartL(PS_Hat,123,true,"nsf_h",,,,,,,"GogglesTex1");
@@ -1306,6 +1309,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("soldier_p");
     OutfitAddPartReference("soldier_s");
     OutfitAddPartReference("soldier_h");
+    OutfitAddPartReference("soldier_h2");
 
     //Riot Cop
     BeginNewOutfitL("riotcop",18);
@@ -2015,10 +2019,10 @@ defaultproperties
      partNames(73)="Old Brown Jacket"
      partNames(74)="Old Blue Jacket"
      partNames(75)="Brown Jacket"
-     partNames(76)="Gray Jacket"
+     partNames(76)="Dark Gray Jacket"
      partNames(77)="Cyber Trenchcoat"
      partNames(78)="Tattered Green Jacket"
-     partNames(79)="Old Gray Jacket"
+     partNames(79)="Old Brown and Gray Jacket"
      partNames(80)="Blue Jacket"
      partNames(81)="Tough Guy Leather Jacket"
      partNames(82)="Adorned White Jacket"
@@ -2070,7 +2074,6 @@ defaultproperties
 
      //Jumpsuit Helmets
      partNames(119)="UNATCO Helmet"
-     partNames(120)="Military Helmet"
      partNames(120)="Military Helmet"
      partNames(121)="Hard Hat"
      partNames(122)="Riot Helmet"
@@ -2143,6 +2146,8 @@ defaultproperties
      //Extras
      partNames(168)="Agent 47"
      partNames(169)="White Shirt and Red Tie"
+     partNames(170)="Fingerless Gloves"
+     partNames(171)="Military Helmet (Chin Strap)"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"

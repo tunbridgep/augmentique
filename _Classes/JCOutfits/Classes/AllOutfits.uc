@@ -25,6 +25,12 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S4.bmp"                                              NAME="JCDentonTex0Bald_S4"         GROUP="Outfits"
 
 //Hitman (Agent 47)
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex0_S0.bmp"                                           NAME="HitmanTex0"                  GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex0_S1.bmp"                                           NAME="HitmanTex0_S1"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex0_S2.bmp"                                           NAME="HitmanTex0_S2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex0_S3.bmp"                                           NAME="HitmanTex0_S3"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Agent47\Tex0_S4.bmp"                                           NAME="HitmanTex0_S4"               GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S0.bmp"                                           NAME="HitmanTex1"                  GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S1.bmp"                                           NAME="HitmanTex1_S1"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Agent47\Tex1_S2.bmp"                                           NAME="HitmanTex1_S2"               GROUP="Outfits"
@@ -94,6 +100,12 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\PantsTex4_S4.bmp"                              NAME="PantsTex4_S4"                        GROUP="Outfits"
 
 ////Male
+
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\HarleyFilbenTex0_S0.bmp"                       NAME="HarleyFilbenTex0"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\HarleyFilbenTex0_S1.bmp"                       NAME="HarleyFilbenTex0_S1"                 GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\HarleyFilbenTex0_S2.bmp"                       NAME="HarleyFilbenTex0_S2"                 GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\HarleyFilbenTex0_S3.bmp"                       NAME="HarleyFilbenTex0_S3"                 GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\HarleyFilbenTex0_S4.bmp"                       NAME="HarleyFilbenTex0_S4"                 GROUP="Outfits"
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\PonyTailTex1_S1.pcx"                           NAME="PonyTailTex1_S1"                     GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\PonyTailTex1_S4.pcx"                           NAME="PonyTailTex1_S4"                     GROUP="Outfits"
