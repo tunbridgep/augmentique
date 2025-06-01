@@ -426,6 +426,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Legs,48,false,"redarrow_p","TriadRedArrowTex3");
     GlobalAddPartL(PS_Legs,49,false,"jock_p","JockTex3");
     GlobalAddPartL(PS_Legs,50,false,"maxchen_p","MaxChenTex3");
+    GlobalAddPartLO(PS_Legs,35,false,"prisoner_p","PrisonerTex2");
 
     //Female
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
@@ -550,6 +551,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Torso_M,111,false,"tong_s","TracerTongTex1");
     GlobalAddPartL(PS_Torso_M,112,false,"hkmilitary_s","HKMilitaryTex1");
     GlobalAddPartL(PS_Torso_M,113,false,"alex_s","AlexDentonMaleTex2");
+    GlobalAddPartLO(PS_Torso_M,35,false,"prisoner_s","PrisonerTex1");
 
     //Female
     GlobalAddPartL(PS_Torso_F,147,false,"nicolette_s","NicoletteDuClareTex1");
@@ -1371,12 +1373,10 @@ function PopulateOutfitsList()
     OutfitAddPartReference("tong_p");
     
     //Prisoner Outfit
-    //TODO: This is currently just the Mechanic mesh
-    /*
     BeginNewOutfitL("prisoner",35);
-    OutfitAddPartReference("mechanic_p");
-    OutfitAddPartReference("mechanic_s");
-    */
+    OutfitAddPartReference("bald_b");
+    OutfitAddPartReference("prisoner_p");
+    OutfitAddPartReference("prisoner_s");
 
     //END
     //CompleteSetup();

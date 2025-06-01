@@ -17,6 +17,10 @@ class AllOutfits expands Object abstract;
 
 //Male Textures
 
+//Prisoner
+#exec TEXTURE IMPORT FILE="Textures\Prisoner\Tex1.bmp"                                             NAME="PrisonerTex1"                GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Prisoner\Tex2.bmp"                                             NAME="PrisonerTex2"                GROUP="Outfits"
+
 //Bald JC Skin
 #exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S0.bmp"                                              NAME="JCDentonTex0Bald"            GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Bald\Tex0_S1.bmp"                                              NAME="JCDentonTex0Bald_S1"         GROUP="Outfits"
