@@ -29,6 +29,8 @@ var globalconfig bool bDebugMode;
 //part names
 var const localized string partNames[1000];
 
+var const sound PickupSound;            //The sound made when picking up outfit boxes
+
 var transient bool bIsSetup;            //Has the outfit manager been setup for this session
 
 //Outfit Information
@@ -331,6 +333,9 @@ function SpawnerPickup(OutfitSpawner S)
         player.ClientMessage(outfits[index].PickupMessage, 'Pickup');
         
     Unlock(S.id);
+
+    //Decorations don't support pickup sounds, so do it here
+	player.PlaySound(PickupSound, SLOT_None);
 
     //Set outfit as new
     outfits[index].bNew = true;
@@ -1919,7 +1924,7 @@ defaultproperties
      outfitInfos(71)=(Name="Chad's Outfit",Article="-")
      outfitInfos(72)=(Name="Janitor Uniform",Desc="Designed for comfort while cleaning, these overalls are made of a soft, water-resistant material")
      //outfitInfos(73)=(Name="Martial Arts Uniform",Desc="These traditional Kasaya are often worn by ordained buddhist monks and martial artists")
-     outfitInfos(73)=(Name="Martial Arts Uniform")
+     outfitInfos(73)=(Name="Monk Clothes",Article="some")
      outfitInfos(74)=(Name="Tracer Tong's Outfit",Article="-")
      outfitInfos(75)=(Name="Hong Kong Military Uniform",Desc="These green fatigues are standard issue for the Hong Kong military police.")
      outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their totalitarian regime.")
@@ -2164,6 +2169,8 @@ defaultproperties
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
-     DefaultPickupMessage="You found %s %s";
-     DefaultPickupMessage2="You found %s";
+     DefaultPickupMessage="You found %s %s"
+     DefaultPickupMessage2="You found %s"
+
+     PickupSound=Sound'Augmentique.Outfits.BoxPickup'
 }

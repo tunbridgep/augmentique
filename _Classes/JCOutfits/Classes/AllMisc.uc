@@ -5,6 +5,9 @@ class AllMisc expands Object abstract;
 // Mainly HDTP menus and other crap
 // ===========================================================================================================
 
+////Pickup Sound
+#exec AUDIO IMPORT FILE="Sounds\BoxPickup.wav"			            NAME="BoxPickup"		  GROUP="Outfits"
+
 ////HDTP Menus
 #exec TEXTURE IMPORT FILE="Textures\Menus\OptionsScreen_1.pcx"      NAME="OptionsScreen_1"    GROUP="UserInterface"
 #exec TEXTURE IMPORT FILE="Textures\Menus\OptionsScreen_2.pcx"      NAME="OptionsScreen_2"    GROUP="UserInterface"
