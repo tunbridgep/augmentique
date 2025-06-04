@@ -1761,6 +1761,9 @@ function ApplyCurrentOutfit()
 	local JCDentonMaleCarcass jcCarcass;
 	local JCDouble jc;
 
+    if (player == None)
+        return;
+
     //player.ClientMessage("ApplyCurrentOutfit");
     ApplyCurrentOutfitToActor(player);
     

@@ -341,9 +341,10 @@ function SetupOutfitManager()
         //Call base setup code, required each map load
         outfitManager.Setup(Self);
         
-        //Add additional outfits below this line
-        //---------------------------------------
+        //Add additional outfits between these lines
         //See docs/mod_integration.pdf for more info
+        //---------------------------------------
+
         //---------------------------------------
 
         //Finish Outfit Setup
@@ -421,9 +422,10 @@ function SetupOutfitManager()
         //Call base setup code, required each map load
         outfitManager.Setup(Self);
         
-        //Add additional outfits below this line
-        //---------------------------------------
+        //Add additional outfits between these lines
         //See docs/mod_integration.pdf for more info
+        //---------------------------------------
+
         //---------------------------------------
 
         //Finish Outfit Setup
@@ -891,3 +893,10 @@ statements, for example:
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex2.pcx"                                NAME="Outfit3F_Tex2"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex3.bmp"                                NAME="Outfit3F_Tex3"               GROUP="Outfits"
 ```
+
+## Using HDTP
+
+Augmentique is not compatible with HDTP. In your code, you should ensure that
+you always call ApplyCurrentOutfit after applying your HDTP model. This will do
+nothing if Augmentique is not installed, but will replace the HDTP model with
+the correct outfit model otherwise.
