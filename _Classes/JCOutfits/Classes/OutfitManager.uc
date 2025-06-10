@@ -1038,8 +1038,9 @@ function PopulateOutfitsList()
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_g");
     
+    /*
     //Adam Jensen Outfit
-    //TODO: Investigate making this better
+    //TODO: Disabled until a proper Jensen texture is available
     //The textures have multiple Alt versions!
     BeginNewOutfitL("adam",67);
     OutfitAddPartReference("adam_b");
@@ -1050,6 +1051,7 @@ function PopulateOutfitsList()
     BeginNewOutfitL("adam",91);
     OutfitAddPartReference("adam_s2");
     OutfitAddPartReference("mib_p");
+    */
     
     //Alex Jacobson Outfit
     BeginNewOutfitL("ajacobson",3);
@@ -1948,9 +1950,9 @@ defaultproperties
      outfitInfos(92)=(Name="White-Collar Dress (Blue and White)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
      outfitInfos(93)=(Name="Maid Outfit",Desc="A formal cleaning uniform worn by servants, assistants and house cleaners.")
      outfitInfos(94)=(Name="Manderley's Outfit",Article="-")
-     outfitInfos(95)=(Name="Traditional Dress",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
+     outfitInfos(95)=(Name="Patterned Dress",Desc="A green dress with a basic pattern, usually worn by lower-middle-class women.")
      outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat and blue dress pants.")
-     outfitInfos(97)=(Name="Hitman Suit",Desc="The signature suit of a professional killer.")
+     outfitInfos(97)=(Name="Hitman Suit",Desc="The signature suit of a silent assassin.")
 
      //Misc
      partNames(0)="Default"
