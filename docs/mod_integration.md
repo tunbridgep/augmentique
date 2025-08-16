@@ -34,7 +34,7 @@ the examples won't be the same in a modded environment.*
 
 ### Copy over files
 
-Copy the provided `OutfitSpawner.uc`, `OutfitSpawner2.uc` and `OutfitManagerBase.uc` files into your
+Copy the provided `OutfitSpawner.uc`, `OutfitSpawner2.uc`, `OutfitSpawner3.uc`, `OutfitStrippedCarcass.uc` and `OutfitManagerBase.uc` files into your
 DeusEx classes folder. These must reside in `DeusEx.u` because they are added to maps directly.
 
 ### Edit DeusExPlayer.uc
@@ -667,9 +667,9 @@ event TravelPostAccept()
 
 Once the code has been updated, it's important to ensure all the outfit pickups are added to the maps.
 
-`t3d` files are provided within the `_Map Patches` folder. Simply load each map in the editor, go to `File->Import Level`. Make sure to select "Import Contents into existing map".
+`t3d` files are provided within the `_Map Patches` folder. Simply load each map in the editor, go to `File->Import Level`. Make sure to select "Import Contents into existing map", then hit save. Rebuilding should not be necessary.
 
-*Note: Some maps will likely crash the editor upon loading. To load them, ensure the Mode setting in the 3D view is set to Map Perp*
+*Note: Some maps will likely crash the editor upon loading. To load them, ensure the Mode setting in the 3D view is set to Map Persp*
 
 ## Creating new Outfits
 
@@ -897,6 +897,6 @@ statements, for example:
 ## Using HDTP
 
 Augmentique is not compatible with HDTP. In your code, you should ensure that
-you always call ApplyCurrentOutfit after applying your HDTP model. This will do
+you always call `ApplyCurrentOutfit()` after applying your HDTP model. This will do
 nothing if Augmentique is not installed, but will replace the HDTP model with
 the correct outfit model otherwise.
