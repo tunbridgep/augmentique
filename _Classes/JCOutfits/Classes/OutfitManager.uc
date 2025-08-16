@@ -432,6 +432,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Legs,49,false,"jock_p","JockTex3");
     GlobalAddPartL(PS_Legs,50,false,"maxchen_p","MaxChenTex3");
     GlobalAddPartLO(PS_Legs,35,false,"prisoner_p","PrisonerTex2");
+    GlobalAddPartLO(PS_Legs,178,false,"midnight_p","MidnightTex2");
 
     //Female
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
@@ -473,6 +474,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Trench_Shirt,173,false,"matrix_s","Outfit4F_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_F,174,false,"goth_s","Outfit3F_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_M,169,false,"agent47_s","HitmanTex1");
+    GlobalAddPartL(PS_Trench_Shirt_M,177,false,"midnight_s","MidnightTex1");
     
     GlobalAddPartL(PS_Trench_Shirt_M,0,false,"default_s","JCDentonTex1");
     GlobalAddPartL(PS_Trench_Shirt_F,0,false,"default_s","FemJC.JCDentonFemaleTex1");
@@ -503,6 +505,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Trench,164,false,"goldbrown_t","Outfit2F_Tex2","Outfit2F_Tex2");
     GlobalAddPartL(PS_Trench,165,false,"matrix_t","Outfit4F_Tex2","Outfit4F_Tex2");
     GlobalAddPartL(PS_Trench,166,false,"goth_t","Female4Tex2","Female4Tex2");
+    GlobalAddPartL(PS_Trench,176,false,"midnight_t","MidnightTex3","MidnightTex3");
     
     GlobalAddPartL(PS_Trench_M,0,false,"default_t","JCDentonTex2","JCDentonTex2");
     GlobalAddPartL(PS_Trench_F,0,false,"default_t","FemJC.JCDentonFemaleTex2","FemJC.JCDentonFemaleTex2");
@@ -762,6 +765,14 @@ function PopulateOutfitsList()
     OutfitAddPartReference("paul_p");
     OutfitAddPartReference("toby_t");
     OutfitAddPartReference("toby_s");
+    
+    //Midnight Trenchcoat
+    BeginNewOutfitL("midnight",98);
+    OutfitAddPartReference("bald_b");
+    OutfitAddPartReference("default_g");
+    OutfitAddPartReference("midnight_s");
+    OutfitAddPartReference("midnight_t");
+    OutfitAddPartReference("midnight_p");
 
     //========================================================
     //  GFM_Trench
@@ -1953,6 +1964,9 @@ defaultproperties
      outfitInfos(95)=(Name="Patterned Dress",Desc="A green dress with a basic pattern, usually worn by lower-middle-class women.")
      outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat and blue dress pants.")
      outfitInfos(97)=(Name="Hitman Suit",Desc="The signature suit of a silent assassin.")
+     
+     //1.1 stuff
+     outfitInfos(98)=(Name="Midnight Trenchcoat",Desc="A trenchcoat equipped for stealth while also looking extremely stylish")
 
      //Misc
      partNames(0)="Default"
@@ -2171,6 +2185,12 @@ defaultproperties
      partNames(165)="Green Patterned Black Jacket"
      partNames(166)="Red Patterned Black Jacket"
      partNames(175)="Alex Denton's Tactical Suit"
+     
+     //1.1 stuff
+     partNames(176)="Midnight Jacket"
+     partNames(177)="Midnight Shirt"
+     partNames(178)="Midnight Pants"
+
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
      DefaultPickupMessage="You found %s %s"

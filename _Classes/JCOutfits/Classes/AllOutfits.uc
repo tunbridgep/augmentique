@@ -62,6 +62,11 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\ButaneBoss\AdamJensen\Tex7.pcx"                                 NAME="AdamJensenTex7"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\ButaneBoss\AdamJensen\Tex8.pcx"                                 NAME="AdamJensenTex8"               GROUP="Outfits"
 
+//Midnight Outfit (Leviatank, made from Helios Texture Pack assets)
+#exec TEXTURE IMPORT FILE="Textures\Midnight\Tex1.bmp"                                             NAME="MidnightTex1"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Midnight\Tex2.bmp"                                             NAME="MidnightTex2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Midnight\Tex3.bmp"                                             NAME="MidnightTex3"               GROUP="Outfits"
+
 //Female Textures
 
 //Alternate Trenchcoat Jewellery Texture
