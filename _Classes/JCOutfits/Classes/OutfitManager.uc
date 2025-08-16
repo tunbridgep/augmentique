@@ -383,7 +383,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Body_M,170,false,"blackgloves_b","HarleyFilbenTex0");
 
     //GlobalAddPartLO(PS_Body_F,2,false,"100%_b","Outfit1_Tex1",,,"Outfit1_Tex1");
-    GlobalAddPartL(PS_Body_F,2,false,"100%_b","Outfit1_Tex1");
+    GlobalAddPartL(PS_Body_F,8,false,"100%_b","Outfit1_Tex1");
 
     //Pants
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
@@ -467,11 +467,11 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Trench_Shirt,67,false,"toby_s","TobyAtanweTex1");
     GlobalAddPartL(PS_Trench_Shirt_M,68,false,"garysavage_s","GarySavageTex1");
     GlobalAddPartL(PS_Trench_Shirt_M,69,false,"maxchen_s","MaxChenTex1");
-    GlobalAddPartL(PS_Trench_Shirt_F,161,false,"default_s2","Outfit1F_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_F,172,false,"default_s2","Outfit1F_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_F,8,false,"100%_s","Outfit1_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_F,51,false,"lab_s","TrenchShirtTex3");
-    GlobalAddPartL(PS_Trench_Shirt,162,false,"matrix_s","Outfit4F_Tex1");
-    GlobalAddPartL(PS_Trench_Shirt_F,163,false,"goth_s","Outfit3F_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt,173,false,"matrix_s","Outfit4F_Tex1");
+    GlobalAddPartL(PS_Trench_Shirt_F,174,false,"goth_s","Outfit3F_Tex1");
     GlobalAddPartL(PS_Trench_Shirt_M,169,false,"agent47_s","HitmanTex1");
     
     GlobalAddPartL(PS_Trench_Shirt_M,0,false,"default_s","JCDentonTex1");
@@ -525,7 +525,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Skirt,161,false,"sarah_sk","SarahMeadTex2","SarahMeadTex2");
     GlobalAddPartL(PS_Skirt,162,false,"hooker_sk","Hooker1Tex2","Hooker1Tex2");
     GlobalAddPartL(PS_Skirt,163,false,"hooker2_sk","Hooker2Tex2","Hooker2Tex2");
-    GlobalAddPartL(PS_Skirt,164,false,"alex_sk","Outfit5F_Tex2","Outfit5F_Tex2");
+    GlobalAddPartL(PS_Skirt,175,false,"alex_sk","Outfit5F_Tex2","Outfit5F_Tex2");
 
     //Shirts etc
     GlobalAddPartL(PS_Torso_M,89,false,"ajacobson_s","AlexJacobsonTex1");
@@ -2153,15 +2153,6 @@ defaultproperties
      partNames(161)="Tartan Skirt"
      partNames(162)="Race-Stripe Miniskirt"
      partNames(163)="Black Skirt"
-     partNames(164)="Alex Denton's Tactical Suit"
-
-     //Trench Shirts
-     partNames(161)="Necklace"
-     partNames(162)="Matrix Shirt"
-     partNames(163)="Fishnet Shirt"
-     partNames(164)="Dark Brown Jacket"
-     partNames(165)="Green Patterned Black Jacket"
-     partNames(166)="Red Patterned Black Jacket"
 
      //SuitSkirt Torsos
      //EDIT: Leave these as the outfits for now
@@ -2172,6 +2163,14 @@ defaultproperties
      partNames(170)="Fingerless Gloves"
      partNames(171)="Military Helmet (Chin Strap)"
 
+     //Trench Shirts
+     partNames(172)="Necklace"
+     partNames(173)="Matrix Shirt"
+     partNames(174)="Fishnet Shirt"
+     partNames(164)="Dark Brown Jacket"
+     partNames(165)="Green Patterned Black Jacket"
+     partNames(166)="Red Patterned Black Jacket"
+     partNames(175)="Alex Denton's Tactical Suit"
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
      DefaultPickupMessage="You found %s %s"
