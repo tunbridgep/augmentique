@@ -19,6 +19,7 @@ enum PartSlot
     PS_Trench_Shirt_M, //Male Exclusive Trench Shirts
     PS_Trench_Shirt_F, //Female Exclusive Trench Shirts
     PS_Torso_M,
+    PS_Torso_M_B,   //Male big boy textures (Gunther, etc)
     PS_Torso_F,
     PS_Skirt,
     PS_Legs, //Common Legs

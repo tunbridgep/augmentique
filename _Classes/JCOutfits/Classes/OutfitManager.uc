@@ -412,7 +412,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Legs,31,false,"secretservice_p","SecretServiceTex2");
     GlobalAddPartL(PS_Legs,32,false,"junkie_p","JunkieMaleTex2");
     GlobalAddPartL(PS_Legs,33,false,"jojo_p","JoJoFineTex2");
-    //GlobalAddPartLO(PS_Legs,64,false,"thug3_p","ThugMale3Tex2");
+    GlobalAddPartLO(PS_Legs,64,false,"thug3_p","ThugMale3Tex2");
     GlobalAddPartL(PS_Legs,34,false,"cop_p","CopTex2");
     GlobalAddPartL(PS_Legs,35,false,"howardstrong_p","HowardStrongTex2");
     GlobalAddPartL(PS_Legs,36,false,"chad_p","ChadTex2");
@@ -544,7 +544,6 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Torso_M,98,false,"junkie_s","JunkieMaleTex1");
     GlobalAddPartL(PS_Torso_M,99,false,"jojo_s","JoJoFineTex1");
     GlobalAddPartL(PS_Torso_M,100,false,"bartender_s","BartenderTex1");
-    //GlobalAddPartL(PS_Torso_M,115,false,"thug3_s","ThugMale3Tex1");
     GlobalAddPartL(PS_Torso_M,101,false,"cop_s","CopTex1");
     GlobalAddPartL(PS_Torso_M,102,false,"howardstrong_s","HowardStrongTex1");
     GlobalAddPartL(PS_Torso_M,103,false,"adam_s","AdamJensenTex3");
@@ -560,6 +559,8 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Torso_M,112,false,"hkmilitary_s","HKMilitaryTex1");
     GlobalAddPartL(PS_Torso_M,113,false,"alex_s","AlexDentonMaleTex2");
     GlobalAddPartLO(PS_Torso_M,35,false,"prisoner_s","PrisonerTex1");
+    GlobalAddPartL(PS_Torso_M_B,148,false,"gunther_s","GuntherHermannTex1");
+    GlobalAddPartL(PS_Torso_M_B,115,false,"thug3_s","ThugMale3Tex1");
 
     //Female
     GlobalAddPartL(PS_Torso_F,147,false,"nicolette_s","NicoletteDuClareTex1");
@@ -1148,20 +1149,28 @@ function PopulateOutfitsList()
     OutfitAddPartReference("lowclass_p"); //Yep, Everett wears lower class pants :S
     OutfitAddPartReference("everett_s");
     
-    /*
+    //========================================================
+    //  GM_DressShirt_B
+    //========================================================
+    
     //Thug3
-    //TODO: Fix
     BeginNewPartsGroup("GM_DressShirt_B", true, false);
+    GroupAddParts(PS_Torso_M_B);
     GroupTranspose(PS_Body_M,3);
-    GroupTranspose(PS_Torso_M,0);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Glasses,4,5);
+    
+    AddDefaultReference("default_b");
     
     BeginNewOutfitL("thug3",64);
     OutfitAddPartReference("thug3_p");
     OutfitAddPartReference("thug3_s");
     OutfitAddPartReference("visor_g");
-    */
+    
+    BeginNewOutfitL("gunther",99);
+    OutfitAddPartReference("anna_p");
+    OutfitAddPartReference("gunther_s");
+    //OutfitAddPartReference("visor_g");
     
     //========================================================
     //  GM_Suit
@@ -1967,6 +1976,7 @@ defaultproperties
      
      //1.1 stuff
      outfitInfos(98)=(Name="Midnight Trenchcoat",Desc="A trenchcoat equipped for stealth while also looking extremely stylish")
+     outfitInfos(99)=(Name="Gunther's Outfit",Article="-",Desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.")
 
      //Misc
      partNames(0)="Default"

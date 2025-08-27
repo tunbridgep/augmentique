@@ -307,6 +307,13 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TriadLumPathTex1_S3.bmp"                       NAME="TriadLumPathTex1_S3"                  GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\TriadLumPathTex1_S4.bmp"                       NAME="TriadLumPathTex1_S4"                  GROUP="Outfits"
 
+//Gunther Hermann
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GuntherHermannTex1_S0.bmp"                     NAME="GuntherHermannTex1"                   GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GuntherHermannTex1_S1.bmp"                     NAME="GuntherHermannTex1_S1"                GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GuntherHermannTex1_S2.bmp"                     NAME="GuntherHermannTex1_S2"                GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GuntherHermannTex1_S3.bmp"                     NAME="GuntherHermannTex1_S3"                GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GuntherHermannTex1_S4.bmp"                     NAME="GuntherHermannTex1_S4"                GROUP="Outfits"
+
 ////////FEMALE
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\AnnaNavarreTex1_S0.bmp"                        NAME="AnnaNavarreTex1"                      GROUP="Outfits"
