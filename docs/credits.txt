@@ -1,0 +1,8 @@
+Augmentique is made possible by:
+
+- Sarge945: Project lead
+- LudpusDraconis: Art, Skin conversions for vanilla outfits, LDDP
+- Xriborg: Sounds, Art, LDDP
+- Maiden China: LDDP+Confix merge.
+
+Special thanks to everyone who worked on LDDP.
