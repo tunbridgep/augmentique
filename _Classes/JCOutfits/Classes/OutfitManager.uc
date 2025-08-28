@@ -389,9 +389,10 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Helmet,120,true,"soldier_h",,"SoldierTex3");
     GlobalAddPartL(PS_Helmet,121,true,"mechanic_h",,"MechanicTex3");
     GlobalAddPartL(PS_Helmet,122,true,"riotcop_h",,"RiotCopTex3","VisorTex1");
-    GlobalAddPartL(PS_Helmet,124,true,"mj12_h",,"MJ12TroopTex3");
+    GlobalAddPartL(PS_Helmet,124,true,"mj12_h",,"MJ12TroopTex4");
+    GlobalAddPartL(PS_Helmet,180,true,"mj12elite_h",,"MJ12TroopTex3");
     GlobalAddPartL(PS_Helmet,123,true,"nsf_h",,"GogglesTex1");
-    GlobalAddPartL(PS_Helmet,180,true,"visor_h",,"ThugMale3Tex3");
+    GlobalAddPartL(PS_Helmet,181,true,"visor_h",,"ThugMale3Tex3");
 
     //Skin Textures
     GlobalAddPartL(PS_Body_M,8,false,"100%_b","Outfit1_Tex1");
@@ -1382,7 +1383,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mj12elite_b");
     OutfitAddPartReference("mj12_p");
     OutfitAddPartReference("mj12_s");
-    OutfitAddPartReference("mj12_h");
+    OutfitAddPartReference("mj12elite_h");
 
     //NSF Troop
     BeginNewOutfitL("nsf",20);
@@ -1960,7 +1961,7 @@ defaultproperties
      outfitInfos(73)=(Name="Monk Clothes",Article="some")
      outfitInfos(74)=(Name="Tracer Tong's Outfit",Article="-")
      outfitInfos(75)=(Name="Hong Kong Military Uniform",Desc="These green fatigues are standard issue for the Hong Kong military police.")
-     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their totalitarian regime.")
+     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their Totalitarian regime.")
      outfitInfos(77)=(Name="Traditional Attire",Article="some",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
      outfitInfos(78)=(Name="Luminous Path Uniform")
      outfitInfos(79)=(Name="Navy Dress Uniform",Desc="Formal dress uniform for Navy officers. Normally used for public events such as parades and ceremonies.")
@@ -2211,7 +2212,8 @@ defaultproperties
      
      partNames(179)="Party Glasses"
      
-     partNames(180)="Tacticool Goggles (Red)"
+     partNames(180)="MJ12 Elite Helmet"
+     partNames(181)="Tacticool Goggles (Red)"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
