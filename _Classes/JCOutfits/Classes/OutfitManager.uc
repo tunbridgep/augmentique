@@ -1313,9 +1313,10 @@ function PopulateOutfitsList()
     
     //========================================================
     //  GM_Jumpsuit
+    // SARGE: Now replaced with AMTMP_Jumpsuit
     //========================================================
 
-    BeginNewPartsGroup("GM_Jumpsuit", true, false);
+    BeginNewPartsGroup("AMTMP_Jumpsuit", true, false);
     GroupTranspose(PS_Body_M,3);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Torso_M,2);
