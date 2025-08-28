@@ -389,6 +389,9 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Helmet,120,true,"soldier_h",,"SoldierTex3");
     GlobalAddPartL(PS_Helmet,121,true,"mechanic_h",,"MechanicTex3");
     GlobalAddPartL(PS_Helmet,122,true,"riotcop_h",,"RiotCopTex3","VisorTex1");
+    GlobalAddPartL(PS_Helmet,124,true,"mj12_h",,"MJ12TroopTex3");
+    GlobalAddPartL(PS_Helmet,123,true,"nsf_h",,"GogglesTex1");
+    GlobalAddPartL(PS_Helmet,180,true,"visor_h",,"ThugMale3Tex3");
 
     //Skin Textures
     GlobalAddPartL(PS_Body_M,8,false,"100%_b","Outfit1_Tex1");
@@ -1179,10 +1182,6 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Glasses,5,6);
     GroupTranspose2(PS_Mask,PS_Body_M,3,3,2);
     
-    //Unique Glasses...
-    AddPartL(PS_Helmet,7,true,"visor_h",,,,,"ThugMale3Tex3");
-    AddPartL(PS_Helmet,123,true,"nsf_h",,,,,"GogglesTex1");
-    
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_g");
     AddDefaultReference("nothing_h");
@@ -1323,12 +1322,6 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Helmet,3,6,8,4);
     GroupTranspose2(PS_Mask,PS_Body_M,3,4,5);
     
-    //Unique Helmets
-    //AddPartL(PS_Helmet,122,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
-    AddPartL(PS_Helmet,123,true,"nsf_h",,,,,,,"GogglesTex1");
-    AddPartL(PS_Helmet,125,true,"mj12elite_h",,,,,,"MJ12EliteTex3","MJ12EliteTex3");
-    AddPartL(PS_Helmet,124,true,"mj12_h",,,,,,"MJ12TroopTex3","MJ12TroopTex4");
-    
     //Defaults
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_h");
@@ -1389,13 +1382,14 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mj12elite_b");
     OutfitAddPartReference("mj12_p");
     OutfitAddPartReference("mj12_s");
-    OutfitAddPartReference("mj12elite_h");
+    OutfitAddPartReference("mj12_h");
 
     //NSF Troop
     BeginNewOutfitL("nsf",20);
     OutfitAddPartReference("nsf_b");
     OutfitAddPartReference("nsf_p");
     OutfitAddPartReference("nsf_s");
+    OutfitAddPartReference("visor_h");
     OutfitAddPartReference("nsf_h");
     
     //NSF Alt, more equipment/clothing
@@ -2002,7 +1996,7 @@ defaultproperties
      partNames(4)="Reading Glasses"
      partNames(5)="Aviators"
      partNames(6)="Sunglasses"
-     partNames(7)="Tacticool Goggles"
+     partNames(7)="Tacticool Goggles" //Unused??!!
 
      //Skin Textures
      partNames(8)="100% Black"
@@ -2138,7 +2132,7 @@ defaultproperties
      partNames(120)="Military Helmet"
      partNames(121)="Hard Hat"
      partNames(122)="Riot Helmet"
-     partNames(123)="Tacticool Goggles"
+     partNames(123)="Tacticool Goggles (Yellow)"
      partNames(124)="MJ12 Helmet"
      partNames(125)="MJ12 Elite Helmet"
 
@@ -2217,7 +2211,7 @@ defaultproperties
      
      partNames(179)="Party Glasses"
      
-     partNames(180)="Basic MJ12 Helmet"
+     partNames(180)="Tacticool Goggles (Red)"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
