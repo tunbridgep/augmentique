@@ -361,7 +361,7 @@ function PopulateOutfitsList()
     //Default "Nothing" accessories/textures
     GlobalAddPart(PS_Glasses,NothingName,true,"nothing_g","none","none");
     GlobalAddPart(PS_Hat,NothingName,true,"nothing_h","none","none");
-    GlobalAddPart(PS_Mask,NothingName,true,"nothing_m","none","none");
+    GlobalAddPart(PS_Helmet,NothingName,true,"nothing_h","none","none");
     GlobalAddPartL(PS_Body_M,0,false,"default_b","default");
     GlobalAddPartL(PS_Body_F,0,false,"default_b","default");
 
@@ -372,7 +372,23 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Glasses,4,true,"business_g","FramesTex1","LensesTex2");
     GlobalAddPartL(PS_Glasses,5,true,"sunglasses_g","FramesTex2","LensesTex3");
     GlobalAddPartL(PS_Glasses,6,true,"sunglasses2_g","FramesTex2","LensesTex2");
-    GlobalAddPartL(PS_Glasses,7,true,"visor_g","ThugMale3Tex3","ThugMale3Tex3");
+    GlobalAddPartL(PS_Glasses,179,true,"party_g","FramesTex3","BlackMaskTex");
+    
+    //Masks
+    //Masks are body textures that cover the mouth
+    //Can only realistically be used on GM_Jumpsuit
+    //because no other model supports the "mouth covering" texture.
+    GlobalAddPartL(PS_Mask,116,false,"unatco_b","MiscTex1JC","MiscTex1JC","MiscTex1JC");
+    GlobalAddPartL(PS_Mask,117,false,"nsf_b","TerroristTex0","TerroristTex0","TerroristTex0");
+    GlobalAddPartL(PS_Mask,118,false,"mj12elite_b","MJ12EliteTex0","MJ12EliteTex0","MJ12EliteTex0");
+
+    //Helmets.
+    //Jumpsuit and GM_DressShirt_B only
+    GlobalAddPartL(PS_Helmet,119,true,"unatco_h",,"UNATCOTroopTex3");
+    GlobalAddPartL(PS_Helmet,171,true,"soldier_h2","SoldierTex0","SoldierTex3","none","SoldierTex0"); //Version with chin strap.
+    GlobalAddPartL(PS_Helmet,120,true,"soldier_h",,"SoldierTex3");
+    GlobalAddPartL(PS_Helmet,121,true,"mechanic_h",,"MechanicTex3");
+    GlobalAddPartL(PS_Helmet,122,true,"riotcop_h",,"RiotCopTex3","VisorTex1");
 
     //Skin Textures
     GlobalAddPartL(PS_Body_M,8,false,"100%_b","Outfit1_Tex1");
@@ -600,6 +616,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_t");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
+    OutfitAddPartReference("party_g");
     OutfitAddPartReference("default_g");
 
     //100% Black Outfit M
@@ -799,6 +816,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_t");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
+    OutfitAddPartReference("party_g");
     OutfitAddPartReference("default_g");
     
     //Alternate Fem Jewellery
@@ -1153,24 +1171,33 @@ function PopulateOutfitsList()
     //  GM_DressShirt_B
     //========================================================
     
-    //Thug3
-    BeginNewPartsGroup("GM_DressShirt_B", true, false);
+    BeginNewPartsGroup("GM_DressShirt_BMasked", true, false);
     GroupAddParts(PS_Torso_M_B);
     GroupTranspose(PS_Body_M,3);
     GroupTranspose(PS_Legs,1);
-    GroupTranspose(PS_Glasses,4,5);
+    GroupTranspose(PS_Helmet,3,4,8,2);
+    GroupTranspose(PS_Glasses,5,6);
+    GroupTranspose2(PS_Mask,PS_Body_M,3,3,2);
+    
+    //Unique Glasses...
+    AddPartL(PS_Helmet,7,true,"visor_h",,,,,"ThugMale3Tex3");
+    AddPartL(PS_Helmet,123,true,"nsf_h",,,,,"GogglesTex1");
     
     AddDefaultReference("default_b");
+    AddDefaultReference("nothing_g");
+    AddDefaultReference("nothing_h");
     
+    //Thug3
     BeginNewOutfitL("thug3",64);
     OutfitAddPartReference("thug3_p");
     OutfitAddPartReference("thug3_s");
-    OutfitAddPartReference("visor_g");
+    OutfitAddPartReference("nsf_h");
+    OutfitAddPartReference("visor_h");
     
+    //Gunther Hermann
     BeginNewOutfitL("gunther",99);
     OutfitAddPartReference("anna_p");
     OutfitAddPartReference("gunther_s");
-    //OutfitAddPartReference("visor_g");
     
     //========================================================
     //  GM_Suit
@@ -1292,31 +1319,17 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Body_M,3);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Torso_M,2);
-    GroupTranspose(PS_Mask,3,4,5);
-    GroupTranspose(PS_Hat,6);
+    GroupTranspose(PS_Helmet,3,6,8,4);
+    GroupTranspose2(PS_Mask,PS_Body_M,3,4,5);
     
-    //Masks
-    //Can only realistically be used on this model
-    //because no other model supports the "mouth covering" texture.
-    //TODO: Either make these not count as accessories (set arg 3 to false), or
-    //add in a system whereby we always assign a default texture
-    AddPartL(PS_Body_M,116,false,"unatco_b",,,,"MiscTex1JC","MiscTex1JC","GrayMaskTex");
-    AddPartL(PS_Body_M,117,false,"nsf_b",,,,"TerroristTex0","TerroristTex0","GrayMaskTex");
-    AddPartL(PS_Body_M,118,false,"mj12elite_b",,,,"MJ12EliteTex0","MJ12EliteTex0","GrayMaskTex");
-
-    //Jumpsuit specific helmets
-    AddPartL(PS_Hat,119,true,"unatco_h",,,,,,,"UNATCOTroopTex3");
-    AddPartL(PS_Hat,120,true,"soldier_h",,,,,,,"SoldierTex3");
-    AddPartL(PS_Hat,171,true,"soldier_h2",,,,"SoldierTex0","PinkMaskTex","PinkMaskTex","SoldierTex3","PinkMaskTex"); //Version with chin strap.
-    AddPartL(PS_Hat,121,true,"mechanic_h",,,,,,,"MechanicTex3");
-    AddPartL(PS_Hat,122,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
-    AddPartL(PS_Hat,123,true,"nsf_h",,,,,,,"GogglesTex1");
-    AddPartL(PS_Hat,124,true,"mj12_h",,,,,,"MJ12TroopTex3","MJ12TroopTex4");
-    AddPartL(PS_Hat,125,true,"mj12elite_h",,,,,,"MJ12EliteTex3","MJ12EliteTex3");
+    //Unique Helmets
+    //AddPartL(PS_Helmet,122,true,"riotcop_h",,,,,,,"RiotCopTex3",,"VisorTex1");
+    AddPartL(PS_Helmet,123,true,"nsf_h",,,,,,,"GogglesTex1");
+    AddPartL(PS_Helmet,125,true,"mj12elite_h",,,,,,"MJ12EliteTex3","MJ12EliteTex3");
+    AddPartL(PS_Helmet,124,true,"mj12_h",,,,,,"MJ12TroopTex3","MJ12TroopTex4");
     
     //Defaults
     AddDefaultReference("default_b");
-    AddDefaultReference("nothing_m");
     AddDefaultReference("nothing_h");
 
     //test
@@ -2109,7 +2122,7 @@ defaultproperties
 
      //Missed some previously
      partNames(114)="White Dress Pants"
-     partNames(115)="Thug3 Shirt" //Placeholder
+     partNames(115)="Fake Augments" //Placeholder
 
      //Suit Torsos
      //EDIT: These will just keep their outfit names
@@ -2200,6 +2213,10 @@ defaultproperties
      partNames(176)="Midnight Jacket"
      partNames(177)="Midnight Shirt"
      partNames(178)="Midnight Pants"
+     
+     partNames(179)="Party Glasses"
+     
+     partNames(180)="Basic MJ12 Helmet"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
