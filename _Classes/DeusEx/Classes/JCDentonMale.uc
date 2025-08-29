@@ -67,6 +67,9 @@ function SetupOutfitManager()
 
         //Finish Outfit Setup
         outfitManager.CompleteSetup();
+   
+        //Finally, apply NPC Outfits if enabled
+        outfitManager.ApplyNPCOutfits();
     }
 }
 

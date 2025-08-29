@@ -415,6 +415,34 @@ var      int      NumCarcasses;     // number of carcasses seen
 var      float    walkAnimMult;
 var      float    runAnimMult;
 
+// ----------------------------------------------------------------------
+// Augmentique
+// ----------------------------------------------------------------------
+
+//Augmentique Data
+struct AugmentiqueOutfitData
+{
+    var Texture textures[9];
+    var bool bRandomized;
+};
+
+var travel AugmentiqueOutfitData augmentiqueData;
+
+//Augmentique: Update our textures to our Augmentique outfit
+function ApplyCurrentOutfit()
+{
+    local int i;
+
+    if (!augmentiqueData.bRandomized)
+        return;
+    
+    for (i = 0;i < 8;i++)
+        if (augmentiqueData.textures[i] != None)
+            multiskins[i] = augmentiqueData.textures[i];
+    if (augmentiqueData.textures[8] != None)
+        Texture = augmentiqueData.textures[8];
+}
+
 native(2102) final function ConBindEvents();
 
 native(2105) final function bool IsValidEnemy(Pawn TestEnemy, optional bool bCheckAlliance);
@@ -3585,6 +3613,7 @@ function EnableCloak(bool bEnable)  // beware! called from C++
 		ResetSkinStyle();
 		CreateShadow();
 		bCloakOn = bEnable;
+        ApplyCurrentOutfit();
 	}
 }
 

@@ -41,6 +41,87 @@ var() bool bInvincible;
 var bool bAnimalCarcass;
 
 // ----------------------------------------------------------------------
+// Augmentique
+// ----------------------------------------------------------------------
+
+//Augmentique Data
+struct AugmentiqueOutfitData
+{
+    var Texture textures[9];
+    var bool bRandomized;
+};
+
+var travel AugmentiqueOutfitData augmentiqueData;
+
+//Augmentique: Update our textures to our Augmentique outfit
+function ApplyCurrentOutfit()
+{
+    local int i;
+
+    if (!augmentiqueData.bRandomized)
+        return;
+    
+    Log("Doing carcass stuff");
+
+    for (i = 0;i < 8;i++)
+        if (augmentiqueData.textures[i] != None)
+            multiskins[i] = augmentiqueData.textures[i];
+    if (augmentiqueData.textures[8] != None)
+        Texture = augmentiqueData.textures[8];
+}
+
+function CopyOutfitFrom(Actor A)
+{
+    local ScriptedPawn S;
+    S = ScriptedPawn(A);
+    if (S != None)
+    {
+        augmentiqueData.textures[0] = S.augmentiqueData.textures[0];
+        augmentiqueData.textures[1] = S.augmentiqueData.textures[1];
+        augmentiqueData.textures[2] = S.augmentiqueData.textures[2];
+        augmentiqueData.textures[3] = S.augmentiqueData.textures[3];
+        augmentiqueData.textures[4] = S.augmentiqueData.textures[4];
+        augmentiqueData.textures[5] = S.augmentiqueData.textures[5];
+        augmentiqueData.textures[6] = S.augmentiqueData.textures[6];
+        augmentiqueData.textures[7] = S.augmentiqueData.textures[7];
+        augmentiqueData.textures[8] = S.augmentiqueData.textures[8];
+        augmentiqueData.bRandomized = S.augmentiqueData.bRandomized;
+    }
+    ApplyCurrentOutfit();
+}
+
+function CopyAugmentiqueDataToPOVCorpse(POVCorpse pov)
+{
+    pov.augmentiqueData.textures[0] = augmentiqueData.textures[0];
+    pov.augmentiqueData.textures[1] = augmentiqueData.textures[1];
+    pov.augmentiqueData.textures[2] = augmentiqueData.textures[2];
+    pov.augmentiqueData.textures[3] = augmentiqueData.textures[3];
+    pov.augmentiqueData.textures[4] = augmentiqueData.textures[4];
+    pov.augmentiqueData.textures[5] = augmentiqueData.textures[5];
+    pov.augmentiqueData.textures[6] = augmentiqueData.textures[6];
+    pov.augmentiqueData.textures[7] = augmentiqueData.textures[7];
+    pov.augmentiqueData.textures[8] = augmentiqueData.textures[8];
+    pov.augmentiqueData.textures[8] = augmentiqueData.textures[8];
+    pov.augmentiqueData.bRandomized = augmentiqueData.bRandomized;
+}
+
+function CopyAugmentiqueDataFromPOVCorpse(POVCorpse pov)
+{
+    augmentiqueData.textures[0] = pov.augmentiqueData.textures[0];
+    augmentiqueData.textures[1] = pov.augmentiqueData.textures[1];
+    augmentiqueData.textures[2] = pov.augmentiqueData.textures[2];
+    augmentiqueData.textures[3] = pov.augmentiqueData.textures[3];
+    augmentiqueData.textures[4] = pov.augmentiqueData.textures[4];
+    augmentiqueData.textures[5] = pov.augmentiqueData.textures[5];
+    augmentiqueData.textures[6] = pov.augmentiqueData.textures[6];
+    augmentiqueData.textures[7] = pov.augmentiqueData.textures[7];
+    augmentiqueData.textures[8] = pov.augmentiqueData.textures[8];
+    augmentiqueData.bRandomized = pov.augmentiqueData.bRandomized;
+    ApplyCurrentOutfit();
+}
+
+
+// ----------------------------------------------------------------------
 // InitFor()
 // ----------------------------------------------------------------------
 
@@ -48,6 +129,9 @@ function InitFor(Actor Other)
 {
 	if (Other != None)
 	{
+        //Augmentique: Configure our carcass
+        CopyOutfitFrom(Other);
+
 		// set as unconscious or add the pawns name to the description
 		if (!bAnimalCarcass)
 		{
@@ -362,6 +446,7 @@ function Frob(Actor Frobber, Inventory frobWith)
 					corpse.MaxDamage = MaxDamage;
 					corpse.CorpseItemName = itemName;
 					corpse.CarcassName = CarcassName;
+                    CopyAugmentiqueDataToPOVCorpse(corpse);     //AUGMENTIQUE: Copy over outfit data.
 					corpse.Frob(player, None);
 					corpse.SetBase(player);
 					player.PutInHand(corpse);

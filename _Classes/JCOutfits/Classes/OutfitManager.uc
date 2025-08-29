@@ -34,7 +34,6 @@ var const sound PickupSound;            //The sound made when picking up outfit 
 var transient bool bIsSetup;            //Has the outfit manager been setup for this session
 
 //Outfit Information
-
 struct LocalizedOutfitInfo
 {
     var const localized string Name;
@@ -66,6 +65,11 @@ var transient int numParts;
 var transient PartsGroup Groups[50];
 var transient int numPartsGroups;
 var transient PartsGroup currentPartsGroup;
+
+//New 1.1 stuff! For handling NPC outfits
+var transient NPCOutfitGroup NPCGroups[50];
+var transient int numNPCOutfitGroups;
+var transient int currentNPCOutfitGroup;
 
 //Outfits unlocked this playthrough. Outfits are made permanent after finishing the game.
 var travel string unlockedOutfits[255];
@@ -237,6 +241,10 @@ function Setup(DeusExPlayer newPlayer)
     //    return;
     
     PopulateOutfitsList();
+
+    //New 1.1 feature!
+    PopulateNPCOutfitsList();
+    SetupNPCOutfits();
 }
 
 function SetupCustomOutfit()
@@ -1418,10 +1426,116 @@ function PopulateOutfitsList()
     //CompleteSetup();
 }
 
+function _NPCSkin(PartSlot bodyslot, int slot0, int slot1, int slot2, string tex0, optional string tex1, optional string tex2)
+{
+    local string slots[9];
+    if (slot0 >= 0)
+        slots[slot0] = tex0;
+    if (slot1 >= 0)
+        slots[slot1] = tex1;
+    if (slot2 >= 0)
+        slots[slot2] = tex2;
+
+    AddNPCOutfitPart(bodyslot,slots[0],slots[1],slots[2],slots[3],slots[4],slots[5],slots[6],slots[7],slots[8]);
+}
+
+function AddNPCFaces(int slot0, int slot1, int slot2, bool genericMale, bool genericFemale, bool tactical, bool thug)
+{
+    if (tactical)
+    {
+        _NPCSkin(PS_Body_M,slot0,slot1,slot2,"TerroristTex0","TerroristTex0","TerroristTex0");
+        //_NPCSkin(PS_Body_M,slot0,slot1,slot2,"MJ12EliteTex0","MJ12EliteTex0","MJ12EliteTex0");
+    }
+
+    if (genericMale)
+    {
+        _NPCSkin(PS_Body_M,slot0,slot1,slot2,"SkinTex1","SkinTex1","PinkMaskTex");
+        _NPCSkin(PS_Body_M,slot0,slot1,slot2,"SkinTex2","SkinTex2","PinkMaskTex");
+        _NPCSkin(PS_Body_M,slot0,slot1,slot2,"SkinTex3","SkinTex3","PinkMaskTex");
+        _NPCSkin(PS_Body_M,slot0,slot1,slot2,"SkinTex4","SkinTex4","PinkMaskTex");
+    }
+    
+    if (thug)
+    {
+        _NPCSkin(PS_Body_M,slot0,slot1,slot2,"ThugMale2Tex0","ThugMale2Tex0","PinkMaskTex");
+    }
+}
+
+function AddNPCGlasses(int slot0, int slot1)
+{
+    _NPCSkin(PS_Glasses,slot0,slot1,-1,"PinkMaskTex","PinkMaskTex"); //Blank Glasses
+    _NPCSkin(PS_Glasses,slot0,slot1,-1,"FramesTex4","LensesTex5");
+    _NPCSkin(PS_Glasses,slot0,slot1,-1,"FramesTex1","LensesTex1");
+    _NPCSkin(PS_Glasses,slot0,slot1,-1,"FramesTex1","LensesTex2");
+    _NPCSkin(PS_Glasses,slot0,slot1,-1,"FramesTex2","LensesTex2");
+    _NPCSkin(PS_Glasses,slot0,slot1,-1,"FramesTex2","LensesTex3");
+    _NPCSkin(PS_Glasses,slot0,slot1,-1,"FramesTex3","BlackMaskTex"); //Red glasses
+}
+
+function PopulateNPCOutfitsList()
+{
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Terrorist");
+    AddNPCFaces(0,3,4,true,false,true,false);
+    AddNPCOutfitPart(PS_Helmet,,,,,,,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,,,,,,,"GogglesTex1"); //Goggles
+    AddNPCOutfitPart(PS_Helmet,,,,,,,"MechanicTex3"); //Mechanic Helmet
+    AddNPCOutfitPart(PS_Helmet,,,,"MiscTex1","MiscTex1",,"MechanicTex3"); //Mechanic Helmet with FaceMask
+    //AddNPCOutfitPart(PS_Helmet,,,,,,,"UnatcoTroopTex3"); //Unatco Helmet
+    //AddNPCOutfitPart(PS_Helmet,,,,"MiscTex1","MiscTex1",,"UnatcoTroopTex3"); //UNATCO Trooper Helmet with FaceMask
+    
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.UNATCOTroop");
+    AddNPCFaces(0,3,4,true,false,true,false);
+    AddNPCOutfitPart(PS_Helmet,,,,,,,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,,,,,,,"UnatcoTroopTex3"); //Unatco Helmet
+    AddNPCOutfitPart(PS_Helmet,,,,"MiscTex1","MiscTex1",,"UnatcoTroopTex3"); //UNATCO Trooper Helmet with FaceMask
+    
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.ThugMale2");
+    AddNPCFaces(0,4,-1,true,false,true,true);
+    AddNPCGlasses(6,7);
+    
+    //More important characters have minor changes
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.PaulDenton");
+    AddNPCGroupClass("DeusEx.Smuggler");
+    AddNPCGroupClass("DeusEx.WaltonSimons");
+    AddNPCGlasses(6,7);
+    
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.PaulDenton");
+    //AddNPCOutfitPart(PS_Torso_M,,"PaulDentonTex2",,,,"PaulDentonTex2"); //Paul's Normal Trenchcoat
+    AddNPCOutfitPart(PS_Torso_M,,"JCDentonTex2",,,,"JCDentonTex2"); //JC Denton's Coat
+    AddNPCOutfitPart(PS_Torso_M,,"JuanLebedevTex2",,,,"JuanLebedevTex2"); //Brown Coat
+    AddNPCOutfitPart(PS_Torso_M,,"TrenchCoatTex1",,,,"TrenchCoatTex1"); //Gray Coat
+}
+
 //Add a reference that will be added to all outfits for this particular parts group
 function AddDefaultReference(string defRef)
 {
     currentPartsGroup.AddDefaultReference(defRef);
+}
+
+function BeginNPCOutfitGroup()
+{
+    local NPCOutfitGroup G;
+
+    G = new(Self) class'NPCOutfitGroup';
+
+    NPCGroups[numNPCOutfitGroups] = G;
+    currentNPCOutfitGroup = numNPCOutfitGroups;
+    numNPCOutfitGroups++;
+}
+
+function AddNPCGroupClass(string classname)
+{
+    NPCGroups[currentNPCOutfitGroup].AddClass(classname);
+}
+
+function AddNPCOutfitPart(PartSlot slot, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
+{
+    NPCGroups[currentNPCOutfitGroup].AddPart(slot,findNPCTexture(t0),findNPCTexture(t1),findNPCTexture(t2),findNPCTexture(t3),findNPCTexture(t4),findNPCTexture(t5),findNPCTexture(t6),findNPCTexture(t7),findNPCTexture(tm));
 }
 
 function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale)
@@ -1784,6 +1898,9 @@ function CompleteSetup()
     //Apply our current outfit
     ApplyCurrentOutfit();
 
+    //New 1.1 feature!
+    ApplyNPCOutfits();
+
     bIsSetup = true;
 }
 
@@ -1841,6 +1958,27 @@ function Mesh findMesh(string mesh)
     return m;
 }
 
+function Texture findNPCTexture(string tex)
+{
+    local Texture t;
+    
+    if (tex == "none" || tex == "")
+        return None;
+    
+    //look in Deus Ex textures first so we don't get skin variants
+    if (t == None)
+        t = Texture(DynamicLoadObject("DeusExCharacters.Skins."$tex, class'Texture', true));
+
+    if (t == None)
+        t = Texture(DynamicLoadObject("DeusExItems.Skins."$tex, class'Texture', true));
+    
+    //Fallback to looking in Augmentique Textures
+    if (t == None)
+        t = Texture(DynamicLoadObject("Augmentique."$tex, class'Texture', true));
+
+    return t;
+}
+
 function Texture findTexture(string tex)
 {
     local Texture t;
@@ -1881,6 +2019,38 @@ function bool ValidateSpawn(string id)
     index = GetOutfitIndexByID(id);
 
     return index > 0 && !outfits[index].unlocked;
+}
+
+//Sets up outfits for the actual NPCs in the map, but doesn't apply them yet
+function SetupNPCOutfits()
+{
+    local ScriptedPawn P;
+    local DeusExCarcass C;
+    local int i;
+    foreach player.AllActors(class'ScriptedPawn', P)
+    {
+        //Find the first NPC group with a matching class.
+        for (i = 0;i < numNPCOutfitGroups;i++)
+            if (NPCGroups[i].GetMatchingClass(string(P.class)))
+                NPCGroups[i].AddMember(P);
+         P.augmentiqueData.bRandomized = true;
+    }
+    foreach player.AllActors(class'DeusExCarcass', C)
+    {
+        //Find the first NPC group with a matching class.
+        for (i = 0;i < numNPCOutfitGroups;i++)
+            if (NPCGroups[i].GetMatchingClass(string(C.class)))
+                NPCGroups[i].AddMember(C);
+         C.augmentiqueData.bRandomized = true;
+    }
+}
+
+function ApplyNPCOutfits()
+{
+    local int i;
+
+    for (i = 0;i < numNPCOutfitGroups;i++)
+        NPCGroups[i].ApplyOutfits();
 }
 
 defaultproperties

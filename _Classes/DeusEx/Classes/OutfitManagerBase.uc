@@ -76,3 +76,7 @@ function SpawnerPickup(OutfitSpawner S) {}
 
 //Force-apply current outfit
 function ApplyCurrentOutfit() {}
+
+//Force-apply NPC outfits
+function ApplyNPCOutfits() {}
+

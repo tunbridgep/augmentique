@@ -5973,6 +5973,7 @@ exec function bool DropItem(optional Inventory inv, optional bool bDrop)
 							carc.bHidden = False;
 							carc.SetPhysics(PHYS_Falling);
 							carc.SetScaleGlow();
+                            carc.CopyAugmentiqueDataFromPOVCorpse(POVCorpse(item));     //AUGMENTIQUE: Copy over outfit data.
 							if (carc.SetLocation(dropVect))
 							{
 								// must circumvent PutInHand() since it won't allow
