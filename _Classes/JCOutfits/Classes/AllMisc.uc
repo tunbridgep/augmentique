@@ -13,3 +13,6 @@ class AllMisc expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Menus\OptionsScreen_2.pcx"      NAME="OptionsScreen_2"    GROUP="UserInterface"
 #exec TEXTURE IMPORT FILE="Textures\Menus\OptionsScreen_3.pcx"      NAME="OptionsScreen_3"    GROUP="UserInterface"
 #exec TEXTURE IMPORT FILE="Textures\Menus\OptionsScreen_4.pcx"      NAME="OptionsScreen_4"    GROUP="UserInterface"
+
+////Outfits Screen
+#exec TEXTURE IMPORT FILE="Textures\Menus\OutfitsBackground_5.pcx"      NAME="OutfitsBackground_5"    GROUP="UserInterface"

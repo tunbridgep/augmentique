@@ -23,6 +23,9 @@ var travel bool noAccessories;
 //Show item descriptions
 var globalconfig bool noDescriptions;
 
+//Equip NPCs
+var globalconfig bool bEquipNPCs;
+
 //Print outfit part names to the console
 var globalconfig bool bDebugMode;
 
@@ -244,7 +247,9 @@ function Setup(DeusExPlayer newPlayer)
 
     //New 1.1 feature!
     PopulateNPCOutfitsList();
-    SetupNPCOutfits();
+
+    if (bEquipNPCs)
+        SetupNPCOutfits();
 }
 
 function SetupCustomOutfit()
@@ -1324,7 +1329,7 @@ function PopulateOutfitsList()
     // SARGE: Now replaced with AMTMP_Jumpsuit
     //========================================================
 
-    BeginNewPartsGroup("AMTMP_Jumpsuit", true, false);
+    BeginNewPartsGroup("GM_Jumpsuit", true, false);
     GroupTranspose(PS_Body_M,3);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Torso_M,2);
@@ -2391,4 +2396,9 @@ defaultproperties
      DefaultPickupMessage2="You found %s"
 
      PickupSound=Sound'Augmentique.Outfits.BoxPickup'
+}
+
+defaultproperties
+{
+    bEquipNPCs=true
 }

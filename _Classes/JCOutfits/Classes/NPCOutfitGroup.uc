@@ -33,8 +33,6 @@ function AddMember(Actor A)
     if (numMembers >= 50)
         return;
 
-    members[numMembers++] = A;
-
     C = DeusExCarcass(A);
     P = ScriptedPawn(A);
 
@@ -43,6 +41,8 @@ function AddMember(Actor A)
 
     if (C != None && C.augmentiqueData.bRandomized)
         return;
+    
+    members[numMembers++] = A;
 
     //Update the members texture data
     for(i = 0;i < 30;i++)
@@ -79,8 +79,8 @@ function AddClass(string className, optional bool bNoCarcass)
     {
         classes[numClasses++] = className$"Carcass";
         //GMDX Support
-        classes[numClasses++] = className$"Carcass2";
-        classes[numClasses++] = className$"CarcassBeheaded";
+        //classes[numClasses++] = className$"Carcass2";
+        //classes[numClasses++] = className$"CarcassBeheaded";
     }
 }
 

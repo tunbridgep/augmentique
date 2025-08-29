@@ -9,12 +9,12 @@ class PersonaScreenOutfits extends PersonaScreenBaseWindow;
 var PersonaActionButtonWindow btnEquip;
 var PersonaActionButtonWindow btnEdit;
 var PersonaActionButtonWindow btnChangeCamera;
+var PersonaActionButtonWindow btnSettings;
 
 var PersonaListWindow         lstOutfits;
 var PersonaScrollAreaWindow   winScroll;
 var PersonaHeaderTextWindow   winOutfitName;
 var PersonaCheckBoxWindow     chkAccessories;
-var PersonaCheckBoxWindow     chkDescriptions;
 var ViewportWindow            winViewport;
 
 var PersonaActionButtonWindow   btnSlotsNext[19];
@@ -24,10 +24,11 @@ var PersonaHeaderTextWindow     txtDescription;
 
 var localized String ChangeCameraLabel;
 var localized String ShowAccessoriesLabel;
-var localized String ShowDescriptionsLabel;
+var localized String MiniModeLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
 var localized String EditButtonLabel;
+var localized String SettingsButtonLabel;
 var localized String NewLabel;
 
 //The offset for the start of the buttons
@@ -43,6 +44,8 @@ var OutfitManager outfitManager;
 var transient int selectedRowId;
 var transient bool bCameraChange;
 var transient bool bEditMode;
+
+var transient bool bMiniMode;
 
 // ----------------------------------------------------------------------
 // InitWindow()
@@ -292,8 +295,11 @@ function CreateButtons()
 
 	winActionButtons = PersonaButtonBarWindow(winClient.NewChild(Class'PersonaButtonBarWindow'));
 	winActionButtons.SetPos(10, 422);
-	winActionButtons.SetWidth(259);
+	winActionButtons.SetWidth(359);
 	winActionButtons.FillAllSpace(False);
+
+	btnSettings = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
+	btnSettings.SetButtonText(SettingsButtonLabel);
     
     btnChangeCamera = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
 	btnChangeCamera.SetButtonText(ChangeCameraLabel);
@@ -312,12 +318,8 @@ function CreateButtons()
 function CreateCheckboxes()
 {
     chkAccessories = PersonaCheckBoxWindow(winClient.NewChild(Class'PersonaCheckBoxWindow'));
-    chkAccessories.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 203, 424);
+    chkAccessories.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 23, 424);
     chkAccessories.SetText(ShowAccessoriesLabel);
-    
-    chkDescriptions = PersonaCheckBoxWindow(winClient.NewChild(Class'PersonaCheckBoxWindow'));
-    chkDescriptions.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 23, 424);
-    chkDescriptions.SetText(ShowDescriptionsLabel);
 }
 
 function CreateDescriptionTextArea()
@@ -511,6 +513,10 @@ function bool ButtonActivated( Window buttonPressed )
             bCameraChange = !bCameraChange;
             winViewport.SetViewportLocation(GetViewportLocation(),true);
             break;
+		
+        case btnSettings:
+            player.InvokeUIScreen(class'OutfitSettingsMenu');
+			break;
 
         case btnSlotsPrev[0]: PrevCustomOutfitSlot(0); break;
         case btnSlotsPrev[1]: PrevCustomOutfitSlot(1); break;
@@ -590,16 +596,6 @@ event Bool ToggleChanged(window button, bool bToggleValue)
         outfitManager.noAccessories = !bToggleValue;
         outfitManager.ApplyCurrentOutfit();
     }
-    else if (button == chkDescriptions)
-    {
-        outfitManager.noDescriptions = !bToggleValue;
-        if (bToggleValue)
-            txtDescription.SetText(outfitManager.currOutfit.Desc);
-        else
-            txtDescription.SetText("");
-
-        outfitManager.SaveConfig();
-    }
 }
 
 // ----------------------------------------------------------------------
@@ -622,9 +618,6 @@ function EnableButtons()
 
     chkAccessories.SetToggle(!outfitManager.noAccessories);
 	chkAccessories.SetSensitivity(true);
-    
-    chkDescriptions.SetToggle(!outfitManager.noDescriptions);
-	chkDescriptions.SetSensitivity(true);
 }
 
 // ----------------------------------------------------------------------
@@ -696,10 +689,10 @@ function DestroyImages()
 defaultproperties
 {
      ShowAccessoriesLabel="Show Accessories"
-     ShowDescriptionsLabel="Show Descriptions"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
      EditButtonLabel="Customize Outfit"
+     SettingsButtonLabel="Settings"
      ChangeCameraLabel="Change View"
      NewLabel="(New)"
      clientBorderOffsetY=35
@@ -711,7 +704,7 @@ defaultproperties
      clientTextures(1)=Texture'DeusExUI.UserInterface.ImagesBackground_2'
      clientTextures(2)=Texture'DeusExUI.UserInterface.ImagesBackground_3'
      clientTextures(3)=Texture'DeusExUI.UserInterface.ImagesBackground_4'
-     clientTextures(4)=Texture'DeusExUI.UserInterface.ImagesBackground_5'
+     clientTextures(4)=Texture'Augmentique.UserInterface.OutfitsBackground_5'
      clientTextures(5)=Texture'DeusExUI.UserInterface.ImagesBackground_6'
      clientBorderTextures(0)=Texture'DeusExUI.UserInterface.ImagesBorder_1'
      clientBorderTextures(1)=Texture'DeusExUI.UserInterface.ImagesBorder_2'
