@@ -3,11 +3,19 @@
 //will simply equip randomly from their parts list.
 class NPCOutfitGroup extends Object;
 
-var string classes[255];
+struct ClassInfo
+{
+    var string className;
+    var bool bUniqueNPC;
+    var int Seeds[30];
+};
+
+var ClassInfo classes[255];
 var int numClasses;
 
 struct SimplePart
 {
+    var bool bSkinPart;                          //Whether or not this part changes a characters skin in some way. Parts that change skins are disallowed for certain characters.
     var Texture textures[9];                //Textures for this part. MultiSkins0-7 and then main texture
 };
 
@@ -44,11 +52,19 @@ function AddMember(Actor A)
     
     members[numMembers++] = A;
 
-    //Update the members texture data
-    for(i = 0;i < 30;i++)
+    for (i = 0; i < ArrayCount(partsList);i++)
     {
-        rando = Rand(partsList[i].numParts);
-        Log("Randomising: Part " $ rando $ " of " $ partsList[i].numParts);
+        if (partsList[i].numParts == 0)
+            continue;
+
+        //Update the members texture data
+        rando = GetClassSeed(string(A.class),i);
+        if (rando < 0) //Allow for custom seeds
+            rando = Rand(partsList[i].numParts);
+        else
+            rando = rando % partsList[i].numParts;
+
+        Log("   Randomising: Part " $ (i+1) $ " to " $ (rando+1) $ " of " $ partsList[i].numParts);
         sp = partsList[i].parts[rando];
         for(k = 0;k < 8;k++)
         {
@@ -69,19 +85,37 @@ function AddMember(Actor A)
             //Log("Applying " $ sp.textures[8] $ " to " $ P $ " (main)");
         }
     }
-
 }
 
-function AddClass(string className, optional bool bNoCarcass)
+function AddClass(string className, optional bool bUniqueNPC, optional bool bNoCarcass, optional int seeds[30])
 {
-    classes[numClasses++] = className;
+    local int i;
+    classes[numClasses].className = className;
+    classes[numClasses].bUniqueNPC = bUniqueNPC;
+
+    for (i = 0;i < 30;i++)
+        classes[numClasses].seeds[i] = seeds[i];
+
+    //Log("Adding class: " $ className);
+    numClasses++;
     if (!bNoCarcass)
     {
-        classes[numClasses++] = className$"Carcass";
+        AddClass(className$"Carcass",bUniqueNPC,true,seeds);
         //GMDX Support
-        //classes[numClasses++] = className$"Carcass2";
-        //classes[numClasses++] = className$"CarcassBeheaded";
+        //AddClass(className$"Carcass2",bUniqueNPC,true);
+        //AddClass(className$"CarcassBeheaded",bUniqueNPC,true);
     }
+}
+
+function int GetClassSeed(string className, int index)
+{
+    local int i;
+    for (i = 0; i < numClasses;i++)
+    {
+        if (classes[i].className ~= className)
+            return classes[i].seeds[index];
+    }
+    return -1;
 }
 
 function bool GetMatchingClass(string className)
@@ -89,13 +123,13 @@ function bool GetMatchingClass(string className)
     local int i;
     for (i = 0; i < numClasses;i++)
     {
-        if (classes[i] ~= className)
+        if (classes[i].className ~= className)
             return true;
     }
     return false;
 }
 
-function AddPart(int slot, optional Texture t0, optional Texture t1, optional Texture t2, optional Texture t3, optional Texture t4, optional Texture t5, optional Texture t6, optional Texture t7, optional Texture t8)
+function AddPart(int slot, bool bSkinPart, optional Texture t0, optional Texture t1, optional Texture t2, optional Texture t3, optional Texture t4, optional Texture t5, optional Texture t6, optional Texture t7, optional Texture t8)
 {
     local int num;
     local SimplePartsList P;
@@ -110,6 +144,7 @@ function AddPart(int slot, optional Texture t0, optional Texture t1, optional Te
     partsList[slot].parts[num].textures[6] = t6;
     partsList[slot].parts[num].textures[7] = t7;
     partsList[slot].parts[num].textures[8] = t8;
+    partsList[slot].parts[num].bSkinPart = bSkinPart;
     partsList[slot].numParts++;
 }
 

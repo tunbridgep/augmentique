@@ -61,8 +61,6 @@ function ApplyCurrentOutfit()
     if (!augmentiqueData.bRandomized)
         return;
     
-    Log("Doing carcass stuff");
-
     for (i = 0;i < 8;i++)
         if (augmentiqueData.textures[i] != None)
             multiskins[i] = augmentiqueData.textures[i];
