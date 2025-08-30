@@ -1448,7 +1448,7 @@ function PopulateOutfitsList()
     //CompleteSetup();
 }
 
-function _NPCSkin(PartSlot part,bool bSkinPart,int slot0, int slot1, int slot2, string tex0, optional string tex1, optional string tex2)
+function AddNPCOutfitPart(PartSlot part,bool bSkinPart,int slot0, int slot1, int slot2, string tex0, optional string tex1, optional string tex2)
 {
     local string slots[9];
     if (slot0 >= 0)
@@ -1458,39 +1458,39 @@ function _NPCSkin(PartSlot part,bool bSkinPart,int slot0, int slot1, int slot2, 
     if (slot2 >= 0)
         slots[slot2] = tex2;
 
-    AddNPCOutfitPart(part,bSkinPart,slots[0],slots[1],slots[2],slots[3],slots[4],slots[5],slots[6],slots[7],slots[8]);
+    _NPCSkin(part,bSkinPart,slots[0],slots[1],slots[2],slots[3],slots[4],slots[5],slots[6],slots[7],slots[8]);
 }
 
 function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, bool tactical, bool lowlife)
 {
     if (tactical)
     {
-        _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"TerroristTex0","TerroristTex0","TerroristTex0");
-        //_NPCSkin(PS_Body_M,slot0,slot1,slot2,"MJ12EliteTex0","MJ12EliteTex0","MJ12EliteTex0");
-        //_NPCSkin(true,slot0,slot1,slot2,"SecretServiceTex0","SecretServiceTex0","PinkMaskTex");
+        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TerroristTex0","TerroristTex0","TerroristTex0");
+        //AddNPCOutfitPart(PS_Body_M,slot0,slot1,slot2,"MJ12EliteTex0","MJ12EliteTex0","MJ12EliteTex0");
+        //AddNPCOutfitPart(true,slot0,slot1,slot2,"SecretServiceTex0","SecretServiceTex0","PinkMaskTex");
     }
 
     if (lowlife)
     {
         if (bMale)
         {
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"BumMaleTex0","BumMaleTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"BumMale2Tex0","BumMale2Tex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"BumMale3Tex0","BumMale3Tex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"JunkieMaleTex0","JunkieMaleTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BumMaleTex0","BumMaleTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BumMale2Tex0","BumMale2Tex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BumMale3Tex0","BumMale3Tex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"JunkieMaleTex0","JunkieMaleTex0","PinkMaskTex");
         }
         else
         {
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"BumFemaleTex0","BumFemaleTex0","BumFemaleTex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"JunkieFemaleTex0","JunkieFemaleTex0","BumFemaleTex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"BumFemaleTex0","BumFemaleTex0","BumFemaleTex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"JunkieFemaleTex0","JunkieFemaleTex0","BumFemaleTex0");
         }
     }
 
     /*
     if (child)
     {
-        _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"ChildMaleTex0","ChildMaleTex0","PinkMaskTex");
-        _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"ChildMale2Tex0","ChildMale2Tex0","PinkMaskTex");
+        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ChildMaleTex0","ChildMaleTex0","PinkMaskTex");
+        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ChildMale2Tex0","ChildMale2Tex0","PinkMaskTex");
     }
     */
 
@@ -1498,44 +1498,44 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
     {
         if (bMale)
         {
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"BartenderTex0","BartenderTex0","PinkMaskTex"); //Also used by Terrorist Commander.  May remove
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"BoatPersonTex0","BoatPersonTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"Businessman2Tex0","Businessman2Tex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"ButlerTex0","ButlerTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"ChefTex0","ChefTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"DoctorTex0","DoctorTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"LowerClassMale2Tex0","LowerClassMale2Tex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"Male1Tex0","Male1Tex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"Male4Tex0","Male4Tex0","PinkMaskTex"); //Looks a bit old?
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"MichaelHamnerTex0","MichaelHamnerTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"MichaelHamnerTex0","MichaelHamnerTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"ScientistMaleTex0","ScientistMaleTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"SkinTex1","SkinTex1","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"SkinTex2","SkinTex2","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"SkinTex3","SkinTex3","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"SkinTex4","SkinTex4","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"ThugMaleTex0","ThugMaleTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPathTex0","TriadLumPathTex0","PinkMaskTex");
-            _NPCSkin(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPath2Tex0","TriadLumPath2Tex0","PinkMaskTex");
-            //_NPCSkin(true,slot0,slot1,slot2,"TriadRedArrowTex0","RedArrowTex0","PinkMaskTex"); //Has a recognisable face tatoo
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BartenderTex0","BartenderTex0","PinkMaskTex"); //Also used by Terrorist Commander.  May remove
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BoatPersonTex0","BoatPersonTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Businessman2Tex0","Businessman2Tex0","PinkMaskTex");
+            //AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ButlerTex0","ButlerTex0","PinkMaskTex"); //Too old for general use.
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ChefTex0","ChefTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"DoctorTex0","DoctorTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"LowerClassMale2Tex0","LowerClassMale2Tex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Male1Tex0","Male1Tex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Male4Tex0","Male4Tex0","PinkMaskTex"); //Looks a bit old?
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"MichaelHamnerTex0","MichaelHamnerTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"MichaelHamnerTex0","MichaelHamnerTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ScientistMaleTex0","ScientistMaleTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex1","SkinTex1","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex2","SkinTex2","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex3","SkinTex3","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex4","SkinTex4","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ThugMaleTex0","ThugMaleTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPathTex0","TriadLumPathTex0","PinkMaskTex");
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPath2Tex0","TriadLumPath2Tex0","PinkMaskTex");
+            //AddNPCOutfitPart(true,slot0,slot1,slot2,"TriadRedArrowTex0","RedArrowTex0","PinkMaskTex"); //Has a recognisable face tatoo
         }
         else
         {
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"BusinessWoman1Tex0","BusinessWoman1Tex0","BusinessWoman1Tex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"Female1Tex0","Female1Tex0","Female1Tex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"Female2Tex0","Female2Tex0","Female2Tex0");
-            //_NPCSkin(true,slot0,slot1,slot2,"Female4Tex0","Female4Tex0","Female4Tex0"); //A bit too distinct
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"Hooker1Tex0","Hooker1Tex0","Hooker1Tex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"Hooker2Tex0","Hooker2Tex0","Hooker2Tex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"LowerClassFemaleTex0","LowerClassFemaleTex0","LowerClassFemaleTex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"MaidTex0","MaidTex0","MaidTex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"MargaretWilliamsTex0","MargaretWilliamsTex0","MargaretWilliamsTex0"); //Completely unused in the vanilla game?
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"NurseTex0","NurseTex0","NurseTex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"RachelMeadTex0","RachelMeadTex0","RachelMeadTex0"); //Completely unused in the vanilla game?
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"SarahMeadTex0","SarahMeadTex0","SarahMeadTex0"); //Completely unused in the vanilla game?
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"ScientistFemaleTex0","ScientistFemaleTex0","ScientistFemaleTex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"SecretaryTex0","SecretaryTex0","SecretaryTex0");
-            _NPCSkin(PS_Body_F,true,slot0,slot1,slot2,"SkinTex5","SkinTex5","SkinTex5");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"BusinessWoman1Tex0","BusinessWoman1Tex0","BusinessWoman1Tex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"Female1Tex0","Female1Tex0","Female1Tex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"Female2Tex0","Female2Tex0","Female2Tex0");
+            //AddNPCOutfitPart(true,slot0,slot1,slot2,"Female4Tex0","Female4Tex0","Female4Tex0"); //A bit too distinct
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"Hooker1Tex0","Hooker1Tex0","Hooker1Tex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"Hooker2Tex0","Hooker2Tex0","Hooker2Tex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"LowerClassFemaleTex0","LowerClassFemaleTex0","LowerClassFemaleTex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"MaidTex0","MaidTex0","MaidTex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"MargaretWilliamsTex0","MargaretWilliamsTex0","MargaretWilliamsTex0"); //Completely unused in the vanilla game?
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"NurseTex0","NurseTex0","NurseTex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"RachelMeadTex0","RachelMeadTex0","RachelMeadTex0"); //Completely unused in the vanilla game?
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"SarahMeadTex0","SarahMeadTex0","SarahMeadTex0"); //Completely unused in the vanilla game?
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"ScientistFemaleTex0","ScientistFemaleTex0","ScientistFemaleTex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"SecretaryTex0","SecretaryTex0","SecretaryTex0");
+            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"SkinTex5","SkinTex5","SkinTex5");
         }
     }
 }
@@ -1543,53 +1543,53 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
 function AddNPCGlasses(int slot0, int slot1, bool nothing, bool normalGlasses, bool bSunglasses, bool bSilly)
 {
     if (nothing)
-        _NPCSkin(PS_Glasses,false,slot0,slot1,-1,"PinkMaskTex","PinkMaskTex"); //Blank Glasses
+        AddNPCOutfitPart(PS_Glasses,false,slot0,slot1,-1,"PinkMaskTex","PinkMaskTex"); //Blank Glasses
         
     if (normalGlasses)
     {
-        _NPCSkin(PS_Glasses,false,slot0,slot1,-1,"FramesTex1","LensesTex1");
-        _NPCSkin(PS_Glasses,false,slot0,slot1,-1,"FramesTex1","LensesTex2");
+        AddNPCOutfitPart(PS_Glasses,false,slot0,slot1,-1,"FramesTex1","LensesTex1");
+        AddNPCOutfitPart(PS_Glasses,false,slot0,slot1,-1,"FramesTex1","LensesTex2");
     }
 
     if (bSunglasses)
     {
-        _NPCSkin(PS_Glasses,false,slot0,slot1,-1,"FramesTex4","LensesTex5");
-        _NPCSkin(PS_Glasses,false,slot0,slot1,-1,"FramesTex2","LensesTex2");
-        _NPCSkin(PS_Glasses,false,slot0,slot1,-1,"FramesTex2","LensesTex3");
+        AddNPCOutfitPart(PS_Glasses,false,slot0,slot1,-1,"FramesTex4","LensesTex5");
+        AddNPCOutfitPart(PS_Glasses,false,slot0,slot1,-1,"FramesTex2","LensesTex2");
+        AddNPCOutfitPart(PS_Glasses,false,slot0,slot1,-1,"FramesTex2","LensesTex3");
     }
 
     if (bSilly)
-        _NPCSkin(PS_Glasses,false,slot0,slot1,-1,"FramesTex3","BlackMaskTex"); //Red glasses
+        AddNPCOutfitPart(PS_Glasses,false,slot0,slot1,-1,"FramesTex3","BlackMaskTex"); //Red glasses
 }
 
 function AddNPCTrenchCoats(bool bMale, bool bFancy, bool bRegular, bool bFilthy)
 {
     if (bFancy) //"Upper Class" trench coats.
     {
-        AddNPCOutfitPart(PS_Trench,false,,"JosephManderleyTex2",,,,"JosephManderleyTex2"); //Joseph Manderley
-        AddNPCOutfitPart(PS_Trench,false,,"SmugglerTex2",,,,"SmugglerTex2"); //Smugglers Black Suit
+        _NPCSkin(PS_Trench,false,,"JosephManderleyTex2",,,,"JosephManderleyTex2"); //Joseph Manderley
+        _NPCSkin(PS_Trench,false,,"SmugglerTex2",,,,"SmugglerTex2"); //Smugglers Black Suit
     }
     if (bRegular)
     {
-        //AddNPCOutfitPart(PS_Trench,false,,"PaulDentonTex2",,,,"PaulDentonTex2"); //Paul's Normal Trenchcoat
-        //AddNPCOutfitPart(PS_Trench,false,,"JCDentonTex2",,,,"JCDentonTex2"); //JC Denton's Coat
-        //AddNPCOutfitPart(PS_Trench,false,,"MaxChenTex2",,,,"MaxChenTex2"); //Max Chen
-        AddNPCOutfitPart(PS_Trench,false,,"JuanLebedevTex2",,,,"JuanLebedevTex2"); //Brown Coat
-        AddNPCOutfitPart(PS_Trench,false,,"TrenchCoatTex1",,,,"TrenchCoatTex1"); //Gray Coat
-        AddNPCOutfitPart(PS_Trench,false,,"Outfit2F_Tex2",,,,"Outfit2F_Tex2"); //Brown and Gold outfit
-        AddNPCOutfitPart(PS_Trench,false,,"Outfit4F_Tex2",,,,"Outfit4F_Tex2"); //Matrix outfit
-        AddNPCOutfitPart(PS_Trench,false,,"Female4Tex2",,,,"Female4Tex2"); //Goth Outfit
-        AddNPCOutfitPart(PS_Trench,false,,"GilbertRentonTex2",,,,"GilbertRentonTex2");
-        AddNPCOutfitPart(PS_Trench,false,,"FordSchickTex2",,,,"FordSchickTex2");
-        AddNPCOutfitPart(PS_Trench,false,,"ThugMale2"); //Thug outfit
+        //_NPCSkin(PS_Trench,false,,"PaulDentonTex2",,,,"PaulDentonTex2"); //Paul's Normal Trenchcoat
+        //_NPCSkin(PS_Trench,false,,"JCDentonTex2",,,,"JCDentonTex2"); //JC Denton's Coat
+        //_NPCSkin(PS_Trench,false,,"MaxChenTex2",,,,"MaxChenTex2"); //Max Chen
+        _NPCSkin(PS_Trench,false,,"JuanLebedevTex2",,,,"JuanLebedevTex2"); //Brown Coat
+        _NPCSkin(PS_Trench,false,,"TrenchCoatTex1",,,,"TrenchCoatTex1"); //Gray Coat
+        _NPCSkin(PS_Trench,false,,"Outfit2F_Tex2",,,,"Outfit2F_Tex2"); //Brown and Gold outfit
+        _NPCSkin(PS_Trench,false,,"Outfit4F_Tex2",,,,"Outfit4F_Tex2"); //Matrix outfit
+        _NPCSkin(PS_Trench,false,,"Female4Tex2",,,,"Female4Tex2"); //Goth Outfit
+        _NPCSkin(PS_Trench,false,,"GilbertRentonTex2",,,,"GilbertRentonTex2");
+        _NPCSkin(PS_Trench,false,,"FordSchickTex2",,,,"FordSchickTex2");
+        _NPCSkin(PS_Trench,false,,"ThugMale2"); //Thug outfit
     }
     
     if (bFilthy)
     {
-        //AddNPCOutfitPart(PS_Trench,false,,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
-        AddNPCOutfitPart(PS_Trench,false,,"BumMaleTex2",,,,"BumMaleTex2");
-        AddNPCOutfitPart(PS_Trench,false,,"BumMale2Tex2",,,,"BumMale2Tex2");
-        AddNPCOutfitPart(PS_Trench,false,,"BumMale3Tex2",,,,"BumMale3Tex2");
+        //_NPCSkin(PS_Trench,false,,"HarleyFilbenTex2",,,,"HarleyFilbenTex2");
+        _NPCSkin(PS_Trench,false,,"BumMaleTex2",,,,"BumMaleTex2");
+        _NPCSkin(PS_Trench,false,,"BumMale2Tex2",,,,"BumMale2Tex2");
+        _NPCSkin(PS_Trench,false,,"BumMale3Tex2",,,,"BumMale3Tex2");
     }
 }
 
@@ -1597,49 +1597,49 @@ function AddNPCTrenchShirts(bool bMale, bool bFancy, bool bRegular, bool bTurtle
 {
     if (bFancy) //"Upper Class" trench shirts.
     {
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"WaltonSimonsTex1"); //White Shirt with Black Suit and Black Tie
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"DoctorTex1"); //White Shirt with Blue Suit and Red Tie
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"JosephManderleyTex1"); //White Shirt with Black Suit and Red Tie
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"JaimeReyesTex1"); //Pink Shirt with Black Tie
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"GarySavageTex1"); //Blue shirt with tie
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"HitmanTex1"); //White shirt with red tie
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"WaltonSimonsTex1"); //White Shirt with Black Suit and Black Tie
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"DoctorTex1"); //White Shirt with Blue Suit and Red Tie
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"JosephManderleyTex1"); //White Shirt with Black Suit and Red Tie
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"JaimeReyesTex1"); //Pink Shirt with Black Tie
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"GarySavageTex1"); //Blue shirt with tie
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"HitmanTex1"); //White shirt with red tie
     }
 
     if (bRegular)
     {
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"GilbertRentonTex1"); //Dirty brown turtleneck
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"ThugMaleTex1"); //Punk Rock Shirt
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"GilbertRentonTex1"); //Dirty brown turtleneck
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"ThugMaleTex1"); //Punk Rock Shirt
     }
 
     if (bTurtlenecks)
     {
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"TriadRedArrowTex1"); //Blue Turtlenech
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"TrenchShirtTex3"); //Yellow zip-up shirt
-        //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"PaulDentonTex1"); //Paul Denton's Turtleneck
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"SmugglerTex1"); //Smugglers Trenchcoat
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"TriadRedArrowTex1"); //Blue Turtlenech
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"TrenchShirtTex3"); //Yellow zip-up shirt
+        //_NPCSkin(PS_Trench_Shirt,false,,,,,"PaulDentonTex1"); //Paul Denton's Turtleneck
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"SmugglerTex1"); //Smugglers Trenchcoat
     }
 
     if (bFilthy)
     {
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"TrenchShirtTex1"); //Filthy Bum shirt
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"TrenchShirtTex2"); //Filthy Bum shirt
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"FordSchickTex1"); //White Shirt
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"TrenchShirtTex1"); //Filthy Bum shirt
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"TrenchShirtTex2"); //Filthy Bum shirt
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"FordSchickTex1"); //White Shirt
     }
 
     if (bSpecial)
     {
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"Outfit4F_Tex1"); //Matrix Shirt
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"JCDentonTex1"); //JCDenton Shirt
-        AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"TobyAtanweTex1"); //Weird techno-shirt??
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"Outfit4F_Tex1"); //Matrix Shirt
+        _NPCSkin(PS_Trench_Shirt,false,,,,,"JCDentonTex1"); //JCDenton Shirt
+        //_NPCSkin(PS_Trench_Shirt,false,,,,,"TobyAtanweTex1"); //Weird techno-shirt??
     }
     
-    //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"TobyAtanweTex1"); //Weird techno-shirt??
-    //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"JuanLebedevTex1"); //NSF Body Armour
-    //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"GordonQuickTex1"); //Bare Chest
-    //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"JockTex1"); //Flight Suit
-    //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"MaxChenTex1"); //Max Chen
-    //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"Outfit4F_Tex1"); //Matrix Shirt
-    //AddNPCOutfitPart(PS_Trench_Shirt,false,,,,,"JCDentonTex1"); //JCDenton Shirt
+    //_NPCSkin(PS_Trench_Shirt,false,,,,,"TobyAtanweTex1"); //Weird techno-shirt??
+    //_NPCSkin(PS_Trench_Shirt,false,,,,,"JuanLebedevTex1"); //NSF Body Armour
+    //_NPCSkin(PS_Trench_Shirt,false,,,,,"GordonQuickTex1"); //Bare Chest
+    //_NPCSkin(PS_Trench_Shirt,false,,,,,"JockTex1"); //Flight Suit
+    //_NPCSkin(PS_Trench_Shirt,false,,,,,"MaxChenTex1"); //Max Chen
+    //_NPCSkin(PS_Trench_Shirt,false,,,,,"Outfit4F_Tex1"); //Matrix Shirt
+    //_NPCSkin(PS_Trench_Shirt,false,,,,,"JCDentonTex1"); //JCDenton Shirt
 }
 
 function AddNPCShirts(int slot, bool bMale, bool bFancy)
@@ -1654,11 +1654,11 @@ function AddNPCShirts(int slot, bool bMale, bool bFancy)
         }
         else
         {
-            //_NPCSkin(PS_Torso_F,false,slot,-1,-1,"Hooker1Tex3"); //These don't look like bum attire
-            //_NPCSkin(PS_Torso_F,false,slot,-1,-1,"Hooker2Tex3"); //These don't look like bum attire
-            _NPCSkin(PS_Torso_F,false,slot,-1,-1,"JunkieFemaleTex1");
-            _NPCSkin(PS_Torso_F,false,slot,-1,-1,"BumFemaleTex1");
-            _NPCSkin(PS_Torso_F,false,slot,-1,-1,"LowerClassFemaleTex1");
+            //AddNPCOutfitPart(PS_Torso_F,false,slot,-1,-1,"Hooker1Tex3"); //These don't look like bum attire
+            //AddNPCOutfitPart(PS_Torso_F,false,slot,-1,-1,"Hooker2Tex3"); //These don't look like bum attire
+            AddNPCOutfitPart(PS_Torso_F,false,slot,-1,-1,"JunkieFemaleTex1");
+            AddNPCOutfitPart(PS_Torso_F,false,slot,-1,-1,"BumFemaleTex1");
+            AddNPCOutfitPart(PS_Torso_F,false,slot,-1,-1,"LowerClassFemaleTex1");
         }
     }
 }
@@ -1667,71 +1667,64 @@ function AddNPCPants(int slot, bool bMale, bool bFancy, bool bRegular, bool bFil
 {
     if (bFancy)
     {
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"JCDentonTex3"); //Blue tactical pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"PantsTex8"); //Pauls pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"Businessman1Tex2"); //Black business pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"Businessman2Tex2"); //Black business pants
-        //_NPCSkin(PS_Legs,false,slot,-1,-1,"ThugMale2Tex2"); //Black pants with chains
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"PantsTex10"); //Chef pants. Look a little silly!
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"ThugMaleTex3"); //Black pants with belt
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"MichaelHamnerTex2"); //Dark-Gray Dress Pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"PantsTex5"); //MIB Pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"SecretServiceTex2"); //Blue Dress Pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"NathanMadisonTex2"); //Navy Dress Pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"BobPageTex2"); //Gray Dress Pants
-        //_NPCSkin(PS_Legs,false,slot,-1,-1,"SamCarterTex2"); //Military style pants with big boots. Look a little silly on regular people
-        //_NPCSkin(PS_Legs,false,slot,-1,-1,"JoJoFineTex2"); //Brown pants with knee pads???
-        //_NPCSkin(PS_Legs,false,slot,-1,-1,"HowardStrongTex2"); //Black pants with knee pads???
-        //_NPCSkin(PS_Legs,false,slot,-1,-1,"ThugMale3Tex2"); //Black pants with something on the sides??? Has bad stretching. Don't use.
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"JCDentonTex3"); //Blue tactical pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex8"); //Pauls pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"Businessman1Tex2"); //Black business pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"Businessman2Tex2"); //Black business pants
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"ThugMale2Tex2"); //Black pants with chains
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex10"); //Chef pants. Look a little silly!
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"ThugMaleTex3"); //Black pants with belt
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"MichaelHamnerTex2"); //Dark-Gray Dress Pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex5"); //MIB Pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"SecretServiceTex2"); //Blue Dress Pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"NathanMadisonTex2"); //Navy Dress Pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"BobPageTex2"); //Gray Dress Pants
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"SamCarterTex2"); //Military style pants with big boots. Look a little silly on regular people
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"JoJoFineTex2"); //Brown pants with knee pads???
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"HowardStrongTex2"); //Black pants with knee pads???
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"ThugMale3Tex2"); //Black pants with something on the sides??? Has bad stretching. Don't use.
     }
     if (bRegular)
     {
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"PantsTex6"); //Brown casual pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"PantsTex2"); //Jeans
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"LowerClass2Male2Tex2"); //Despite being "lower class" thse are quite fancy
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"TriadRedArrowTex3"); //Despite being "lower class" thse are quite fancy
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex6"); //Brown casual pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex2"); //Jeans
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"LowerClass2Male2Tex2"); //Despite being "lower class" thse are quite fancy
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"TriadRedArrowTex3"); //Despite being "lower class" thse are quite fancy
     }
     
     if (bFilthy)
     {
         if (!bMale)
-            _NPCSkin(PS_Legs,false,slot,-1,-1,"JunkieFemaleTex2"); //Junkie jeans
+            AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"JunkieFemaleTex2"); //Junkie jeans
 
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"PantsTex4"); //Ripped jeans
-        //_NPCSkin(PS_Legs,false,slot,-1,-1,"ChadTex2"); //Has a weird middle section?
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"PantsTex7"); //Soiled brown pants
-        _NPCSkin(PS_Legs,false,slot,-1,-1,"JunkieMale2Tex2"); //Soiled brown pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex4"); //Ripped jeans
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"ChadTex2"); //Has a weird middle section?
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex7"); //Soiled brown pants
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"JunkieMale2Tex2"); //Soiled brown pants
     }
-        //_NPCSkin(PS_Legs,false,slot,-1,-1,"GordonQuickTex3"); //Fancy pants with a dragon on them
+        //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"GordonQuickTex3"); //Fancy pants with a dragon on them
 }
 
 function AddNPCSkirts(int slot0, int slot1)
 {
-    _NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"WIBTex1","WIBTex1"); //WIB Dress
-    //_NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"MaggieChowTex1","MaggieChowTex1"); //Maggies Dress
-    _NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"MargaretWilliamsTex1","MargaretWilliamsTex1"); //Fancy blue dress
-    //_NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"RachaelMeadTex1","RachaelMeadTex1"); //Schoolgirl outfit
-    _NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"BusinessWoman1Tex1","BusinessWoman1Tex1");
-    _NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"SecretaryTex2","SecretaryTex2");
-    _NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"Female2Tex2","Female2Tex2");
-    _NPCSkin(PS_Legs_F,false,slot0,slot1,-1,"Female3Tex1","Female3Tex1");
+    AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"WIBTex1","WIBTex1"); //WIB Dress
+    //AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"MaggieChowTex1","MaggieChowTex1"); //Maggies Dress
+    AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"MargaretWilliamsTex1","MargaretWilliamsTex1"); //Fancy blue dress
+    //AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"RachaelMeadTex1","RachaelMeadTex1"); //Schoolgirl outfit
+    AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"BusinessWoman1Tex1","BusinessWoman1Tex1");
+    AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"SecretaryTex2","SecretaryTex2");
+    AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"Female2Tex2","Female2Tex2");
+    AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"Female3Tex1","Female3Tex1");
 }
 
 function PopulateNPCOutfitsList()
 {
-    //---Generic Stuff
+
+    //////////////////////////////////////////////////////////
+    //                  ---GM_Trench---
+    //////////////////////////////////////////////////////////
 
     ////FACES
-
-    //Combat Male - GM_Jumpsuit
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.UNATCOTroop");
-    AddNPCFaces(0,3,4,true,true,true,false);
-    
-    //Civilian Male - GM_Jumpsuit
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.Mechanic");
-    AddNPCFaces(0,3,4,true,true,false,false);
     
     //Civilian Female - GFM_TShirtPants
     BeginNPCOutfitGroup();
@@ -1822,7 +1815,7 @@ function PopulateNPCOutfitsList()
     //////////////////////////////////////////////////////////
     //                  ---SPECIAL CASES---
     //////////////////////////////////////////////////////////
-    
+
     //Juan Lebedev and the NSF Commander have a random trenchcoat, but keep their normal
     //gear otherwise.
     BeginNPCOutfitGroup();
@@ -1831,8 +1824,8 @@ function PopulateNPCOutfitsList()
     AddNPCTrenchCoats(true,false,true,false);
     //AddNPCPants(2, true, true, true, true);
     
-    //Some NPCs keep their signature trenchcoats,
-    //but everything else is randomised.
+    ////Some important NPCs keep their signature trenchcoats,
+    ////but everything else is randomised.
     //UPPER CLASS MALES
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.JosephManderley",true);
@@ -1842,8 +1835,6 @@ function PopulateNPCOutfitsList()
     AddNPCTrenchShirts(true,true,false,false,false,false);
     AddNPCPants(2, true, true, false, false);
     
-    //Some NPCs keep their signature trenchcoats,
-    //but everything else is randomised.
     //REGULAR MALES
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.PaulDenton",true);
@@ -1851,8 +1842,6 @@ function PopulateNPCOutfitsList()
     AddNPCTrenchShirts(true,false,true,true,false,true);
     AddNPCPants(2, true, true, true, false);
     
-    //Some NPCs keep their signature trenchcoats,
-    //but everything else is randomised.
     //BUM MALES
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.HarleyFilben",true);
@@ -1863,45 +1852,48 @@ function PopulateNPCOutfitsList()
     //But keep their uniform as is.
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Mechanic");
-    AddNPCOutfitPart(PS_Helmet,false,,,,,,,"PinkMaskTex"); //Nothing
-    AddNPCOutfitPart(PS_Helmet,false,,,,,,,"MechanicTex3"); //Mechanic Helmet
-    AddNPCOutfitPart(PS_Helmet,true,,,,"MiscTex1","MiscTex1",,"MechanicTex3"); //Mechanic Helmet with FaceMask
+    AddNPCFaces(0,3,4,true,true,false,false);
+    AddNPCOutfitPart(PS_Helmet,false,3,4,4,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"MechanicTex3"); //Mechanic Helmet
+    AddNPCOutfitPart(PS_Helmet,true,6,3,4,"MechanicTex3","MiscTex1","MiscTex1"); //Mechanic Helmet with FaceMask
 
     //Terrorists have special face gear,
     //but otherwise keep their uniforms as is
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Terrorist");
-    AddNPCFaces(0,3,4,true,true,true,false);
+    AddNPCFaces(0,3,4,true,true,false,false);
     //Add in a few extra nothings to reduce the chances of having them always in tactical gear.
-    AddNPCOutfitPart(PS_Helmet,false,,,,,,,"PinkMaskTex"); //Nothing
-    AddNPCOutfitPart(PS_Helmet,false,,,,,,,"PinkMaskTex"); //Nothing
-    AddNPCOutfitPart(PS_Helmet,false,,,,,,,"PinkMaskTex"); //Nothing
-    AddNPCOutfitPart(PS_Helmet,false,"TerroristTex0",,,"TerroristTex0","TerroristTex0","GrayMaskTex","GogglesTex1"); //Goggles
-    AddNPCOutfitPart(PS_Helmet,false,"TerroristTex0",,,"TerroristTex0","TerroristTex0","GrayMaskTex","ThugMale3Tex3"); //Goggles (Red)
-    //AddNPCOutfitPart(PS_Helmet,false,,,,,,,"MechanicTex3"); //Mechanic Helmet
-    //AddNPCOutfitPart(PS_Helmet,true,,,,"MiscTex1","MiscTex1",,"MechanicTex3"); //Mechanic Helmet with FaceMask
-    //AddNPCOutfitPart(PS_Helmet,,,,,,,"UnatcoTroopTex3"); //Unatco Helmet
-    //AddNPCOutfitPart(PS_Helmet,,,,"MiscTex1","MiscTex1",,"UnatcoTroopTex3"); //UNATCO Trooper Helmet with FaceMask
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex","TerroristTex0","TerroristTex0"); //Tactical Gear
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"GogglesTex1","TerroristTex0","TerroristTex0"); //Goggles
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"ThugMale3Tex3","TerroristTex0","TerroristTex0"); //Goggles (Red)
+    //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"MechanicTex3"); //Mechanic Helm
+    //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"MechanicTex3","MiscTex3","MiscTex3"); //Mechanic Helm with Face Mask
+    //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"SoldierTex3"); //Soldier Helm
+    //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"SoldierTex3","MiscTex3","MiscTex3"); //Soldier Helm with Face Mask
     
     //Unatco Troops have special face gear
     //but otherwise keep their uniforms as is
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.UNATCOTroop");
-    //AddNPCOutfitPart(PS_Helmet,false,,,,,,,"PinkMaskTex"); //Nothing
-    AddNPCOutfitPart(PS_Helmet,false,,,,,,,"UnatcoTroopTex3"); //Unatco Helmet
-    AddNPCOutfitPart(PS_Helmet,true,,,,"MiscTex1","MiscTex1",,"UnatcoTroopTex3"); //UNATCO Trooper Helmet with FaceMask
+    AddNPCFaces(0,3,4,true,true,true,false);
+    //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"UnatcoTroopTex3"); //Unatco Helm
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"UnatcoTroopTex3","MiscTex3","MiscTex3"); //Unatco Helm with Face Mask
     
     //Unatco Troop Carcass with no helmet. Only randomise the face
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.UNATCOTroopCarcassDehelm",,true);
     AddNPCFaces(0,3,4,true,true,true,false);
-    AddNPCOutfitPart(PS_Body_M,true,,,,"MiscTex1","MiscTex1"); //FaceMask
+    AddNPCOutfitPart(PS_Body_M,false,3,4,-1,"MiscTex3","MiscTex3"); //Face Mask
     
     //Thugs have special faces, since they can have a beanie
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.ThugMale2");
     AddNPCFaces(0,4,-1,true,true,true,false);
-    AddNPCOutfitPart(PS_Body_M,true,"ThugMale2Tex0",,,,"ThugMale2Tex0"); //Beanie
+    AddNPCOutfitPart(PS_Body_M,true,0,4,-1,"ThugMale2Tex0","ThugMale2Tex0"); //Beanie
     
     //There are only 2 children and they share the same model...
     /*
@@ -1949,7 +1941,7 @@ function AddNPCGroupClass(string classname, optional bool bUniqueNPC, optional b
     NPCGroups[currentNPCOutfitGroup].AddClass(classname,bUniqueNPC,bNoCarcass,seeds);
 }
 
-function AddNPCOutfitPart(PartSlot part,bool bSkinPart, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
+function _NPCSkin(PartSlot part,bool bSkinPart, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
     NPCGroups[currentNPCOutfitGroup].AddPart(part,bSkinPart,findNPCTexture(t0),findNPCTexture(t1),findNPCTexture(t2),findNPCTexture(t3),findNPCTexture(t4),findNPCTexture(t5),findNPCTexture(t6),findNPCTexture(t7),findNPCTexture(tm));
 }
