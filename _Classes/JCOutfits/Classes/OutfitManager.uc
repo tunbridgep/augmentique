@@ -1853,7 +1853,7 @@ function PopulateNPCOutfitsList()
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Mechanic");
     AddNPCFaces(0,3,4,true,true,false,false);
-    AddNPCOutfitPart(PS_Helmet,false,3,4,4,"PinkMaskTex"); //Nothing
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"MechanicTex3"); //Mechanic Helmet
     AddNPCOutfitPart(PS_Helmet,true,6,3,4,"MechanicTex3","MiscTex1","MiscTex1"); //Mechanic Helmet with FaceMask
 
