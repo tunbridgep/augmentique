@@ -83,6 +83,12 @@ var transient int currentNPCOutfitGroup;
 //Outfits unlocked this playthrough. Outfits are made permanent after finishing the game.
 var travel string unlockedOutfits[255];
 
+function DebugLog(coerce string text)
+{
+    if (bDebugMode)
+        Log(text);
+}
+
 function OutfitPart CreateNewOutfitPart(PartSlot slot,string name,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
     local OutfitPart P;
@@ -251,11 +257,11 @@ function Setup(DeusExPlayer newPlayer)
     //When we finish the game, or if we're in training, copy our outfits out permanently
     if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0))
     {
-        //Log("Copying over outfits");
+        DebugLog("Copying over outfits");
         CopyOutfitsToPlayer();
     }
     //else
-    //    Log("Not Copying over outfits");
+    //    DebugLog("Not Copying over outfits");
 
     //if (numOutfits != 0)
     //    return;
@@ -2438,25 +2444,25 @@ function SetupNPCOutfits()
     local bool match;
     foreach player.AllActors(class'ScriptedPawn', P)
     {
-        Log("Processing Actor: " $ P);
+        DebugLog("Processing Actor: " $ P);
         //Find the first NPC group with a matching class.
         for (i = 0;i < numNPCOutfitGroups;i++)
         {
             match = NPCGroups[i].GetMatchingClass(string(P.class)) || NPCGroups[i].GetMatchingClass(P.BindName);
             if (match)
-                NPCGroups[i].AddMember(P);
+                NPCGroups[i].AddMember(P,bDebugMode);
         }
         P.augmentiqueData.bRandomized = true;
     }
     foreach player.AllActors(class'DeusExCarcass', C)
     {
-        Log("Processing Actor: " $ C);
+        DebugLog("Processing Actor: " $ C);
         //Find the first NPC group with a matching class.
         for (i = 0;i < numNPCOutfitGroups;i++)
         {
             match = NPCGroups[i].GetMatchingClass(string(C.class));
             if (match)
-                NPCGroups[i].AddMember(C);
+                NPCGroups[i].AddMember(C,bDebugMode);
         }
         C.augmentiqueData.bRandomized = true;
     }

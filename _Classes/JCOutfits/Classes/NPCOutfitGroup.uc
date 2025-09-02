@@ -31,7 +31,7 @@ var SimplePartsList partsList[30];
 var private Actor members[50];
 var private int numMembers;
 
-function AddMember(Actor A)
+function AddMember(Actor A, optional bool bLog)
 {
     local int i, k, rando;
     local SimplePart sp;
@@ -64,7 +64,8 @@ function AddMember(Actor A)
         else
             rando = rando % partsList[i].numParts;
 
-        Log("   Randomising: Part " $ (i+1) $ " to " $ (rando+1) $ " of " $ partsList[i].numParts);
+        if (bLog)
+            Log("   Randomising: Part " $ (i+1) $ " to " $ (rando+1) $ " of " $ partsList[i].numParts);
         sp = partsList[i].parts[rando];
         for(k = 0;k < 8;k++)
         {
