@@ -834,9 +834,10 @@ function PopulateOutfitsList()
 
     //========================================================
     //  GFM_Trench
+    // SARGE: Now replaced with AMTGFM_Trench
     //========================================================
 
-    BeginNewPartsGroup("GFM_Trench", false, true);
+    BeginNewPartsGroup("AMTGFM_Trench", false, true);
     GroupAddParts(PS_Body_F);
     GroupTranspose(PS_Trench,1,5);
     GroupTranspose2(PS_Trench_F,PS_Trench,1,5);
@@ -912,9 +913,10 @@ function PopulateOutfitsList()
 
     //========================================================
     //  GFM_SuitSkirt
+    // SARGE: Now replaced with AMTGFM_Trench
     //========================================================
 
-    BeginNewPartsGroup("GFM_SuitSkirt", false, true);
+    BeginNewPartsGroup("AMTGFM_SuitSkirt", false, true);
     GroupAddParts(PS_Body_F);
     //GroupTranspose(PS_Legs,3);
     //GroupTranspose2(PS_DressLegs,PS_Legs,3);
@@ -993,9 +995,10 @@ function PopulateOutfitsList()
 
     //========================================================
     //  GFM_Dress
+    // SARGE: Now replaced with AMTGFM_Dress
     //========================================================
 
-    BeginNewPartsGroup("GFM_Dress", false, true);
+    BeginNewPartsGroup("AMTGFM_Dress", false, true);
     GroupTranspose(PS_Body_F,7);
     GroupTranspose(PS_Legs,1);
     GroupTranspose2(PS_Legs_F,PS_Legs,1);
@@ -1038,8 +1041,10 @@ function PopulateOutfitsList()
 
     //========================================================
     //  GFM_TShirtPants
+    // SARGE: Now replaced with AMTGFM_TShirtPants
     //========================================================
     
+    //BeginNewPartsGroup("AMTGFM_TShirtPants", false, true); //DISABLED until WCCC fixes the model
     BeginNewPartsGroup("GFM_TShirtPants", false, true);
     GroupAddParts(PS_Body_F);
     GroupTranspose(PS_Legs,6);
@@ -1095,9 +1100,10 @@ function PopulateOutfitsList()
     
     //========================================================
     //  GM_DressShirt
+    // SARGE: Now replaced with AMTGM_DressShirt
     //========================================================
 
-    BeginNewPartsGroup("GM_DressShirt", true, false);
+    BeginNewPartsGroup("AMTGM_DressShirt", true, false);
     GroupAddParts(PS_Body_M);
     GroupTranspose(PS_Torso_M,5);
     GroupTranspose(PS_Legs,3);
@@ -1209,6 +1215,7 @@ function PopulateOutfitsList()
     
     //========================================================
     //  GM_DressShirt_B
+    // SARGE: Now replaced with GM_DressShirt_BMasked
     //========================================================
     
     BeginNewPartsGroup("GM_DressShirt_BMasked", true, false);
@@ -1237,9 +1244,10 @@ function PopulateOutfitsList()
     
     //========================================================
     //  GM_Suit
+    // SARGE: Now replaced with AMTGM_Suit
     //========================================================
 
-    BeginNewPartsGroup("GM_Suit", true, false);
+    BeginNewPartsGroup("AMTGM_Suit", true, false);
     GroupAddParts(PS_Body_M);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Glasses,5,6);
@@ -1352,7 +1360,7 @@ function PopulateOutfitsList()
     // SARGE: Now replaced with AMTMP_Jumpsuit
     //========================================================
 
-    BeginNewPartsGroup("GM_Jumpsuit", true, false);
+    BeginNewPartsGroup("AMTMP_Jumpsuit", true, false);
     GroupTranspose(PS_Body_M,3);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Torso_M,2);
