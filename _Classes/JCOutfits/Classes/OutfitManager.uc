@@ -1492,14 +1492,6 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
         }
     }
 
-    /*
-    if (child)
-    {
-        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ChildMaleTex0","ChildMaleTex0","PinkMaskTex");
-        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ChildMale2Tex0","ChildMale2Tex0","PinkMaskTex");
-    }
-    */
-
     if (generic)
     {
         if (bMale)
@@ -1652,6 +1644,24 @@ function AddNPCShirts(int slot, bool bMale, bool bFancy)
 {
     if (bMale)
     {
+        if (bFancy)
+        {
+            //SARGE: TODO: Add Male1Tex1, Male2Tex1, and Male3Tex1 shirts and pants to the regular augmentique outfits
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"Male1Tex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"Male2Tex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"Male3Tex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"ThugMale2Tex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"JoeGreeneTex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"BartenderTex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"HowardStrongTex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"MorganEverettTex1");
+        }
+        else
+        {
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"JunkieMaleTex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"BoatPersonTex1");
+            AddNPCOutfitPart(PS_Torso_M,false,slot,-1,-1,"LowerClassMaleTex1");
+        }
     }
     else
     {
@@ -1694,6 +1704,7 @@ function AddNPCPants(int slot, bool bMale, bool bFancy, bool bRegular, bool bFil
     {
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex6"); //Brown casual pants
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex2"); //Jeans
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex3"); //Dirty Jeans
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"LowerClass2Male2Tex2"); //Despite being "lower class" thse are quite fancy
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"TriadRedArrowTex3"); //Despite being "lower class" thse are quite fancy
     }
@@ -1716,11 +1727,26 @@ function AddNPCSkirts(int slot0, int slot1)
     AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"WIBTex1","WIBTex1"); //WIB Dress
     //AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"MaggieChowTex1","MaggieChowTex1"); //Maggies Dress
     AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"MargaretWilliamsTex1","MargaretWilliamsTex1"); //Fancy blue dress
-    //AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"RachaelMeadTex1","RachaelMeadTex1"); //Schoolgirl outfit
+    AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"RachaelMeadTex1","RachaelMeadTex1"); //Bright Orange outfit
     AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"BusinessWoman1Tex1","BusinessWoman1Tex1");
     AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"SecretaryTex2","SecretaryTex2");
     AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"Female2Tex2","Female2Tex2");
     AddNPCOutfitPart(PS_Legs_F,false,slot0,slot1,-1,"Female3Tex1","Female3Tex1");
+}
+
+function AddNPCDressLegs(int slot0)
+{
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"LegsTex1"); //Brown stockings and high heels
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"LegsTex2"); //Dark Stockings
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"Hooker1Tex1"); //Bare legs with brown shoes
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"Hooker2Tex1"); //Dark black stockings with heels
+    //AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"Outfit5F_Tex1"); //Alex Denton legs
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"RachelMeadTex2"); //Brown legs with bright red shoes
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"BusinessWoman1Tex2"); //Brown legs with heels
+    //AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"NicoletteDuClareTex3");
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"SarahMeadTex3"); //Long socks with heels
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"Female2Tex1");
+    AddNPCOutfitPart(PS_DressLegs,false,slot0,-1,-1,"Female3Tex2");
 }
 
 function PopulateNPCOutfitsList()
@@ -1754,27 +1780,36 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.FordSchick",true);
     AddNPCGroupClass("DeusEx.Secretary");
     AddNPCGroupClass("DeusEx.BusinessWoman1");
+    AddNPCGroupClass("DeusEx.Nurse");
+    AddNPCGroupClass("DeusEx.Doctor");
     AddNPCGroupClass("DeusEx.AlexJacobson");
-    AddNPCGroupClass("DeusEx.Scientist");
+    AddNPCGroupClass("DeusEx.ScientistMale");
     AddNPCGroupClass("DeusEx.ScientistFemale");
+    AddNPCGroupClass("DeusEx.Female1");
+    AddNPCGroupClass("DeusEx.Female2");
+    AddNPCGroupClass("DeusEx.Female3");
+    AddNPCGroupClass("DeusEx.JoeGreene",true);
+    AddNPCGroupClass("DeusEx.GilbertRenton",true);
     AddNPCGlasses(6,7,true,true,false,false);
     
     //Glasses, including sunglasses
     BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.ThugMale2");
+    AddNPCGroupClass("DeusEx.Cop");
     AddNPCGlasses(6,7,true,true,true,false);
 
     //Sunglasses only
     BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.ThugMale2");
+    AddNPCGroupClass("DeusEx.Jock",true);
     AddNPCGroupClass("DeusEx.WaltonSimons",true);
     AddNPCGroupClass("DeusEx.PaulDenton",true);
     AddNPCGlasses(6,7,true,false,true,false);
 
-    //Allow anything, including silly glasses
+    //Sunglasses and silly glasses
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Smuggler",true);
     AddNPCGroupClass("DeusEx.TerroristCommander",true);
-    AddNPCGlasses(6,7,true,true,true,true);
+    AddNPCGlasses(6,7,true,false,true,true);
     
     ////TRENCH COATS (Male) (GM_Trench)
 
@@ -1791,6 +1826,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.BumMale");
     AddNPCGroupClass("DeusEx.BumMale2");
     AddNPCGroupClass("DeusEx.BumMale3");
+    AddNPCFaces(0,3,-1,true,true,false,true);
     AddNPCTrenchCoats(true,false,false,true);
     AddNPCTrenchShirts(true,false,false,false,true,false);
     AddNPCPants(2, true, false, false, true);
@@ -1801,12 +1837,24 @@ function PopulateNPCOutfitsList()
 
     //bum attire
     BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.SandraRenton",true);
     AddNPCGroupClass("DeusEx.BumFemale");
     AddNPCGroupClass("DeusEx.LowerClassFemale");
     AddNPCGroupClass("DeusEx.JunkieFemale");
     AddNPCShirts(7, false, false);
     AddNPCPants(6, false, false, false, true);
     
+    ////DRESS SHIRTS (Male) (GM_DressShirt)
+
+    ///REGULAR MALES
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Male1");
+    AddNPCGroupClass("DeusEx.Male2");
+    AddNPCGroupClass("DeusEx.Male3");
+    AddNPCFaces(0,4,-1,true,true,false,false);
+    AddNPCGlasses(6,7, true, true, false, false);
+    AddNPCPants(3, true, false, true, false);
+
     ////DRESSES
 
     //Most business-women and secretaries and etc will wear standard dresses
@@ -1816,11 +1864,26 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.BusinessWoman1");
     AddNPCGroupClass("DeusEx.Female2");
     AddNPCSkirts(4,5);
+    AddNPCDressLegs(3);
     //AddNPCGroupClass("DeusEx.Female3");
 
     //////////////////////////////////////////////////////////
     //                  ---SPECIAL CASES---
     //////////////////////////////////////////////////////////
+
+
+    //Some NPCs simply change pants and keep everything else the same
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.JordanShea",true);
+    AddNPCPants(2, false, true, false, false);
+
+    //Cops can have regular faces or the cop face, but should otherwise stay in uniform
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Cop");
+    AddNPCFaces(0,4,-1,true,true,false,false);
+    //Add special cop helmets.
+    AddNPCOutfitPart(PS_Hack,true,2,-1,-1,"PinkMaskTex"); //Empty head slot hack.
+    AddNPCOutfitPart(PS_Body_M,true,0,2,4,"CopTex0","CopTex0","CopTex0");
 
     //Juan Lebedev and the NSF Commander have a random trenchcoat, but keep their normal
     //gear otherwise.
@@ -1850,6 +1913,8 @@ function PopulateNPCOutfitsList()
     
     //BUM MALES
     BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.GilbertRenton",true);
+    AddNPCGroupClass("DeusEx.FordSchick",true);
     AddNPCGroupClass("DeusEx.HarleyFilben",true);
     AddNPCTrenchShirts(true,false,false,false,true,false);
     AddNPCPants(2, true, false, false, true);
@@ -1901,13 +1966,25 @@ function PopulateNPCOutfitsList()
     AddNPCFaces(0,4,-1,true,true,true,false);
     AddNPCOutfitPart(PS_Body_M,true,0,4,-1,"ThugMale2Tex0","ThugMale2Tex0"); //Beanie
     
+    //MJ12 Troops simply change faces. No special tactical gear as they will look too much like elites.
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.MJ12Troop");
+    AddNPCFaces(0,3,4,true,true,false,false);
+    
+    //Nurses keep their nurse outfit, but change everything else
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Nurse");
+    AddNPCDressLegs(3);
+    
     //There are only 2 children and they share the same model...
-    /*
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.ChildMale");
     AddNPCGroupClass("DeusEx.ChildMale2");
-    */
-    
+    AddNPCOutfitPart(PS_Body_M,true,0,3,-1,"ChildMaleTex0","ChildMaleTex0");
+    AddNPCOutfitPart(PS_Body_M,true,0,3,-1,"ChildMale2Tex0","ChildMale2Tex0");
+    AddNPCOutfitPart(PS_Torso_M,false,1,5,-1,"ChildMaleTex1","ChildMaleTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,5,-1,"ChildMale2Tex1","ChildMale2Tex1");
+    AddNPCPants(2, true, false, true, true);
 }
 
 //Add a reference that will be added to all outfits for this particular parts group
