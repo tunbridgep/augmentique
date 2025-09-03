@@ -1,4 +1,4 @@
-class OutfitCarcassReplacer extends JCDentonMaleCarcass;
+class OutfitCarcassPlayer extends JCDentonMaleCarcass;
 
 function SetSkin(DeusExPlayer player)
 {

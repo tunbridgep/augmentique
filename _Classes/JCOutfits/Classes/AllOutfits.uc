@@ -532,6 +532,9 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S3.bmp"                                NAME="WIBTex1_S3"                           GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S4.bmp"                                NAME="WIBTex1_S4"                           GROUP="Outfits"
 
+//Tiffany Savage outfit, with the hands fixed. Only usable on NPCs
+#exec TEXTURE IMPORT FILE="Textures\Female\TiffanySavageGenericTex1.pcx"                           NAME="TiffanyGenericTex1"                   GROUP="Outfits"
+
 defaultproperties
 {
 }

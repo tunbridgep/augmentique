@@ -1,6 +1,7 @@
 class PartsGroup extends Object;
 
 var Mesh mesh;                          //Which mesh is this parts group associated with?
+var Mesh carcassMesh;                 //Name of the Carcass Mesh
 var bool allowMale;                     //Whether or not males are allowed to use parts from this group
 var bool allowFemale;                   //Whether or not females are allowed to use parts from this group
 

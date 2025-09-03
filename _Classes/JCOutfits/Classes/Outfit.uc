@@ -120,10 +120,11 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
     
     if (A.IsA('DeusExCarcass'))
     {
+        Log("partsGroup.carcassMesh: " $ partsGroup.carcassMesh);
         C = DeusExCarcass(A);
-        DeusExCarcass(A).mesh = LodMesh(DynamicLoadObject(partsGroup.Mesh $ "_Carcass", class'LodMesh', true));
-        DeusExCarcass(A).mesh2 = LodMesh(DynamicLoadObject(partsGroup.Mesh $ "_CarcassB", class'LodMesh', true));
-        DeusExCarcass(A).mesh3 = LodMesh(DynamicLoadObject(partsGroup.Mesh $ "_CarcassC", class'LodMesh', true));
+        DeusExCarcass(A).mesh = partsGroup.carcassMesh;
+        DeusExCarcass(A).mesh2 = LodMesh(DynamicLoadObject(string(partsGroup.carcassMesh) $ "B", class'LodMesh', true));
+        DeusExCarcass(A).mesh3 = LodMesh(DynamicLoadObject(string(partsGroup.carcassMesh) $ "C", class'LodMesh', true));
     }
     else
         A.mesh = partsGroup.Mesh;

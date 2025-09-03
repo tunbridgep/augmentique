@@ -10,8 +10,10 @@ struct ClassInfo
     var int Seeds[30];
 };
 
-var ClassInfo classes[255];
+var ClassInfo classes[100];
 var int numClasses;
+var string exceptedClasses[100];
+var int numExcepted;
 
 struct SimplePart
 {
@@ -31,7 +33,12 @@ var SimplePartsList partsList[30];
 var private Actor members[50];
 var private int numMembers;
 
-function AddMember(Actor A, optional bool bLog)
+function ClearMembers()
+{
+    numMembers = 0;
+}
+
+function AddMember(Actor A, optional bool bLog, optional bool bAllowRepeats)
 {
     local int i, k, rando;
     local SimplePart sp;
@@ -44,13 +51,17 @@ function AddMember(Actor A, optional bool bLog)
     C = DeusExCarcass(A);
     P = ScriptedPawn(A);
 
-    if (P != None && P.augmentiqueData.bRandomized)
+    if (P != None && P.augmentiqueData.bRandomized && !bAllowRepeats)
         return;
 
-    if (C != None && C.augmentiqueData.bRandomized)
+    if (C != None && C.augmentiqueData.bRandomized && !bAllowRepeats)
         return;
     
     members[numMembers++] = A;
+    
+    //Set their carcass
+    //if (P != None)
+    //    P.CarcassType=class'Augmentique.OutfitCarcass';
 
     for (i = 0; i < ArrayCount(partsList);i++)
     {
@@ -65,9 +76,9 @@ function AddMember(Actor A, optional bool bLog)
             rando = rando % partsList[i].numParts;
 
         if (bLog)
-            Log("   Randomising: Part " $ (i+1) $ " to " $ (rando+1) $ " of " $ partsList[i].numParts);
+            Log("   Randomising: Part " $ (i+1) $ " to " $ (rando+1) $ " of " $ partsList[i].numParts $ " (slot " $ i $ ")");
         sp = partsList[i].parts[rando];
-        for(k = 0;k < 8;k++)
+        for(k = 0;k < 9;k++)
         {
             if (sp.textures[k] != None)
             {
@@ -77,15 +88,12 @@ function AddMember(Actor A, optional bool bLog)
                     C.augmentiqueData.textures[k] = sp.textures[k];
             }
         }
-        if (sp.textures[8] != None)
-        {
-            if (P != None)
-                P.augmentiqueData.textures[k] = sp.textures[8];
-            else if (C != None)
-                C.augmentiqueData.textures[k] = sp.textures[8];
-            //Log("Applying " $ sp.textures[8] $ " to " $ P $ " (main)");
-        }
     }
+}
+
+function AddExceptedClass(string className)
+{
+    exceptedClasses[numExcepted++] = className;
 }
 
 function AddClass(string className, optional bool bUniqueNPC, optional bool bNoCarcass, optional int seeds[30])
@@ -119,12 +127,20 @@ function int GetClassSeed(string className, int index)
     return -1;
 }
 
-function bool GetMatchingClass(string className)
+function bool GetMatchingClass(string s1, optional string s2)
 {
     local int i;
+
+    //first check for exceptions
+    for (i = 0; i < numExcepted;i++)
+    {
+        if (exceptedClasses[i] ~= s1 || (s2 != "" && exceptedClasses[i] ~= s2))
+            return false;
+    }
+
     for (i = 0; i < numClasses;i++)
     {
-        if (classes[i].className ~= className)
+        if (classes[i].className ~= s1 || (s2 != "" && classes[i].className ~= s2))
             return true;
     }
     return false;
