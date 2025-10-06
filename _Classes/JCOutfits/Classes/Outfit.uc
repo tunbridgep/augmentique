@@ -120,7 +120,7 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
     
     if (A.IsA('DeusExCarcass'))
     {
-        Log("partsGroup.carcassMesh: " $ partsGroup.carcassMesh);
+        //Log("partsGroup.carcassMesh: " $ partsGroup.carcassMesh);
         C = DeusExCarcass(A);
         DeusExCarcass(A).mesh = partsGroup.carcassMesh;
         DeusExCarcass(A).mesh2 = LodMesh(DynamicLoadObject(string(partsGroup.carcassMesh) $ "B", class'LodMesh', true));
@@ -140,6 +140,7 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
         for (s = 0;s < 9;s++)
         {
             T = parts[i].textures[s];
+            //Log("Applying texture " $ T $ " to slot " $ s);
 
             //don't add any accessory textures if accessories are turned off
             if (parts[i].isAccessory && !allowAccessories)

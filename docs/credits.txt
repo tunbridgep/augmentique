@@ -4,5 +4,7 @@ Augmentique is made possible by:
 - LudpusDraconis: Art, Skin conversions for vanilla outfits, LDDP
 - Xriborg: Sounds, Art, LDDP
 - Maiden China: LDDP+Confix merge.
+- WCCC - for the masked GM_Trench model, left-hand models, and other help/support.
+- Diva - for the masked models (except GM_Trench)
 
 Special thanks to everyone who worked on LDDP.

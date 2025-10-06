@@ -105,6 +105,7 @@ function AddTransposePart(OutfitPart P,int bodySlot,int slot0, int slot1, int sl
 {
     local OutfitPart P2;
     local int i;
+    local bool bDontCheckZero;
 
     //We need to add a new part, rather than manipulating the reference
     P2 = new(Self) class'OutfitPart';
@@ -122,8 +123,16 @@ function AddTransposePart(OutfitPart P,int bodySlot,int slot0, int slot1, int sl
             
     //player.ClientMessage("TEX: " $ P.textures[0] @ P.textures[1] @ P.textures[2]);
 
+    //Stupid hacky bullshit for adding to slot zero.
+    //TODO: Fix this!
+    if (slot0 == -1)
+    {
+        slot0 = 0;
+        bDontCheckZero = true;
+    }
+
     //now move the textures around
-    if (slot0 > 0) P2.textures[slot0] = P.textures[0];
+    if (slot0 > 0 || bDontCheckZero) P2.textures[slot0] = P.textures[0];
     if (slot1 > 0) P2.textures[slot1] = P.textures[1];
     if (slot2 > 0) P2.textures[slot2] = P.textures[2];
     if (slot3 > 0) P2.textures[slot3] = P.textures[3];

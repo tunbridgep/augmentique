@@ -262,7 +262,7 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S1.bmp"                             NAME="MiscTex1JC_S1"                        GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S2.bmp"                             NAME="MiscTex1JC_S2"                        GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S3.bmp"                             NAME="MiscTex1JC_S3"                        GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S3.bmp"                             NAME="MiscTex1JC_S3"                        GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MiscTex1JC_S4.bmp"                             NAME="MiscTex1JC_S4"                        GROUP="Outfits"
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SailorSkin_S0.bmp"                             NAME="SailorSkin"                           GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\SailorSkin_S1.bmp"                             NAME="SailorSkin_S1"                        GROUP="Outfits"
@@ -532,8 +532,13 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S3.bmp"                                NAME="WIBTex1_S3"                           GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\WIBTex1_S4.bmp"                                NAME="WIBTex1_S4"                           GROUP="Outfits"
 
+////NPC Outfits
+
 //Tiffany Savage outfit, with the hands fixed. Only usable on NPCs
 #exec TEXTURE IMPORT FILE="Textures\Female\TiffanySavageGenericTex1.pcx"                           NAME="TiffanyGenericTex1"                   GROUP="Outfits"
+
+//Male4Tex0 with no forehead dots
+#exec TEXTURE IMPORT FILE="Textures\Male4Tex0NoDots.pcx"                                            NAME="Male4Tex0NoDots"                     GROUP="Outfits"
 
 defaultproperties
 {

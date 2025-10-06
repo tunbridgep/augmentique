@@ -15,6 +15,7 @@ var PersonaListWindow         lstOutfits;
 var PersonaScrollAreaWindow   winScroll;
 var PersonaHeaderTextWindow   winOutfitName;
 var PersonaCheckBoxWindow     chkAccessories;
+var PersonaCheckBoxWindow     chkDescriptions;
 var ViewportWindow            winViewport;
 
 var PersonaActionButtonWindow   btnSlotsNext[19];
@@ -24,6 +25,7 @@ var PersonaHeaderTextWindow     txtDescription;
 
 var localized String ChangeCameraLabel;
 var localized String ShowAccessoriesLabel;
+var localized String ShowDescriptionsLabel;
 var localized String MiniModeLabel;
 var localized String OutfitsTitleText;
 var localized String EquipButtonLabel;
@@ -298,8 +300,8 @@ function CreateButtons()
 	winActionButtons.SetWidth(359);
 	winActionButtons.FillAllSpace(False);
 
-	btnSettings = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
-	btnSettings.SetButtonText(SettingsButtonLabel);
+    btnSettings = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
+    btnSettings.SetButtonText(SettingsButtonLabel);
     
     btnChangeCamera = PersonaActionButtonWindow(winActionButtons.NewChild(Class'PersonaActionButtonWindow'));
 	btnChangeCamera.SetButtonText(ChangeCameraLabel);
@@ -320,6 +322,10 @@ function CreateCheckboxes()
     chkAccessories = PersonaCheckBoxWindow(winClient.NewChild(Class'PersonaCheckBoxWindow'));
     chkAccessories.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 23, 424);
     chkAccessories.SetText(ShowAccessoriesLabel);
+
+    chkDescriptions = PersonaCheckBoxWindow(winClient.NewChild(Class'PersonaCheckBoxWindow'));
+    chkDescriptions.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 223, 424);
+    chkDescriptions.SetText(ShowDescriptionsLabel);
 }
 
 function CreateDescriptionTextArea()
@@ -596,6 +602,16 @@ event Bool ToggleChanged(window button, bool bToggleValue)
         outfitManager.noAccessories = !bToggleValue;
         outfitManager.ApplyCurrentOutfit();
     }
+    else if (button == chkDescriptions)
+    {
+        outfitManager.noDescriptions = !bToggleValue;
+        if (bToggleValue)
+            txtDescription.SetText(outfitManager.currOutfit.Desc);
+        else
+            txtDescription.SetText("");
+
+        outfitManager.SaveConfig();
+    }
 }
 
 // ----------------------------------------------------------------------
@@ -618,6 +634,20 @@ function EnableButtons()
 
     chkAccessories.SetToggle(!outfitManager.noAccessories);
 	chkAccessories.SetSensitivity(true);
+    
+    if (outfitManager != None && outfitManager.bSettingsMenuDisabled)
+        btnSettings.Hide();
+    else
+        btnSettings.Show();
+    
+    if (outfitManager != None && outfitManager.bDescriptionsCheckbox)
+    {
+        chkDescriptions.Show();
+        chkDescriptions.SetToggle(!outfitManager.noDescriptions);
+        chkDescriptions.SetSensitivity(true);
+    }
+    else
+        chkDescriptions.Hide();
 }
 
 // ----------------------------------------------------------------------
@@ -689,6 +719,7 @@ function DestroyImages()
 defaultproperties
 {
      ShowAccessoriesLabel="Show Accessories"
+     ShowDescriptionsLabel="Show Descriptions"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
      EditButtonLabel="Customize Outfit"

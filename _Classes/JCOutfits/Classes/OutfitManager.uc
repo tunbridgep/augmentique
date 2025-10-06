@@ -42,6 +42,8 @@ var const sound PickupSound;            //The sound made when picking up outfit 
 
 var transient bool bIsSetup;            //Has the outfit manager been setup for this session
 
+var const localized string MsgOutfitUnlocked;       //Message that tells us we've unlocked an outfit.
+
 //Outfit Information
 struct LocalizedOutfitInfo
 {
@@ -83,6 +85,14 @@ var transient int currentNPCOutfitGroup;
 //Outfits unlocked this playthrough. Outfits are made permanent after finishing the game.
 var travel string unlockedOutfits[255];
 
+var transient bool bSettingsMenuDisabled;
+var transient bool bDescriptionsCheckbox;
+
+function bool Installed()
+{
+    return true;
+}
+
 function DebugLog(coerce string text)
 {
     if (bDebugMode)
@@ -92,6 +102,9 @@ function DebugLog(coerce string text)
 function OutfitPart CreateNewOutfitPart(PartSlot slot,string name,bool isAccessory,string id, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
     local OutfitPart P;
+
+    if (bIsSetup)
+        return None;
 
     P = new(Self) class'OutfitPart';
 
@@ -175,6 +188,9 @@ function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional 
 {
     local OutfitPart P;
     
+    if (bIsSetup)
+        return;
+
     P = CreateNewOutfitPart(slot,name,isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7,tm);
 
     currentPartsGroup.AddPart(P);
@@ -183,6 +199,10 @@ function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional 
 function GroupAddParts(PartSlot bodySlot)
 {
     local int i;
+    
+    if (bIsSetup)
+        return;
+
     for (i = 0;i < numParts;i++)
     {
         if (PartsList[i].bodySlot == bodySlot)
@@ -198,6 +218,10 @@ function GroupTranspose(PartSlot bodySlot,optional int slot0,optional int slot1,
 function GroupTranspose2(PartSlot bodySlot, PartSlot bodySlot2,optional int slot0,optional int slot1,optional int slot2,optional int slot3,optional int slot4,optional int slot5,optional int slot6,optional int slot7,optional int slot8)
 {
     local int i;
+    
+    if (bIsSetup)
+        return;
+
     for (i = 0;i < numParts;i++)
     {
         if (PartsList[i].bodySlot == bodySlot)
@@ -209,6 +233,10 @@ function GroupTranspose2(PartSlot bodySlot, PartSlot bodySlot2,optional int slot
 
 function OutfitAddPartReference(string partID)
 {
+    
+    if (bIsSetup)
+        return;
+
     currOutfit.AddPartFromID(partID);
 }
 
@@ -637,7 +665,8 @@ function PopulateOutfitsList()
     //  GM_Trench
     //========================================================
 
-    BeginNewPartsGroup("GM_Trench","GM_Trench_Carcass", true, false);
+    //BeginNewPartsGroup("GM_Trench","GM_Trench_Carcass", true, false);
+    BeginNewPartsGroup("AMTGM_Trench","GM_Trench_Carcass", true, false);
     GroupAddParts(PS_Body_M);
     GroupTranspose(PS_Trench,1,5);
     GroupTranspose2(PS_Trench_M,PS_Trench,1,5);
@@ -646,10 +675,18 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,2);
     GroupTranspose2(PS_Legs_M,PS_Legs,2);
     GroupTranspose(PS_Glasses,6,7);
+    GroupTranspose2(PS_Mask,PS_Body_M,-1,3);
 
     //Defaults
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_g");
+
+    //Masks
+    /*
+    AddDefaultReference("unatco_b");
+    AddDefaultReference("nsf_b");
+    AddDefaultReference("mj12elite_b");
+    */
     
     //Default M
     BeginNewOutfitL("default",0);
@@ -1049,6 +1086,7 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,6);
     GroupTranspose2(PS_Legs_F,PS_Legs,6);
     GroupTranspose(PS_Torso_F,7);
+    GroupTranspose2(PS_Mask,PS_Body_F,2,0,-1);
     
     //Defaults
     AddDefaultReference("default_b");
@@ -1108,6 +1146,7 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,3);
     GroupTranspose2(PS_Legs_M,PS_Legs,3);
     GroupTranspose(PS_Glasses,6,7);
+    GroupTranspose2(PS_Mask,PS_Body_M,-1,4);
     
     //Defaults
     AddDefaultReference("default_b");
@@ -1251,6 +1290,7 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Glasses,5,6);
     GroupTranspose(PS_Hat,7);
+    GroupTranspose2(PS_Mask,PS_Body_M,-1,2);
 
     //Add Suit-only Torsos because they can't be used on other outfits, and other torsos can't be used here
     AddPartLO(PS_Torso_M,6,false,"businessman1_s",,,,"BusinessMan1Tex1","BusinessMan1Tex1");
@@ -1364,7 +1404,7 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Torso_M,2);
     GroupTranspose(PS_Helmet,3,6,8,4);
-    GroupTranspose2(PS_Mask,PS_Body_M,3,4,5);
+    GroupTranspose2(PS_Mask,PS_Body_M,3,4);
     
     //Defaults
     AddDefaultReference("default_b");
@@ -1461,9 +1501,31 @@ function PopulateOutfitsList()
     //CompleteSetup();
 }
 
+function ADDNPCHologramOverride(int slot, optional string tex)
+{
+    local Texture T;
+
+    if (slot > 8 || slot < 0)
+        return;
+
+    if (tex == "")
+        tex = "PinkMaskTex";
+
+    T = findTexture(tex);
+
+    if (T == None)
+        return;
+
+    NPCGroups[currentNPCOutfitGroup].AddOverride(slot,T);
+}
+
 function AddNPCOutfitPart(PartSlot part,bool bSkinPart,int slot0, int slot1, int slot2, string tex0, optional string tex1, optional string tex2)
 {
     local string slots[9];
+    
+    if (bIsSetup)
+        return;
+
     if (slot0 >= 0)
         slots[slot0] = tex0;
     if (slot1 >= 0)
@@ -1474,7 +1536,7 @@ function AddNPCOutfitPart(PartSlot part,bool bSkinPart,int slot0, int slot1, int
     _NPCSkin(part,bSkinPart,slots[0],slots[1],slots[2],slots[3],slots[4],slots[5],slots[6],slots[7],slots[8]);
 }
 
-function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, bool tactical, bool lowlife, bool triad)
+function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, bool tactical, bool lowlife, bool triad, bool butler)
 {
     if (tactical)
     {
@@ -1506,12 +1568,11 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BartenderTex0","BartenderTex0","PinkMaskTex"); //Also used by Terrorist Commander.  May remove
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BoatPersonTex0","BoatPersonTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Businessman2Tex0","Businessman2Tex0","PinkMaskTex");
-            //AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ButlerTex0","ButlerTex0","PinkMaskTex"); //Too old for general use.
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ChefTex0","ChefTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"DoctorTex0","DoctorTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"LowerClassMale2Tex0","LowerClassMale2Tex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Male1Tex0","Male1Tex0","PinkMaskTex");
-            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Male4Tex0","Male4Tex0","PinkMaskTex"); //Looks a bit old?
+            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Male4Tex0NoDots","Male4Tex0NoDots","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"MichaelHamnerTex0","MichaelHamnerTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"MichaelHamnerTex0","MichaelHamnerTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ScientistMaleTex0","ScientistMaleTex0","PinkMaskTex");
@@ -1533,7 +1594,7 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
             AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"Hooker2Tex0","Hooker2Tex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"LowerClassFemaleTex0","LowerClassFemaleTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"MaidTex0","MaidTex0","PinkMaskTex");
-            AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"MargaretWilliamsTex0","MargaretWilliamsTex0","PinkMaskTex"); //Completely unused in the vanilla game?
+            //AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"MargaretWilliamsTex0","MargaretWilliamsTex0","PinkMaskTex"); //Completely unused in the vanilla game? //Looks bad on most models
             AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"NurseTex0","NurseTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"RachelMeadTex0","RachelMeadTex0","PinkMaskTex"); //Completely unused in the vanilla game?
             AddNPCOutfitPart(PS_Body_F,true,slot0,slot1,slot2,"SarahMeadTex0","SarahMeadTex0","PinkMaskTex"); //Completely unused in the vanilla game?
@@ -1545,6 +1606,10 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
     if (triad)
     {
         AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPath2Tex0","TriadLumPath2Tex0","PinkMaskTex"); //This has weird hair and shouldn't be used.
+    }
+    if (butler)
+    {
+        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ButlerTex0","ButlerTex0","PinkMaskTex"); //Too old for general use.
     }
 }
 
@@ -1653,6 +1718,23 @@ function AddNPCTrenchShirts(bool bMale, bool bFancy, bool bRegular, bool bTurtle
     //_NPCSkin(PS_Trench_Shirt,false,,,,,"Female4Tex1"); //Goth Chest
 }
 
+function AddNPCSuitShirts(int slot, int slot2)
+{
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"BusinessMan1Tex1","BusinessMan1Tex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"BusinessMan2Tex1","BusinessMan2Tex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"MIBTex1","MIBTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"PhilipMeadTex1","PhilipMeadTex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"ChefTex1","ChefTex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"SailorTex1","SailorTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"SecretServiceTex1","SecretServiceTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"MichaelHamnerTex1","MichaelHamnerTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"LowerClassMale2Tex1","LowerClassMale2Tex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"TriadLumPathTex1","TriadLumPathTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"NathanMadisonTex1","NathanMadisonTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"ButlerTex1","ButlerTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,slot,slot2,-1,"BobPageTex1","BobPageTex1");
+}
+
 function AddNPCShirts(int slot, int slot2, bool bMale, bool bFancy)
 {
     if (bMale)
@@ -1723,7 +1805,6 @@ function AddNPCPants(int slot, bool bMale, bool bFancy, bool bRegular, bool bFil
     {
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex6"); //Brown casual pants
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex2"); //Jeans
-        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex3"); //Dirty Jeans
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"LowerClass2Male2Tex2"); //Despite being "lower class" thse are quite fancy
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"TriadRedArrowTex3"); //Despite being "lower class" thse are quite fancy
     }
@@ -1733,6 +1814,7 @@ function AddNPCPants(int slot, bool bMale, bool bFancy, bool bRegular, bool bFil
         if (!bMale)
             AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"JunkieFemaleTex2"); //Junkie jeans
 
+        AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex3"); //Dirty Jeans
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex4"); //Ripped jeans
         //AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"ChadTex2"); //Has a weird middle section?
         AddNPCOutfitPart(PS_Legs,false,slot,-1,-1,"PantsTex7"); //Soiled brown pants
@@ -1771,10 +1853,6 @@ function AddNPCDressLegs(int slot0)
 function PopulateNPCOutfitsList()
 {
 
-    //////////////////////////////////////////////////////////
-    //                  ---GM_Trench---
-    //////////////////////////////////////////////////////////
-
     ////FACES
 
     ////GLASSES
@@ -1783,21 +1861,14 @@ function PopulateNPCOutfitsList()
     BeginNPCOutfitGroup();
     AddNPCGroupClass("JaniceReed",true); //Now we can use BindNames too!!
     AddNPCGroupClass("Shannon",true); //Now we can use BindNames too!!
-    AddNPCGroupClass("DeusEx.HarleyFilben",true);
-    AddNPCGroupClass("DeusEx.JosephManderley",true);
-    AddNPCGroupClass("DeusEx.GarySavage",true);
-    AddNPCGroupClass("DeusEx.FordSchick",true);
     AddNPCGroupClass("DeusEx.Secretary");
     AddNPCGroupClass("DeusEx.BusinessWoman1");
     AddNPCGroupClass("DeusEx.Nurse");
-    AddNPCGroupClass("DeusEx.Doctor");
     AddNPCGroupClass("DeusEx.AlexJacobson");
-    AddNPCGroupClass("DeusEx.ScientistMale");
     AddNPCGroupClass("DeusEx.ScientistFemale");
     AddNPCGroupClass("DeusEx.Female2");
     AddNPCGroupClass("DeusEx.Female3");
     AddNPCGroupClass("DeusEx.JoeGreene",true);
-    AddNPCGroupClass("DeusEx.GilbertRenton",true);
     AddNPCGlasses(6,7,true,true,false,false);
     
     //Glasses, including sunglasses
@@ -1808,19 +1879,69 @@ function PopulateNPCOutfitsList()
     //Sunglasses only
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.ThugMale2");
+    AddNPCGlasses(6,7,true,false,true,false);
+
+    //////////////////////////////////////////////////////////
+    //                  ---GM_Trench---
+    //////////////////////////////////////////////////////////
+    
+    ////FACES
+    
+    //Regular Faces
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Doctor");
+    AddNPCGroupClass("DeusEx.ScientistMale");
+    AddNPCGroupClass("DeusEx.ThugMale");
+    AddNPCGroupClass("DeusEx.TriadRedArrow");
+    AddNPCFaces(0,3,-1,true,true,false,false,false,true);
+
+    //Bum Faces
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.BumMale");
+    AddNPCGroupClass("DeusEx.BumMale2");
+    AddNPCGroupClass("DeusEx.BumMale3");
+    AddNPCGroupException("Curly");
+    AddNPCGroupException("CharlieFann");
+    AddNPCGroupException("ParkBum1");
+    AddNPCFaces(0,3,-1,true,true,false,true,false,true);
+
+    ////GLASSES
+    
+    //Regular Glasses, no sunglasses
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.GilbertRenton",true);
+    AddNPCGroupClass("DeusEx.HarleyFilben",true);
+    AddNPCGroupClass("DeusEx.JosephManderley",true);
+    AddNPCGroupClass("DeusEx.GarySavage",true);
+    AddNPCGroupClass("DeusEx.FordSchick",true);
+    AddNPCGroupClass("DeusEx.Doctor");
+    AddNPCGroupClass("DeusEx.ScientistMale");
+    AddNPCGlasses(6,7,true,true,false,false);
+    AddNPCHologramOverride(6);
+    AddNPCHologramOverride(7);
+    
+    //Sunglasses only
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.StantonDowd",true);
     AddNPCGroupClass("DeusEx.Jock",true);
     AddNPCGroupClass("DeusEx.WaltonSimons",true);
     AddNPCGroupClass("DeusEx.PaulDenton",true);
+    AddNPCGroupClass("DeusEx.ThugMale");
+    AddNPCGroupClass("DeusEx.TriadRedArrow");
     AddNPCGlasses(6,7,true,false,true,false);
-
+    AddNPCHologramOverride(6);
+    AddNPCHologramOverride(7);
+    
     //Sunglasses and silly glasses
     BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.GordonQuick",true);
+    AddNPCGroupClass("DeusEx.MaxChen",true);
     AddNPCGroupClass("DeusEx.Smuggler",true);
     AddNPCGroupClass("DeusEx.TerroristCommander",true);
     AddNPCGlasses(6,7,true,false,true,true);
+    AddNPCHologramOverride(6);
+    AddNPCHologramOverride(7);
     
-    ////TRENCH COATS (Male) (GM_Trench)
-
     //upper class/fancy
     /*
     BeginNPCOutfitGroup();
@@ -1834,111 +1955,13 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.BumMale");
     AddNPCGroupClass("DeusEx.BumMale2");
     AddNPCGroupClass("DeusEx.BumMale3");
-    AddNPCGroupException("Curly");
-    AddNPCGroupException("CharlieFann");
-    AddNPCFaces(0,3,-1,true,true,false,true,false);
+    //AddNPCGroupException("Curly");
+    //AddNPCGroupException("CharlieFann");
+    //AddNPCGroupException("ParkBum1");
     AddNPCTrenchCoats(true,false,false,true);
     AddNPCTrenchShirts(true,false,false,false,true,false);
     AddNPCPants(2, true, false, false, true);
     
-    ////TRENCH COATS (Female) (GFM_Trench)
-    
-    ////TSHIRTPANTS (Female) (GFM_TShirtPants)
-    
-    //Glasses, but not sunglasses
-    //BeginNPCOutfitGroup();
-    //AddNPCGroupClass("DeusEx.Female1");
-    //AddNPCGlasses(6,7,true,true,false,false);
-    
-    ///FACES - Civilian Female
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.BumFemale");
-    AddNPCGroupClass("DeusEx.LowerClassFemale");
-    AddNPCFaces(0,1,2,false,true,false,false,false);
-    
-    ///FACES - Bum Female
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.JunkieFemale");
-    AddNPCFaces(0,1,2,false,false,false,true,false);
-    
-    //nice attire
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.Female1");
-    AddNPCFaces(0,1,2,false,false,false,true,false);
-    AddNPCShirts(7,-1, false, true);
-    AddNPCPants(6, false, false, true, false);
-
-    //bum attire
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.SandraRenton",true);
-    AddNPCGroupClass("DeusEx.BumFemale");
-    AddNPCGroupClass("DeusEx.LowerClassFemale");
-    AddNPCGroupClass("DeusEx.JunkieFemale");
-    AddNPCShirts(7,-1, false, false);
-    AddNPCPants(6, false, false, false, true);
-    
-    ////DRESS SHIRTS (Male) (GM_DressShirt)
-    
-    ///FACES - Normal Male - GM_DressShirt
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.Male1");
-    AddNPCGroupClass("DeusEx.Male2");
-    AddNPCGroupClass("DeusEx.Male3");
-    AddNPCFaces(0,4,-1,true,false,false,true,false);
-
-    ///FACES - Bum Male - GM_DressShirt
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.JunkieMale");
-    AddNPCGroupException("Lenny");
-    AddNPCFaces(0,4,-1,true,false,false,true,false);
-
-    ///REGULAR MALES
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.Male1");
-    AddNPCGroupClass("DeusEx.Male2");
-    AddNPCGroupClass("DeusEx.Male3");
-    AddNPCGlasses(6, 7, true, true, false, false);
-    AddNPCShirts(5,-1, true, true);
-    AddNPCPants(3, true, false, true, false);
-    
-    ///Bums
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.JunkieMale");
-    AddNPCGlasses(6,7, true, true, false, false);
-    AddNPCShirts(5, -1, true, false);
-    AddNPCPants(3, true, false, true, false);
-
-    ////DRESSES
-
-    //Most business-women and secretaries and etc will wear standard dresses
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("JaniceReed",true); //Now we can use BindNames too!!
-    AddNPCGroupClass("Shannon",true); //Now we can use BindNames too!!
-    AddNPCGroupClass("DeusEx.Secretary");
-    AddNPCGroupClass("DeusEx.BusinessWoman1");
-    AddNPCGroupClass("DeusEx.Female2");
-    AddNPCSkirts(4,5);
-    AddNPCDressLegs(3);
-    //AddNPCGroupClass("DeusEx.Female3");
-
-    //////////////////////////////////////////////////////////
-    //                  ---SPECIAL CASES---
-    //////////////////////////////////////////////////////////
-
-
-    //Some NPCs simply change pants and keep everything else the same
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.JordanShea",true);
-    AddNPCPants(2, false, true, false, false);
-
-    //Cops can have regular faces or the cop face, but should otherwise stay in uniform
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.Cop");
-    AddNPCFaces(0,4,-1,true,true,false,false,false);
-    //Add special cop helmets.
-    AddNPCOutfitPart(PS_Hack,true,2,-1,-1,"PinkMaskTex"); //Empty head slot hack.
-    AddNPCOutfitPart(PS_Body_M,true,0,2,4,"CopTex0","CopTex0","CopTex0");
-
     //Juan Lebedev and the NSF Commander have a random trenchcoat, but keep their normal
     //gear otherwise.
     BeginNPCOutfitGroup();
@@ -1947,8 +1970,11 @@ function PopulateNPCOutfitsList()
     AddNPCTrenchCoats(true,false,true,false);
     //AddNPCPants(2, true, true, true, true);
     
+    ////SPECIAL CASES
+    
     ////Some important NPCs keep their signature trenchcoats,
     ////but everything else is randomised.
+
     //UPPER CLASS MALES
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.JosephManderley",true);
@@ -1957,9 +1983,10 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.ScientistMale");
     AddNPCTrenchShirts(true,true,false,false,false,false);
     AddNPCPants(2, true, true, false, false);
-    
+
     //REGULAR MALES
     BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.StantonDowd",true);
     AddNPCGroupClass("DeusEx.PaulDenton",true);
     AddNPCGroupClass("DeusEx.Smuggler",true);
     AddNPCTrenchShirts(true,false,true,true,false,true);
@@ -1975,11 +2002,201 @@ function PopulateNPCOutfitsList()
     AddNPCTrenchShirts(true,false,false,false,true,false);
     AddNPCPants(2, true, false, false, true);
     
+    //////////////////////////////////////////////////////////
+    //                  ---GFM_Trench---
+    //////////////////////////////////////////////////////////
+    
+    //There's only one. ScientistFemale
+    //Keep the lab coat, but everything else can change
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.ScientistFemale");
+    AddNPCFaces(0,3,-1,false,true,false,false,false,false);
+    AddNPCGlasses(6,7,true,true,false,false);
+    //AddNPCTrenchShirts(false,true,false,true,false,false);
+    //AddNPCPants(2, false, true, false, false);
+    
+    //////////////////////////////////////////////////////////
+    //               ---GFM_TShirtPants---
+    //////////////////////////////////////////////////////////
+    
+    //Glasses, but not sunglasses
+    //BeginNPCOutfitGroup();
+    //AddNPCGroupClass("DeusEx.Female1");
+    //AddNPCGlasses(6,7,true,true,false,false);
+    
+    //nice attire
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Female1");
+    AddNPCFaces(0,1,2,false,true,false,false,false,false);
+    AddNPCShirts(7,-1, false, true);
+    AddNPCPants(6, false, false, true, false);
+
+    //bum attire
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.SandraRenton",true);
+    AddNPCGroupClass("ParkBumFemale2",true); //Woman in Battery Park
+    AddNPCGroupClass("DeusEx.BumFemale");
+    AddNPCGroupClass("DeusEx.LowerClassFemale");
+    AddNPCGroupClass("DeusEx.JunkieFemale");
+    AddNPCFaces(0,1,2,false,true,false,true,false,false);
+    AddNPCShirts(7,-1, false, false);
+    AddNPCPants(6, false, false, false, true);
+
+    ////SPECIAL CASES
+   
+    //Some NPCs simply change pants and keep everything else the same
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.JordanShea",true);
+    AddNPCPants(6, false, true, false, false);
+    
+    //////////////////////////////////////////////////////////
+    //               ---GM_Suit---
+    //////////////////////////////////////////////////////////
+    
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.BusinessMan1");
+    AddNPCGroupClass("DeusEx.BusinessMan2");
+    AddNPCGroupClass("DeusEx.BusinessMan3");
+    AddNPCGroupClass("DeusEx.MichaelHamner"); //Antoine actually! (the guy who sells Biocells in the Paris Club)
+    AddNPCGroupClass("DeusEx.Butler");
+    AddNPCGroupException("Supervisor01"); //Mr Hundly
+    //AddNPCGroupClass("DeusEx.Chef");
+    //AddNPCGroupClass("DeusEx.MIB");
+    AddNPCGroupClass("DeusEx.LowerClassMale2");
+    AddNPCFaces(0,2,-1,true,true,false,false,false,true);
+    AddNPCGlasses(5,6,true,true,false,false);
+    //AddNPCSuitShirts(3,4);
+    //AddNPCPants(1,true,true,true,false);
+
+    //Instead of adding shirts and pants separately, instead, create proper outfits
+    //consisting of both suits and pants.
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"BusinessMan1Tex2","BusinessMan1Tex1","BusinessMan1Tex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"BusinessMan2Tex2","BusinessMan2Tex1","BusinessMan2Tex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"PantsTex5","MIBTex1","MIBTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"PantsTex5","PhilipMeadTex1","PhilipMeadTex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"ChefTex2","ChefTex1","ChefTex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"SailorTex2","SailorTex1","SailorTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"SecretServiceTex2","SecretServiceTex1","SecretServiceTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"MichaelHamnerTex2","MichaelHamnerTex1","MichaelHamnerTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"LowerClassMale2Tex2","LowerClassMale2Tex1","LowerClassMale2Tex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"TriadLumPathTex2","TriadLumPathTex1","TriadLumPathTex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"NathanMadisonTex2","NathanMadisonTex1","NathanMadisonTex1");
+    AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"PantsTex5","ButlerTex1","ButlerTex1");
+    //AddNPCOutfitPart(PS_Torso_M,false,1,3,4,"BobPageTex2","BobPageTex1","BobPageTex1"); //Might keep this for bobby page
+
+    ////Special Cases
+
+    //Sailors keep their uniforms, but can have any face, including the faces with a hat
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Sailor");
+    AddNPCFaces(0,2,7,true,true,false,false,false,true);
+    AddNPCOutfitPart(PS_Body_M,true,0,2,7,"SailorTex0","SailorTex0","SailorTex3");
+    
+    //Some people keep their outfits, only randomise their faces.
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Chef");
+    AddNPCFaces(0,2,-1,true,true,false,false,false,true);
+
+    //Triad LumPath are the same, except no old-man butler faces
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.TriadLumPath");
+    AddNPCGroupClass("DeusEx.TriadLumPath2");
+    AddNPCFaces(0,2,-1,true,true,false,false,false,false);
+
+    //////////////////////////////////////////////////////////
+    //               ---GM_DressShirt---
+    //////////////////////////////////////////////////////////
+
+    
+    ///FACES - Normal Male - GM_DressShirt
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Male1");
+    AddNPCGroupClass("DeusEx.Male2");
+    AddNPCGroupClass("DeusEx.Male3");
+    AddNPCGroupClass("DeusEx.Bartender");
+    AddNPCGroupClass("DeusEx.LowerClassMale");
+    AddNPCGroupClass("DeusEx.BoatPerson");
+    AddNPCFaces(0,4,-1,true,false,false,true,false,true);
+
+    ///FACES - Bum Male - GM_DressShirt
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("SickMan",true); //Battery Park Sick Man (somebody kill me! Anybody!)
+    AddNPCGroupClass("DeusEx.JunkieMale");
+    AddNPCGroupClass("DeusEx.Bartender");
+    AddNPCGroupException("Lenny");
+    AddNPCFaces(0,4,-1,true,false,false,true,false,true);
+
+    ///REGULAR MALES
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Male1");
+    AddNPCGroupClass("DeusEx.Male2");
+    AddNPCGroupClass("DeusEx.Male3");
+    AddNPCGroupClass("DeusEx.Bartender");
+    AddNPCGroupClass("DeusEx.LowerClassMale");
+    AddNPCGlasses(6, 7, true, true, false, false);
+    AddNPCShirts(5,-1, true, true);
+    AddNPCPants(3, true, false, true, false);
+    
+    ///Bums
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.JunkieMale");
+    AddNPCGroupClass("DeusEx.BoatPerson");
+    AddNPCGlasses(6,7, true, true, false, false);
+    AddNPCShirts(5, -1, true, false);
+    AddNPCPants(3, true, false, true, false);
+    
+    //////////////////////////////////////////////////////////
+    //               ---GFM_Dress---
+    //////////////////////////////////////////////////////////
+    
+    //Keep the school girl outfit, but swap the face.
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.SarahMead");
+    AddNPCFaces(6,7,0,false,true,false,false,false,false);
+
+
+    //////////////////////////////////////////////////////////
+    //               ---GFM_SuitSkirt---
+    //////////////////////////////////////////////////////////
+
+    //Most business-women and secretaries and etc will wear standard dresses
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("JaniceReed",true); //Now we can use BindNames too!!
+    AddNPCGroupClass("Shannon",true); //Now we can use BindNames too!!
+    AddNPCGroupClass("DeusEx.Secretary");
+    AddNPCGroupClass("DeusEx.BusinessWoman1");
+    AddNPCGroupClass("DeusEx.Female2");
+    AddNPCGroupClass("DeusEx.Female3");
+    AddNPCFaces(0,1,2,false,true,false,false,false,false);
+    AddNPCSkirts(4,5);
+    AddNPCDressLegs(3);
+    
+    ////Special Cases
+
+    //Nurses keep their nurse outfit, but change everything else
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Nurse");
+    AddNPCFaces(0,1,2,false,true,false,false,false,false);
+    AddNPCDressLegs(3);
+
+    //////////////////////////////////////////////////////////
+    //                  ---SPECIAL CASES---
+    //////////////////////////////////////////////////////////
+
+    //Cops can have regular faces or the cop face, but should otherwise stay in uniform
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Cop");
+    AddNPCFaces(0,4,-1,true,true,false,false,false,true);
+    //Add special cop helmets.
+    AddNPCOutfitPart(PS_Hack,true,2,-1,-1,"PinkMaskTex"); //Empty head slot hack.
+    AddNPCOutfitPart(PS_Body_M,true,0,2,4,"CopTex0","CopTex0","CopTex0");
+    
+
     //Mechanics can have a helmet, or nothing, and may or may not have a mask on.
     //But keep their uniform as is.
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Mechanic");
-    AddNPCFaces(0,3,4,true,true,false,false,false);
+    AddNPCFaces(0,3,4,true,true,false,false,false,true);
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"MechanicTex3"); //Mechanic Helmet
     AddNPCOutfitPart(PS_Helmet,true,6,3,4,"MechanicTex3","MiscTex1","MiscTex1"); //Mechanic Helmet with FaceMask
@@ -1988,7 +2205,9 @@ function PopulateNPCOutfitsList()
     //but otherwise keep their uniforms as is
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Terrorist");
-    AddNPCFaces(0,3,4,true,true,false,false,false);
+    AddNPCGroupException("TerroristLeader"); //Mole People terrorist commander
+    AddNPCGroupException("Miguel");
+    AddNPCFaces(0,3,4,true,true,false,false,false,false);
     //Add in a few extra nothings to reduce the chances of having them always in tactical gear.
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
@@ -2001,12 +2220,20 @@ function PopulateNPCOutfitsList()
     //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"SoldierTex3"); //Soldier Helm
     //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"SoldierTex3","MiscTex3","MiscTex3"); //Soldier Helm with Face Mask
     
+    //Miguel and the Mole People terrorist can only change their visors, nothing else
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("Miguel",true);
+    AddNPCGroupClass("TerroristLeader");
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex","TerroristTex0","TerroristTex0"); //Tactical Gear
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"GogglesTex1","TerroristTex0","TerroristTex0"); //Goggles
+    AddNPCOutfitPart(PS_Helmet,false,6,3,4,"ThugMale3Tex3","TerroristTex0","TerroristTex0"); //Goggles (Red)
+    
     //Unatco Troops have special face gear
     //but otherwise keep their uniforms as is
     BeginNPCOutfitGroup();
     AddNPCGroupClass("Scott",true);
     AddNPCGroupClass("DeusEx.UNATCOTroop");
-    AddNPCFaces(0,3,4,true,true,true,false,false);
+    AddNPCFaces(0,3,4,true,true,true,false,false,false);
     //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"UnatcoTroopTex3"); //Unatco Helm
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"UnatcoTroopTex3","MiscTex3","MiscTex3"); //Unatco Helm with Face Mask
@@ -2014,24 +2241,22 @@ function PopulateNPCOutfitsList()
     //Unatco Troop Carcass with no helmet. Only randomise the face
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.UNATCOTroopCarcassDehelm",,true);
-    AddNPCFaces(0,3,4,true,true,true,false,false);
+    AddNPCFaces(0,3,4,true,true,true,false,false,false);
     AddNPCOutfitPart(PS_Body_M,false,3,4,-1,"MiscTex3","MiscTex3"); //Face Mask
     
     //Thugs have special faces, since they can have a beanie
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.ThugMale2");
-    AddNPCFaces(0,4,-1,true,true,true,false,false);
+    AddNPCFaces(0,4,-1,true,true,true,false,false,false);
     AddNPCOutfitPart(PS_Body_M,true,0,4,-1,"ThugMale2Tex0","ThugMale2Tex0"); //Beanie
     
     //MJ12 Troops simply change faces. No special tactical gear as they will look too much like elites.
+    //And now others too
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.MJ12Troop");
-    AddNPCFaces(0,3,4,true,true,false,false,false);
-    
-    //Nurses keep their nurse outfit, but change everything else
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.Nurse");
-    AddNPCDressLegs(3);
+    AddNPCGroupClass("DeusEx.HKMilitary");
+    AddNPCGroupClass("DeusEx.Soldier");
+    AddNPCFaces(0,3,4,true,true,false,false,false,false);
     
     //Rock keeps everything except his visor, which can be swapped out
     BeginNPCOutfitGroup();
@@ -2040,6 +2265,12 @@ function PopulateNPCOutfitsList()
     AddNPCOutfitPart(PS_Helmet,false,4,-1,-1,"GogglesTex1"); //Goggles (Yellow)
     AddNPCOutfitPart(PS_Helmet,false,4,-1,-1,"ThugMale3Tex3"); //Goggles (Red)
     
+    //Thugs keeps their uniform, but have unique faces
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("ThugMale3");
+    AddNPCGroupException("Jughead"); //El Ray
+    AddNPCFaces(2,3,-1,true,true,true,false,false,false);
+
     //There are only 2 children and they share the same model...
     BeginNPCOutfitGroup();
     AddNPCGroupClass("Billy",true);
@@ -2055,12 +2286,19 @@ function PopulateNPCOutfitsList()
 //Add a reference that will be added to all outfits for this particular parts group
 function AddDefaultReference(string defRef)
 {
+    
+    if (bIsSetup)
+        return;
+
     currentPartsGroup.AddDefaultReference(defRef);
 }
 
 function BeginNPCOutfitGroup()
 {
     local NPCOutfitGroup G;
+
+    if (bIsSetup)
+        return;
 
     G = new(Self) class'NPCOutfitGroup';
 
@@ -2079,6 +2317,9 @@ function AddNPCGroupClass(string classname, optional bool bUniqueNPC, optional b
     local int seeds[30];
     local int i;
 
+    if (bIsSetup)
+        return;
+
     for (i = 0;i < ArrayCount(seeds);i++)
     {
         if (bUniqueNPC)
@@ -2096,6 +2337,10 @@ function AddNPCGroupClass(string classname, optional bool bUniqueNPC, optional b
 
 function _NPCSkin(PartSlot part,bool bSkinPart, optional string t0, optional string t1, optional string t2, optional string t3, optional string t4, optional string t5, optional string t6, optional string t7, optional string tm)
 {
+
+    if (bIsSetup)
+        return;
+
     NPCGroups[currentNPCOutfitGroup].AddPart(part,bSkinPart,findNPCTexture(t0),findNPCTexture(t1),findNPCTexture(t2),findNPCTexture(t3),findNPCTexture(t4),findNPCTexture(t5),findNPCTexture(t6),findNPCTexture(t7),findNPCTexture(tm));
 }
 
@@ -2103,6 +2348,9 @@ function BeginNewPartsGroup(string mesh, string carcassMesh, bool allowMale, boo
 {
     local Mesh M, CM;
     local PartsGroup G;
+
+    if (bIsSetup)
+        return;
 
     M = findMesh(mesh);
     CM = findMesh(carcassMesh);
@@ -2127,6 +2375,9 @@ function bool GetPartsGroup(string mesh)
 {
     local int i;
     local Mesh M;
+
+    if (bIsSetup)
+        return false;
 
     M = findMesh(mesh);
 
@@ -2165,6 +2416,10 @@ function BeginNewOutfit(string id, string name, optional string desc, optional s
 {
     local Outfit O;
     local int i;
+
+    if (bIsSetup)
+        return;
+
     O = new(Self) class'Outfit';
 
     O.id = id;
@@ -2412,7 +2667,12 @@ function Unlock(string id, optional bool bPrintMessage)
         for (i = 1;i<numOutfits;i++)
         {
             if (outfits[i] != None && outfits[i].id == id)
+            {
+                if (bPrintMessage)
+                    player.ClientMessage(sprintf(MsgOutfitUnlocked,outfits[i].name));
+
                 outfits[i].SetUnlocked();
+            }
         }
     }
 }
@@ -2572,6 +2832,9 @@ function Texture findTexture(string tex)
     if (t == None)
         t = Texture(DynamicLoadObject("DeusExItems.Skins."$tex, class'Texture', true));
 
+    if (t == None)
+        DebugLog("findTexture: Texture " $ tex $ " not found!");
+
     return t;
 }
 
@@ -2593,6 +2856,7 @@ function RedoNPCOutfits()
     for (i = 0;i < numNPCOutfitGroups;i++)
         NPCGroups[i].ClearMembers();
 
+    RollTable();
     SetupNPCOutfits(true);
     _ForceApplyNPCOutfits();
 }
@@ -2604,6 +2868,10 @@ function SetupNPCOutfits(optional bool bAllowRedo)
     local DeusExCarcass C;
     local int i;
     local bool match;
+
+    if (bIsSetup && !bAllowRedo)
+        return;
+
     foreach player.AllActors(class'ScriptedPawn', P)
     {
         DebugLog("Processing Actor: " $ P $ " (" $ P.class.name $ ")");
@@ -2666,6 +2934,27 @@ function static ApplyOutfitToCarcass(DeusExCarcass C)
     class'OutfitCarcassUtils'.static.CopyOutfitToCarcass(C);
 }
 */
+
+function SetOutfitSetting(OutfitSetting S, bool bValue)
+{
+    switch (S)
+    {
+        case AllowNPCOutfits:
+            bEquipNPCs = bValue;
+        break;
+        case ShowDescriptions:
+            noDescriptions = !bValue;
+        break;
+    }
+    SaveConfig();
+}
+
+function SetOutfitSettingsMenuVisibility(bool bValue, optional bool bShowDescriptionsCheckbox)
+{
+    bSettingsMenuDisabled = !bValue;
+    bDescriptionsCheckbox = bShowDescriptionsCheckbox && !bValue;
+    Log("Checkbox: " $ bDescriptionsCheckbox @ bShowDescriptionsCheckbox @ bValue);
+}
 
 defaultproperties
 {
@@ -3005,9 +3294,7 @@ defaultproperties
      DefaultPickupMessage2="You found %s"
 
      PickupSound=Sound'Augmentique.Outfits.BoxPickup'
-}
+     bEquipNPCs=true
 
-defaultproperties
-{
-    bEquipNPCs=true
+     MsgOutfitUnlocked="Outfit %s has been unlocked!"
 }

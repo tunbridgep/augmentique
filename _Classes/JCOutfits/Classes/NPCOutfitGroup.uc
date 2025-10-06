@@ -28,7 +28,15 @@ struct SimplePartsList
     var SimplePart parts[50];
 };
 
+struct HologramOverride
+{
+    var int slot;
+    var Texture tex;
+};
+
 var SimplePartsList partsList[30];
+var HologramOverride overrides[10];
+var private int numOverrides;
 
 var private Actor members[50];
 var private int numMembers;
@@ -38,9 +46,19 @@ function ClearMembers()
     numMembers = 0;
 }
 
+function AddOverride(int slot, Texture tex)
+{
+    if (numOverrides >= ArrayCount(overrides))
+        return;
+
+    overrides[numOverrides].slot = slot;
+    overrides[numOverrides].tex = tex;
+    numOverrides++;
+}
+
 function AddMember(Actor A, optional bool bLog, optional bool bAllowRepeats)
 {
-    local int i, k, rando;
+    local int i, k, rando, seed, bUnique;
     local SimplePart sp;
     local DeusExCarcass C;
     local ScriptedPawn P;
@@ -67,17 +85,23 @@ function AddMember(Actor A, optional bool bLog, optional bool bAllowRepeats)
     {
         if (partsList[i].numParts == 0)
             continue;
+        
+        GetClassInfo(string(A.class),i,seed,bUnique);
 
         //Update the members texture data
-        rando = GetClassSeed(string(A.class),i);
-        if (rando < 0) //Allow for custom seeds
+        if (seed < 0) //Allow for custom seeds
             rando = Rand(partsList[i].numParts);
         else
-            rando = rando % partsList[i].numParts;
+            rando = seed % partsList[i].numParts;
 
         if (bLog)
             Log("   Randomising: Part " $ (i+1) $ " to " $ (rando+1) $ " of " $ partsList[i].numParts $ " (slot " $ i $ ")");
         sp = partsList[i].parts[rando];
+
+        //Don't apply skin parts to unique NPCs
+        if (bUnique == 1 && sp.bSkinPart)
+            continue;
+
         for(k = 0;k < 9;k++)
         {
             if (sp.textures[k] != None)
@@ -87,6 +111,20 @@ function AddMember(Actor A, optional bool bLog, optional bool bAllowRepeats)
                 else if (C != None)
                     C.augmentiqueData.textures[k] = sp.textures[k];
             }
+        }
+    }
+        
+    //If it's a hologram, apply the hologram overrides
+    if (A.Style == STY_Translucent)
+    {
+        if (bLog)
+            Log("Applying overrides: " $ numOverrides);
+        for(k = 0;k < numOverrides;k++)
+        {
+            if (P != None)
+                P.augmentiqueData.textures[overrides[k].slot] = overrides[k].tex;
+            if (C != None)
+                C.augmentiqueData.textures[overrides[k].slot] = overrides[k].tex;
         }
     }
 }
@@ -116,15 +154,17 @@ function AddClass(string className, optional bool bUniqueNPC, optional bool bNoC
     }
 }
 
-function int GetClassSeed(string className, int index)
+function GetClassInfo(string className, int index, out int seed, out int bUnique)
 {
     local int i;
     for (i = 0; i < numClasses;i++)
     {
         if (classes[i].className ~= className)
-            return classes[i].seeds[index];
+        {
+            seed = classes[i].seeds[index];
+            bUnique = int(classes[i].bUniqueNPC);
+        }
     }
-    return -1;
 }
 
 function bool GetMatchingClass(string s1, optional string s2)
@@ -176,7 +216,7 @@ function ApplyOutfits()
         C = DeusExCarcass(members[i]);
         P = ScriptedPawn(members[i]);
 
-        if (P != None)
+        if (P != None && !P.bCloakOn)
             P.ApplyCurrentOutfit();
         else if (C != None)
             C.ApplyCurrentOutfit();
