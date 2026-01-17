@@ -10,7 +10,7 @@ class MenuChoice_NPCs extends OutfitMenuChoice;
 
 function LoadSetting()
 {
-	SetValue(int(!O.bEquipNPCs));
+	SetValue(O.iEquipNPCs);
 }
 
 // ----------------------------------------------------------------------
@@ -19,7 +19,7 @@ function LoadSetting()
 
 function SaveSetting()
 {
-	O.bEquipNPCs = !bool(GetValue());
+	O.iEquipNPCs = GetValue();
 }
 
 // ----------------------------------------------------------------------
@@ -27,7 +27,7 @@ function SaveSetting()
 
 function ResetToDefault()
 {
-	SetValue(int(!O.bEquipNPCs));
+	SetValue(O.iEquipNPCs);
 }
 
 // ----------------------------------------------------------------------
@@ -35,6 +35,9 @@ function ResetToDefault()
 
 defaultproperties
 {
-     HelpText="Equips NPCs with outfits. Takes effect on loading a new map."
+     HelpText="Equips NPCs with outfits. Allow custom outfits for only generic NPCs or for generic and unique NPCs. Takes effect on loading a new map."
      actionText="|&NPC Fashion"
+     enumText(0)="Disabled"
+     enumText(1)="Generic"
+     enumText(2)="All NPCs"
 }

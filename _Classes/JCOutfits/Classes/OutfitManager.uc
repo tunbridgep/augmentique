@@ -30,7 +30,7 @@ var travel bool bRolledTable;
 var transient int iCurrentRand;
 
 //Equip NPCs
-var globalconfig bool bEquipNPCs;
+var globalconfig int iEquipNPCs;
 
 //Print outfit part names to the console
 var globalconfig bool bDebugMode;
@@ -299,7 +299,7 @@ function Setup(DeusExPlayer newPlayer)
     //New 1.1 feature!
     PopulateNPCOutfitsList();
 
-    if (bEquipNPCs)
+    if (iEquipNPCs > 0)
         SetupNPCOutfits();
 }
 
@@ -2880,7 +2880,11 @@ function SetupNPCOutfits(optional bool bAllowRedo)
         {
             match = NPCGroups[i].GetMatchingClass(string(P.class),P.bindName);
             if (match)
+            {
                 NPCGroups[i].AddMember(P,bDebugMode,bAllowRedo);
+                if (NPCGroups[i].IsClassUnique(string(P.class)) || NPCGroups[i].IsClassUnique(P.bindName))
+                    P.augmentiqueData.bUnique = true;
+            }
         }
         P.augmentiqueData.bRandomized = true;
     }
@@ -2892,7 +2896,11 @@ function SetupNPCOutfits(optional bool bAllowRedo)
         {
             match = NPCGroups[i].GetMatchingClass(string(C.class));
             if (match)
+            {
                 NPCGroups[i].AddMember(C,bDebugMode,bAllowRedo);
+                if (NPCGroups[i].IsClassUnique(string(match)))
+                    C.augmentiqueData.bUnique = true;
+            }
         }
         C.augmentiqueData.bRandomized = true;
     }
@@ -2904,7 +2912,7 @@ function private _ForceApplyNPCOutfits()
     local int i;
     
     for (i = 0;i < numNPCOutfitGroups;i++)
-        NPCGroups[i].ApplyOutfits();
+        NPCGroups[i].ApplyOutfits(iEquipNPCs >= 2);
 }
 
 function ApplyNPCOutfits()
@@ -2934,20 +2942,6 @@ function static ApplyOutfitToCarcass(DeusExCarcass C)
     class'OutfitCarcassUtils'.static.CopyOutfitToCarcass(C);
 }
 */
-
-function SetOutfitSetting(OutfitSetting S, bool bValue)
-{
-    switch (S)
-    {
-        case AllowNPCOutfits:
-            bEquipNPCs = bValue;
-        break;
-        case ShowDescriptions:
-            noDescriptions = !bValue;
-        break;
-    }
-    SaveConfig();
-}
 
 function SetOutfitSettingsMenuVisibility(bool bValue, optional bool bShowDescriptionsCheckbox)
 {
@@ -3294,7 +3288,7 @@ defaultproperties
      DefaultPickupMessage2="You found %s"
 
      PickupSound=Sound'Augmentique.Outfits.BoxPickup'
-     bEquipNPCs=true
+     iEquipNPCs=1
 
      MsgOutfitUnlocked="Outfit %s has been unlocked!"
 }

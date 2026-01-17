@@ -167,6 +167,18 @@ function GetClassInfo(string className, int index, out int seed, out int bUnique
     }
 }
 
+function bool IsClassUnique(string className)
+{
+    local int i;
+    for (i = 0; i < numClasses;i++)
+    {
+        Log("IsClassUnique: " $ className $ ", checking against " $ classes[i].className);
+        if (classes[i].className ~= className)
+            return classes[i].bUniqueNPC;
+    }
+    return false;
+}
+
 function bool GetMatchingClass(string s1, optional string s2)
 {
     local int i;
@@ -205,7 +217,7 @@ function AddPart(int slot, bool bSkinPart, optional Texture t0, optional Texture
     partsList[slot].numParts++;
 }
 
-function ApplyOutfits()
+function ApplyOutfits(bool bAllowUnique)
 {
     local DeusExCarcass C;
     local ScriptedPawn P;
@@ -216,9 +228,17 @@ function ApplyOutfits()
         C = DeusExCarcass(members[i]);
         P = ScriptedPawn(members[i]);
 
-        if (P != None && !P.bCloakOn)
-            P.ApplyCurrentOutfit();
+        if (P != None)
+        {
+            //Log("Unique: " $ P.augmentiqueData.bUnique);
+            if (!P.bCloakOn && (bAllowUnique || !P.augmentiqueData.bUnique))
+                P.ApplyCurrentOutfit();
+        }
         else if (C != None)
-            C.ApplyCurrentOutfit();
+        {
+            //Log("Unique: " $ C.augmentiqueData.bUnique);
+            if (bAllowUnique || !C.augmentiqueData.bUnique)
+                C.ApplyCurrentOutfit();
+        }
     }
 }
