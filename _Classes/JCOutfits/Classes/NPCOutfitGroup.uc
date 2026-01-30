@@ -172,7 +172,7 @@ function bool IsClassUnique(string className)
     local int i;
     for (i = 0; i < numClasses;i++)
     {
-        Log("IsClassUnique: " $ className $ ", checking against " $ classes[i].className);
+        //Log("IsClassUnique: " $ className $ ", checking against " $ classes[i].className $ ": " $ classes[i].className ~= className);
         if (classes[i].className ~= className)
             return classes[i].bUniqueNPC;
     }
@@ -217,7 +217,7 @@ function AddPart(int slot, bool bSkinPart, optional Texture t0, optional Texture
     partsList[slot].numParts++;
 }
 
-function ApplyOutfits(bool bAllowUnique)
+function ApplyOutfits(bool bAllowRandomise, bool bAllowUnique)
 {
     local DeusExCarcass C;
     local ScriptedPawn P;
@@ -225,20 +225,26 @@ function ApplyOutfits(bool bAllowUnique)
 
     for (i = 0;i < numMembers;i++)
     {
+        //Log("ApplyOutfits to: " $ members[i] @ bAllowUnique);
         C = DeusExCarcass(members[i]);
         P = ScriptedPawn(members[i]);
 
         if (P != None)
         {
+            P.augmentiqueData.bRandomized = false;
             //Log("Unique: " $ P.augmentiqueData.bUnique);
-            if (!P.bCloakOn && (bAllowUnique || !P.augmentiqueData.bUnique))
+            if (bAllowRandomise && (bAllowUnique || !P.augmentiqueData.bUnique))
+                P.augmentiqueData.bRandomized = true;
+            if (!P.bCloakOn)
                 P.ApplyCurrentOutfit();
         }
         else if (C != None)
         {
+            C.augmentiqueData.bRandomized = false;
             //Log("Unique: " $ C.augmentiqueData.bUnique);
-            if (bAllowUnique || !C.augmentiqueData.bUnique)
-                C.ApplyCurrentOutfit();
+            if (bAllowRandomise && (bAllowUnique || !C.augmentiqueData.bUnique))
+                C.augmentiqueData.bRandomized = true;
+            C.ApplyCurrentOutfit();
         }
     }
 }

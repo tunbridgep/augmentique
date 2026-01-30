@@ -54,10 +54,24 @@ struct AugmentiqueOutfitData
 
 var travel AugmentiqueOutfitData augmentiqueData;
 
+//Copied from ScriptedPawn
+function ResetSkinStyle()
+{
+	local int i;
+
+	for (i=0; i<8; i++)
+		MultiSkins[i] = Default.MultiSkins[i];
+	Skin      = Default.Skin;
+	ScaleGlow = Default.ScaleGlow;
+	Style     = Default.Style;
+}
+
 //Augmentique: Update our textures to our Augmentique outfit
 function ApplyCurrentOutfit()
 {
     local int i;
+
+    ResetSkinStyle();
 
     if (!augmentiqueData.bRandomized)
         return;
@@ -85,6 +99,7 @@ function CopyOutfitFrom(Actor A)
         augmentiqueData.textures[7] = S.augmentiqueData.textures[7];
         augmentiqueData.textures[8] = S.augmentiqueData.textures[8];
         augmentiqueData.bRandomized = S.augmentiqueData.bRandomized;
+        augmentiqueData.bUnique = S.augmentiqueData.bUnique;
     }
     ApplyCurrentOutfit();
 }
@@ -102,6 +117,7 @@ function CopyAugmentiqueDataToPOVCorpse(POVCorpse pov)
     pov.augmentiqueData.textures[8] = augmentiqueData.textures[8];
     pov.augmentiqueData.textures[8] = augmentiqueData.textures[8];
     pov.augmentiqueData.bRandomized = augmentiqueData.bRandomized;
+    pov.augmentiqueData.bUnique = augmentiqueData.bUnique;
 }
 
 function CopyAugmentiqueDataFromPOVCorpse(POVCorpse pov)
@@ -116,6 +132,7 @@ function CopyAugmentiqueDataFromPOVCorpse(POVCorpse pov)
     augmentiqueData.textures[7] = pov.augmentiqueData.textures[7];
     augmentiqueData.textures[8] = pov.augmentiqueData.textures[8];
     augmentiqueData.bRandomized = pov.augmentiqueData.bRandomized;
+    augmentiqueData.bUnique = pov.augmentiqueData.bUnique;
     ApplyCurrentOutfit();
 }
 

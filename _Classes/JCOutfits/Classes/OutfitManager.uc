@@ -299,8 +299,7 @@ function Setup(DeusExPlayer newPlayer)
     //New 1.1 feature!
     PopulateNPCOutfitsList();
 
-    if (iEquipNPCs > 0)
-        SetupNPCOutfits();
+    SetupNPCOutfits();
 }
 
 function SetupCustomOutfit()
@@ -2892,7 +2891,7 @@ function SetupNPCOutfits(optional bool bAllowRedo)
                     P.augmentiqueData.bUnique = true;
             }
         }
-        P.augmentiqueData.bRandomized = true;
+        DebugLog("Processed Actor: " $ P $ " (" $ P.augmentiqueData.bUnique $ ")");
     }
     foreach player.AllActors(class'DeusExCarcass', C)
     {
@@ -2904,11 +2903,10 @@ function SetupNPCOutfits(optional bool bAllowRedo)
             if (match)
             {
                 NPCGroups[i].AddMember(C,bDebugMode,bAllowRedo);
-                if (NPCGroups[i].IsClassUnique(string(match)))
+                if (NPCGroups[i].IsClassUnique(string(C.class)))
                     C.augmentiqueData.bUnique = true;
             }
         }
-        C.augmentiqueData.bRandomized = true;
     }
 }
 
@@ -2918,7 +2916,7 @@ function private _ForceApplyNPCOutfits()
     local int i;
     
     for (i = 0;i < numNPCOutfitGroups;i++)
-        NPCGroups[i].ApplyOutfits(iEquipNPCs >= 2);
+        NPCGroups[i].ApplyOutfits(iEquipNPCs >= 1, iEquipNPCs >= 2);
 }
 
 function ApplyNPCOutfits()
@@ -3059,6 +3057,10 @@ defaultproperties
      //1.1 stuff
      outfitInfos(98)=(Name="Midnight Trenchcoat",Desc="A trenchcoat equipped for stealth while also looking extremely stylish")
      outfitInfos(99)=(Name="Gunther's Outfit",Article="-",Desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.")
+
+     //1.2 stuff
+     outfitInfos(100)=(Name="MJ12 Soldier Uniform (Alternate)",Desc="A variant of the MJ12 outfit with a more streamlined helmet for better visibility, but without the tactical goggles or extra protection.")
+
 
      //Misc
      partNames(0)="Default"
@@ -3287,6 +3289,10 @@ defaultproperties
      
      partNames(180)="MJ12 Elite Helmet"
      partNames(181)="Tacticool Goggles (Red)"
+     
+
+     //1.2 stuff
+     partNames(182)="MJ12 Helmet (Slimline)"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"

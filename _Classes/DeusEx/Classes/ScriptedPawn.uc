@@ -433,10 +433,13 @@ var travel AugmentiqueOutfitData augmentiqueData;
 function ApplyCurrentOutfit()
 {
     local int i;
+    
+    //Reset Skin
+    ResetSkinStyle();
 
     if (!augmentiqueData.bRandomized)
         return;
-    
+
     for (i = 0;i < 8;i++)
         if (augmentiqueData.textures[i] != None)
             multiskins[i] = augmentiqueData.textures[i];
