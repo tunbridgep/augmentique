@@ -454,6 +454,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Helmet,121,true,"mechanic_h",,"MechanicTex3");
     GlobalAddPartL(PS_Helmet,122,true,"riotcop_h",,"RiotCopTex3","VisorTex1");
     GlobalAddPartL(PS_Helmet,124,true,"mj12_h",,"MJ12TroopTex4");
+    GlobalAddPartL(PS_Helmet,182,true,"mj12_h2",,"MJ12TroopTex4s",,,"none");
     GlobalAddPartL(PS_Helmet,180,true,"mj12elite_h",,"MJ12TroopTex3");
     GlobalAddPartL(PS_Helmet,123,true,"nsf_h",,"GogglesTex1");
     GlobalAddPartL(PS_Helmet,181,true,"visor_h",,"ThugMale3Tex3");
@@ -1403,7 +1404,7 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Body_M,3);
     GroupTranspose(PS_Legs,1);
     GroupTranspose(PS_Torso_M,2);
-    GroupTranspose(PS_Helmet,3,6,8,4);
+    GroupTranspose(PS_Helmet,3,6,8,4,5);
     GroupTranspose2(PS_Mask,PS_Body_M,3,4);
     
     //Defaults
@@ -1460,6 +1461,11 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mj12_p");
     OutfitAddPartReference("mj12_s");
     OutfitAddPartReference("mj12_h");
+    
+    BeginNewOutfitL("mj12",100);
+    OutfitAddPartReference("mj12_p");
+    OutfitAddPartReference("mj12_s");
+    OutfitAddPartReference("mj12_h2");
     
     //MJ12 Elite
     BeginNewOutfitL("mj122",76);

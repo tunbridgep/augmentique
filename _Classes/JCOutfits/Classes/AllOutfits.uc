@@ -314,6 +314,9 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GuntherHermannTex1_S3.bmp"                     NAME="GuntherHermannTex1_S3"                GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\GuntherHermannTex1_S4.bmp"                     NAME="GuntherHermannTex1_S4"                GROUP="Outfits"
 
+//Slimline MJ12 Helmet from GMDX
+#exec TEXTURE IMPORT FILE="Textures\MJ12Troop\MJ12TroopTex4S.pcx"                                  NAME="MJ12TroopTex4S"                       GROUP="Outfits"
+
 ////////FEMALE
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\AnnaNavarreTex1_S0.bmp"                        NAME="AnnaNavarreTex1"                      GROUP="Outfits"
