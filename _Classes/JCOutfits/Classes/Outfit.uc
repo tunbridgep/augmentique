@@ -10,6 +10,8 @@ var travel string highlightName;
 
 var PartsGroup partsGroup;
 
+var int groupMeshID;
+
 var OutfitPart parts[20];
 var int numParts;
 
@@ -122,12 +124,12 @@ function ApplyOutfitToActor(Actor A, bool allowAccessories)
     {
         //Log("partsGroup.carcassMesh: " $ partsGroup.carcassMesh);
         C = DeusExCarcass(A);
-        DeusExCarcass(A).mesh = partsGroup.carcassMesh;
-        DeusExCarcass(A).mesh2 = LodMesh(DynamicLoadObject(string(partsGroup.carcassMesh) $ "B", class'LodMesh', true));
-        DeusExCarcass(A).mesh3 = LodMesh(DynamicLoadObject(string(partsGroup.carcassMesh) $ "C", class'LodMesh', true));
+        DeusExCarcass(A).mesh = partsGroup.GetCarcassMesh(groupMeshID);
+        DeusExCarcass(A).mesh2 = LodMesh(DynamicLoadObject(string(partsGroup.GetCarcassMesh(groupMeshID)) $ "B", class'LodMesh', true));
+        DeusExCarcass(A).mesh3 = LodMesh(DynamicLoadObject(string(partsGroup.GetCarcassMesh(groupMeshID)) $ "C", class'LodMesh', true));
     }
     else
-        A.mesh = partsGroup.Mesh;
+        A.mesh = partsGroup.GetMesh(groupMeshID);
 
     //Remove existing textures
     A.Texture = Texture'DeusExItems.Skins.PinkMaskTex';

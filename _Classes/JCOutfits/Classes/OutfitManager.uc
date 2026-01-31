@@ -88,6 +88,11 @@ var travel string unlockedOutfits[255];
 var transient bool bSettingsMenuDisabled;
 var transient bool bDescriptionsCheckbox;
 
+//Body Variants
+var const localized string BodyTypeRegular;
+var const localized string BodyTypeFat;
+var const localized string BodyTypeSkinny;
+
 function bool Installed()
 {
     return true;
@@ -195,6 +200,13 @@ function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional 
 
     currentPartsGroup.AddPart(P);
 }
+
+//Add a new mesh variant for an existing group, such as a "Fat" GM_Trench variant.
+function AddNewPartsMesh(string mesh, string carcassMesh, string menuName)
+{
+    currentPartsGroup.AddMesh(findMesh(mesh),findMesh(carcassMesh),menuName);
+}
+
 
 function GroupAddParts(PartSlot bodySlot)
 {
@@ -667,6 +679,7 @@ function PopulateOutfitsList()
 
     //BeginNewPartsGroup("GM_Trench","GM_Trench_Carcass", true, false);
     BeginNewPartsGroup("AMTGM_Trench","GM_Trench_Carcass", true, false);
+    AddNewPartsMesh("AMTGM_Trench_F", "GM_Trench_F_Carcass", BodyTypeFat);
     GroupAddParts(PS_Body_M);
     GroupTranspose(PS_Trench,1,5);
     GroupTranspose2(PS_Trench_M,PS_Trench,1,5);
@@ -739,7 +752,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("garysavage_s");
     
     //Gilbert Renton Outfit
-    BeginNewOutfitL("gilbertrenton",50);
+    BeginNewOutfitL("gilbertrenton",50,1);
     OutfitAddPartReference("gilbertrenton_p");
     OutfitAddPartReference("gilbertrenton_t");
     OutfitAddPartReference("gilbertrenton_s");
@@ -759,27 +772,27 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mib_p");
 
     //Bum
-    BeginNewOutfitL("bum",21);
+    BeginNewOutfitL("bum",21,1);
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("bum_p");
     OutfitAddPartReference("bum_t");
     OutfitAddPartReference("bum_s");
     
     //Bum2
-    BeginNewOutfitL("bum2",44);
+    BeginNewOutfitL("bum2",44,1);
     OutfitAddPartReference("business_g");
     OutfitAddPartReference("bum_p");
     OutfitAddPartReference("bum2_t");
     OutfitAddPartReference("bum2_s");
     
     //Bum2
-    BeginNewOutfitL("bum3",88);
+    BeginNewOutfitL("bum3",88,1);
     OutfitAddPartReference("brown_p");
     OutfitAddPartReference("bum3_t");
     OutfitAddPartReference("bum2_s"); //Not a mistake. Bum 2 and 3 have the same shirt
 
     //Jaime
-    BeginNewOutfitL("jaimereyes",85);
+    BeginNewOutfitL("jaimereyes",85,1);
     OutfitAddPartReference("lab_t");
     OutfitAddPartReference("jaime_s");
     OutfitAddPartReference("lowclass_p2");
@@ -831,7 +844,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("redarrow_t");
     
     //Harley Filben Outfit
-    BeginNewOutfitL("harleyfilben",45);
+    BeginNewOutfitL("harleyfilben",45,1);
     OutfitAddPartReference("blackgloves_b");
     OutfitAddPartReference("brown_p");
     OutfitAddPartReference("bum_s");
@@ -850,13 +863,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("thug2_t");
     
     //Terrorist Commander
-    BeginNewOutfitL("terroristcommander",96);
+    BeginNewOutfitL("terroristcommander",96,1);
     OutfitAddPartReference("gray_t");
     OutfitAddPartReference("lebedev_s");
     OutfitAddPartReference("paul_p");
     
     //Toby Atanwe
-    BeginNewOutfitL("toby",86);
+    BeginNewOutfitL("toby",86,1);
     OutfitAddPartReference("paul_p");
     OutfitAddPartReference("toby_t");
     OutfitAddPartReference("toby_s");
@@ -950,10 +963,11 @@ function PopulateOutfitsList()
 
     //========================================================
     //  GFM_SuitSkirt
-    // SARGE: Now replaced with AMTGFM_Trench
+    // SARGE: Now replaced with AMTGFM_SuitSkir
     //========================================================
 
     BeginNewPartsGroup("AMTGFM_SuitSkirt","GFM_SuitSkirt_Carcass", false, true);
+    AddNewPartsMesh("AMTGFM_SuitSkirt_F", "GFM_SuitSkirt_F_Carcass", BodyTypeFat);
     GroupAddParts(PS_Body_F);
     //GroupTranspose(PS_Legs,3);
     //GroupTranspose2(PS_DressLegs,PS_Legs,3);
@@ -1005,7 +1019,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("rachel_sf");
 
     //Business Woman
-    BeginNewOutfitL("businesswoman",59);
+    BeginNewOutfitL("businesswoman",59,1);
     OutfitAddPartReference("business_pf");
     OutfitAddPartReference("business_sf");
 
@@ -1021,7 +1035,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("office_pf");
     
     //Maid
-    BeginNewOutfitL("maid",93);
+    BeginNewOutfitL("maid",93,1);
     OutfitAddPartReference("maid_sf");
     OutfitAddPartReference("stockings_pf");
     
@@ -1141,6 +1155,8 @@ function PopulateOutfitsList()
     //========================================================
 
     BeginNewPartsGroup("AMTGM_DressShirt","GM_DressShirt_Carcass", true, false);
+    AddNewPartsMesh("AMTGM_DressShirt_F", "GM_DressShirt_F_Carcass", BodyTypeFat);
+    AddNewPartsMesh("AMTGM_DressShirt_S", "GM_DressShirt_S_Carcass", BodyTypeSkinny);
     GroupAddParts(PS_Body_M);
     GroupTranspose(PS_Torso_M,5);
     GroupTranspose(PS_Legs,3);
@@ -1168,7 +1184,7 @@ function PopulateOutfitsList()
     */
     
     //Alex Jacobson Outfit
-    BeginNewOutfitL("ajacobson",3);
+    BeginNewOutfitL("ajacobson",3,2);
     OutfitAddPartReference("ajacobson_s");
     OutfitAddPartReference("ajacobson_p");
     OutfitAddPartReference("sci_g");
@@ -1179,12 +1195,12 @@ function PopulateOutfitsList()
     OutfitAddPartReference("bartender_s");
     
     //Boat Person Outfit
-    BeginNewOutfitL("boatperson",70);
+    BeginNewOutfitL("boatperson",70,2);
     OutfitAddPartReference("boatperson_s");
     OutfitAddPartReference("gilbertrenton_p");
     
     //Chad's Outfit
-    BeginNewOutfitL("chad",71);
+    BeginNewOutfitL("chad",71,2);
     OutfitAddPartReference("chad_s");
     OutfitAddPartReference("chad_p");
     
@@ -1226,43 +1242,39 @@ function PopulateOutfitsList()
     OutfitAddPartReference("thug_p");
     OutfitAddPartReference("thug_s");
     
-    //Janitor Outfit
-    BeginNewOutfitL("janitor",72);
-    OutfitAddPartReference("janitor_s");
-    OutfitAddPartReference("janitor_p");
-    
     //Joe Greene Outfit
     BeginNewOutfitL("joegreene",53);
     OutfitAddPartReference("joegreene_s");
     OutfitAddPartReference("lab_p");
    
     //Junkie
-    BeginNewOutfitL("junkie",54);
+    BeginNewOutfitL("junkie",54,2);
     OutfitAddPartReference("junkie_s");
     OutfitAddPartReference("junkie_p");
     
     //Lower Class outfit
-    BeginNewOutfitL("lowclass",60);
+    BeginNewOutfitL("lowclass",60,2);
     OutfitAddPartReference("lowclass_p2");
     OutfitAddPartReference("lowclass_s");
     
     //Morgan Everett
-    BeginNewOutfitL("everett",69);
+    BeginNewOutfitL("everett",69,1);
     OutfitAddPartReference("lowclass_p"); //Yep, Everett wears lower class pants :S
     OutfitAddPartReference("everett_s");
     
     //========================================================
     //  GM_DressShirt_B
-    // SARGE: Now replaced with GM_DressShirt_BMasked
+    // SARGE: Now replaced with AMTGM_DressShirt_B
     //========================================================
     
-    BeginNewPartsGroup("GM_DressShirt_BMasked","GM_DressShirt_B_Carcass", true, false);
+    //BeginNewPartsGroup("GM_DressShirt_B","GM_DressShirt_B_Carcass", true, false);
+    BeginNewPartsGroup("AMTGM_DressShirt_B","GM_DressShirt_B_Carcass", true, false);
     GroupAddParts(PS_Torso_M_B);
     GroupTranspose(PS_Body_M,3);
     GroupTranspose(PS_Legs,1);
-    GroupTranspose(PS_Helmet,3,4,8,2);
+    GroupTranspose(PS_Helmet,3,4,8);
     GroupTranspose(PS_Glasses,5,6);
-    GroupTranspose2(PS_Mask,PS_Body_M,3,3,2);
+    GroupTranspose2(PS_Mask,PS_Body_M,3,2);
     
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_g");
@@ -1461,6 +1473,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("mj12_s");
     OutfitAddPartReference("mj12_h");
     
+    //MJ12 Variant with slimmer helm
     BeginNewOutfitL("mj12",100);
     OutfitAddPartReference("mj12_p");
     OutfitAddPartReference("mj12_s");
@@ -1501,6 +1514,11 @@ function PopulateOutfitsList()
     OutfitAddPartReference("bald_b");
     OutfitAddPartReference("prisoner_p");
     OutfitAddPartReference("prisoner_s");
+    
+    //Janitor Outfit
+    BeginNewOutfitL("janitor",72);
+    OutfitAddPartReference("janitor_s");
+    OutfitAddPartReference("janitor_p");
 
     //END
     //CompleteSetup();
@@ -2365,8 +2383,7 @@ function BeginNewPartsGroup(string mesh, string carcassMesh, bool allowMale, boo
         return;
     
     G = new(Self) class'PartsGroup';
-    G.mesh = M;
-    G.carcassMesh = CM;
+    G.AddMesh(M,CM,BodyTypeRegular);
     G.allowMale = allowMale;
     G.allowFemale = allowFemale;
     G.player = player;
@@ -2389,7 +2406,7 @@ function bool GetPartsGroup(string mesh)
     //If we find a group with this mesh already set, use it.
     for (i = 0;i < numPartsGroups;i++)
     {
-        if (M == Groups[i].mesh)
+        if (Groups[i].HasMesh(M))
         {
             currentPartsGroup = Groups[i];
             return true;
@@ -2403,7 +2420,7 @@ function bool GetPartsGroup(string mesh)
 //Only used internally
 //Works exactly the same way as BeginOutfit, but automatically looks up the default names/descriptions list
 //at the bottom of this file
-function BeginNewOutfitL(string id, int nameIndex)
+function BeginNewOutfitL(string id, int nameIndex, optional int meshIndex)
 {
     local string n,d,h,p,m,a;
 
@@ -2414,10 +2431,10 @@ function BeginNewOutfitL(string id, int nameIndex)
     m = outfitInfos[nameIndex].PickupMessage;
     a = outfitInfos[nameIndex].Article;
 
-    BeginNewOutfit(id,n,d,h,p,m,a);
+    BeginNewOutfit(id,n,meshIndex,d,h,p,m,a);
 }
 
-function BeginNewOutfit(string id, string name, optional string desc, optional string highlightName, optional string pickupName, optional string pickupMessage, optional string pickupArticle)
+function BeginNewOutfit(string id, string name, int meshIndex, optional string desc, optional string highlightName, optional string pickupName, optional string pickupMessage, optional string pickupArticle)
 {
     local Outfit O;
     local int i;
@@ -2429,6 +2446,7 @@ function BeginNewOutfit(string id, string name, optional string desc, optional s
 
     O.id = id;
     O.index = numOutfits;
+    O.groupMeshID = meshIndex;
     O.name = name;
     O.desc = desc;
 
@@ -2475,7 +2493,7 @@ function PartsGroup GetPartsGroupByID(string id)
 
     for (i = 0;i < numPartsGroups;i++)
     {
-        if (Groups[i].Mesh == M)
+        if (Groups[i].HasMesh(M))
             return Groups[i];
     }
     return None;
@@ -2527,6 +2545,7 @@ function EquipCustomOutfit()
     currOutfit.CopyPartsListTo(customOutfit);
     customOutfit.name = currOutfit.name @ CustomOutfitName;
     customOutfit.UpdatePartsGroup(currOutfit.partsGroup);
+    customOutfit.groupMeshID = currOutfit.groupMeshID;
     customOutfit.UpdatePartIDsList();
     
     currOutfit = customOutfit;
@@ -2740,7 +2759,6 @@ function ApplyCurrentOutfit()
     if (player == None)
         return;
 
-    //player.ClientMessage("ApplyCurrentOutfit");
     ApplyCurrentOutfitToActor(player);
     
     //Also apply to JC Carcasses and JCDoubles
@@ -2757,6 +2775,9 @@ function ApplyCurrentOutfit()
 
 	if (jc != None)
         ApplyCurrentOutfitToActor(jc);
+    
+    if (bDebugMode)
+        player.ClientMessage("ApplyCurrentOutfit to player: Model is " $ player.Mesh);
 }
 
 //Apply our current outfit
@@ -3303,4 +3324,8 @@ defaultproperties
      iEquipNPCs=1
 
      MsgOutfitUnlocked="Outfit %s has been unlocked!"
+
+     BodyTypeFat="Fat"
+     BodyTypeRegular="Average"
+     BodyTypeSkinny="Skinny"
 }

@@ -67,6 +67,7 @@ function GroupTranspose2(PartSlot bodySlot, PartSlot bodySlot2,optional int slot
 //Outfit Functions
 function bool GetPartsGroup(string mesh) {}
 function BeginNewPartsGroup(string mesh, bool allowMale, bool allowFemale) {}
+function AddNewPartsMesh(string mesh, string carcassMesh, string menuName) {} //Add a new mesh variant for an existing group, such as a "Fat" GM_Trench variant.
 function AddDefaultReference(string defRef) {}
 function BeginNewOutfit(string id, string name, optional string desc, optional string highlightName, optional string pickupName, optional string pickupMessage, optional string pickupArticle) {}
 function OutfitAddPartReference(string partID) {}

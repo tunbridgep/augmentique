@@ -1,7 +1,5 @@
 class PartsGroup extends Object;
 
-var Mesh mesh;                          //Which mesh is this parts group associated with?
-var Mesh carcassMesh;                 //Name of the Carcass Mesh
 var bool allowMale;                     //Whether or not males are allowed to use parts from this group
 var bool allowFemale;                   //Whether or not females are allowed to use parts from this group
 
@@ -14,6 +12,66 @@ var OutfitManager manager;
 //add default parts to each outfit that is added to this group
 var transient string defaultParts[50];
 var transient int defaultPartsNum;
+
+struct MeshInfo
+{
+    var Mesh mesh;               //Which meshes are this parts group associated with?
+    var Mesh carcassMesh;        //Name of the Carcass Meshes
+    var string menuName;         //Menu name of the mesh group
+};
+
+var private MeshInfo MeshInfos[5];
+var int meshes;
+var int selectedMesh;
+
+
+function AddMesh(Mesh M, Mesh CM, string meshName)
+{
+    MeshInfos[meshes].mesh = M;
+    MeshInfos[meshes].carcassMesh = CM;
+    MeshInfos[meshes].menuName = meshName;
+    meshes++;
+    selectedMesh++;
+}
+
+function Mesh GetMesh(int id)
+{
+    if (id > meshes-1)
+        id = 0;
+
+    return MeshInfos[id].mesh;
+}
+
+function Mesh GetCarcassMesh(int id)
+{
+    if (id > meshes-1)
+        id = 0;
+
+    return MeshInfos[id].carcassMesh;
+}
+
+function string GetMeshMenuName(int id)
+{
+    if (id > meshes-1)
+        id = 0;
+
+    return MeshInfos[id].menuName;
+}
+
+function int NumMeshes()
+{
+    return meshes;
+}
+
+function bool HasMesh(Mesh M)
+{
+    local int i;
+    for (i = 0;i < meshes;i++)
+        if (MeshInfos[i].Mesh == M || MeshInfos[i].carcassMesh == M)
+            return true;
+    
+    return false;
+}
 
 function AddDefaultReference(string defRef)
 {

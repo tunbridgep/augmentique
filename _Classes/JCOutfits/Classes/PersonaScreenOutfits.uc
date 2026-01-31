@@ -23,6 +23,10 @@ var PersonaActionButtonWindow   btnSlotsPrev[19];
 var PersonaHeaderTextWindow     txtSlots[19];
 var PersonaHeaderTextWindow     txtDescription;
 
+var PersonaActionButtonWindow   btnModelVariantNext;
+var PersonaActionButtonWindow   btnModelVariantPrev;
+var PersonaHeaderTextWindow     txtModelVariant;
+
 var localized String ChangeCameraLabel;
 var localized String ShowAccessoriesLabel;
 var localized String ShowDescriptionsLabel;
@@ -32,6 +36,8 @@ var localized String EquipButtonLabel;
 var localized String EditButtonLabel;
 var localized String SettingsButtonLabel;
 var localized String NewLabel;
+var localized String ModelVariantLabel;
+var localized String PartButtonNames[19];
 
 //The offset for the start of the buttons
 var int customButtonStartOffsetX;
@@ -90,6 +96,7 @@ function CreateControls()
 	CreateButtons();
     CreateCheckboxes();
     CreateOutfitPartButtons();
+    CreateModelVariantButton();
     CreateDescriptionTextArea();
 }
 
@@ -102,31 +109,32 @@ function CreateOutfitPartButtons()
     customButtonStartOffsetX = 20;
     customButtonStartOffsetY = 25;
     customButtonAddPerButtonY = 20;
-    CreatePartButton(0,"Skin");
-    CreatePartButton(1,"Skin");
-    CreatePartButton(2,"Coat");
-    CreatePartButton(3,"Coat");
-    CreatePartButton(4,"Coat");
-    CreatePartButton(5,"Torso");
-    CreatePartButton(6,"Torso");
-    CreatePartButton(7,"Torso");
-    CreatePartButton(8,"Torso");
-    CreatePartButton(9,"Torso");
-    CreatePartButton(10,"Legs");
-    CreatePartButton(11,"Legs");
-    CreatePartButton(12,"Legs");
-    CreatePartButton(13,"Legs");
-    CreatePartButton(14,"Skirt");
-    CreatePartButton(15,"Glasses");
-    CreatePartButton(16,"Helmet");
-    CreatePartButton(17,"Main");
-    CreatePartButton(18,"Mask");
+    CreatePartButton(0,PartButtonNames[0]);
+    CreatePartButton(1,PartButtonNames[0]);
+    CreatePartButton(2,PartButtonNames[1]);
+    CreatePartButton(3,PartButtonNames[1]);
+    CreatePartButton(4,PartButtonNames[1]);
+    CreatePartButton(5,PartButtonNames[2]);
+    CreatePartButton(6,PartButtonNames[2]);
+    CreatePartButton(7,PartButtonNames[2]);
+    CreatePartButton(8,PartButtonNames[2]);
+    CreatePartButton(9,PartButtonNames[2]);
+    CreatePartButton(10,PartButtonNames[3]);
+    CreatePartButton(11,PartButtonNames[3]);
+    CreatePartButton(12,PartButtonNames[3]);
+    CreatePartButton(13,PartButtonNames[3]);
+    CreatePartButton(14,PartButtonNames[4]);
+    CreatePartButton(15,PartButtonNames[5]);
+    CreatePartButton(16,PartButtonNames[6]);
+    CreatePartButton(17,PartButtonNames[7]);
+    CreatePartButton(18,PartButtonNames[8]);
     UpdateOutfitPartButtons();
 }
 
 function UpdateOutfitPartButtons()
 {
     customButtonCount = 0;
+    UpdateModelVariantsButtons();
     UpdateOutfitPartButton(0);
     UpdateOutfitPartButton(1);
     UpdateOutfitPartButton(2);
@@ -146,6 +154,65 @@ function UpdateOutfitPartButtons()
     UpdateOutfitPartButton(16);
     UpdateOutfitPartButton(17);
     UpdateOutfitPartButton(18);
+}
+
+function UpdateModelVariantsButtons()
+{
+    //SARGE: I have no idea why this is required...
+    local OutfitManager O;
+    local int count;
+    O = outfitManager;
+
+    //Only show when we're in edit mode and our outfit has multiple body types
+    if (O != None && O.currOutfit == O.customOutfit && bEditMode)
+    {
+        count = O.currOutfit.partsGroup.NumMeshes();
+        if (count > 1)
+        {
+            btnModelVariantPrev.SetPos(customButtonStartOffsetX,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY));
+            btnModelVariantNext.SetPos(customButtonStartOffsetX + 30,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY));
+            txtModelVariant.SetPos(customButtonStartOffsetX + 60,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY) + 2);
+            txtModelVariant.SetText(O.currOutfit.partsGroup.GetMeshMenuName(O.currOutfit.groupMeshID));
+            btnModelVariantNext.Show();
+            btnModelVariantPrev.Show();
+            txtModelVariant.Show();
+            customButtonCount++;
+        }
+        else
+        {
+            btnModelVariantNext.Hide();
+            btnModelVariantPrev.Hide();
+            txtModelVariant.Hide();
+        }
+    }
+    AskParentForReconfigure();
+}
+
+function SetNextModelVariant(optional bool bPrevious)
+{
+    local OutfitManager O;
+    local int id, count;
+    O = outfitManager;
+
+    if (O != None && O.customOutfit == O.currOutfit)
+    {
+        if (bPrevious)
+            id = O.customOutfit.groupMeshID - 1;
+        else
+            id = O.customOutfit.groupMeshID + 1;
+        count = outfitManager.customOutfit.partsGroup.NumMeshes();
+
+        //Wrap around
+        if (id >= count)
+            id = 0;
+        if (id < 0)
+            id = count - 1;
+        
+        O.customOutfit.groupMeshID = id;
+    
+        O.EquipCustomOutfit();
+        O.ApplyCurrentOutfit();
+    }
 }
 
 function UpdateOutfitPartButton(int id)
@@ -179,6 +246,26 @@ function UpdateOutfitPartButton(int id)
     btnSlotsPrev[id].Hide();
     btnSlotsNext[id].Hide();
     txtSlots[id].Hide();
+}
+
+function PersonaActionButtonWindow CreateModelVariantButton()
+{
+    btnModelVariantNext = PersonaActionButtonWindow(winClient.NewChild(class'PersonaActionButtonWindow'));
+    //btnModelVariantNext.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 208, 25);
+    btnModelVariantNext.SetButtonText(">");
+    
+    btnModelVariantPrev = PersonaActionButtonWindow(winClient.NewChild(class'PersonaActionButtonWindow'));
+    //btnModelVariantPrev.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 248, 25);
+    btnModelVariantPrev.SetButtonText("<");
+            
+    txtModelVariant = PersonaHeaderTextWindow(winClient.NewChild(class'PersonaHeaderTextWindow'));
+    //txtModelVariant.SetWindowAlignments(HALIGN_Right, VALIGN_Top, 210, 25+20);
+	txtModelVariant.SetTextAlignments(HALIGN_Right, VALIGN_Top);
+    txtModelVariant.SetText("");
+    //UpdateModelVariantsButtons();
+    btnModelVariantNext.Hide();
+    btnModelVariantPrev.Hide();
+    txtModelVariant.Hide();
 }
 
 function PersonaActionButtonWindow CreatePartButton(int partID, string label)
@@ -442,6 +529,7 @@ function EquipCustomOutfit()
     outfitManager.ApplyCurrentOutfit();
     PopulateOutfitsList();
     UpdateOutfitPartButtons();
+    //UpdateModelVariantsButtons();
     txtDescription.SetText("");
 }
 
@@ -466,6 +554,7 @@ function PrevCustomOutfitSlot(int slot)
     outfitManager.ApplyCurrentOutfit();
     PopulateOutfitsList();
     UpdateOutfitPartButtons();
+    //UpdateModelVariantsButtons();
     AskParentForReconfigure();
 }
 // ----------------------------------------------------------------------
@@ -489,6 +578,7 @@ function NextCustomOutfitSlot(int slot)
     outfitManager.ApplyCurrentOutfit();
     PopulateOutfitsList();
     UpdateOutfitPartButtons();
+    //UpdateModelVariantsButtons();
     AskParentForReconfigure();
 }
 
@@ -513,6 +603,16 @@ function bool ButtonActivated( Window buttonPressed )
             bEditMode = !bEditMode;
             EquipCustomOutfit();
             EnableButtons();
+            break;
+
+		case btnModelVariantNext:
+            SetNextModelVariant();
+            UpdateOutfitPartButtons();
+            break;
+		
+        case btnModelVariantPrev:
+            SetNextModelVariant(true);
+            UpdateOutfitPartButtons();
             break;
 		
         case btnChangeCamera:
@@ -669,6 +769,7 @@ function Equip(int index)
     rowIDLastEquipped = selectedRowId;
     
     UpdateOutfitPartButtons();
+    //UpdateModelVariantsButtons();
     //PopulateOutfitsList();
 
     //Update description text
@@ -725,7 +826,17 @@ defaultproperties
      EditButtonLabel="Customize Outfit"
      SettingsButtonLabel="Settings"
      ChangeCameraLabel="Change View"
+     ModelVariantLabel="Body Type"
      NewLabel="(New)"
+     PartButtonNames(0)="Skin"
+     PartButtonNames(1)="Coat"
+     PartButtonNames(2)="Torso"
+     PartButtonNames(3)="Legs"
+     PartButtonNames(4)="Skirt"
+     PartButtonNames(5)="Glasses"
+     PartButtonNames(6)="Helmet"
+     PartButtonNames(7)="Main"
+     PartButtonNames(8)="Mask"
      clientBorderOffsetY=35
      ClientWidth=617
      ClientHeight=439

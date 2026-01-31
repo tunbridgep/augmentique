@@ -32,7 +32,7 @@ function UpdatePartIDsList()
 function UpdatePartsGroup(PartsGroup PG)
 {
     partsGroup = PG;
-    partsGroupID = string(PG.Mesh);
+    partsGroupID = string(PG.GetMesh(groupMeshID));
 }
 
 function AddPartFromIDNoUpdate(string partID)
