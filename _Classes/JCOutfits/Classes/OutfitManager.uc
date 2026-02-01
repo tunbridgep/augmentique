@@ -434,11 +434,17 @@ function PopulateOutfitsList()
     ////Add Global Parts
     
     //Default "Nothing" accessories/textures
+    GlobalAddPart(PS_Ponytail,NothingName,true,"nothing_pt","none","none");
     GlobalAddPart(PS_Glasses,NothingName,true,"nothing_g","none","none");
     GlobalAddPart(PS_Hat,NothingName,true,"nothing_h","none","none");
     GlobalAddPart(PS_Helmet,NothingName,true,"nothing_h","none","none");
     GlobalAddPartL(PS_Body_M,0,false,"default_b","default");
     GlobalAddPartL(PS_Body_F,0,false,"default_b","default");
+
+    //Ponytails
+    GlobalAddPartL(PS_Ponytail,183,true,"default_pt","skin","skin","none");
+    GlobalAddPartL(PS_Ponytail,184,true,"hair_pt","skin","none","skin");
+    GlobalAddPartL(PS_Ponytail,185,true,"hairtail_pt","skin","skin","skin");
 
     //Glasses
     GlobalAddPartL(PS_Glasses,1,true,"default_g","FramesTex4","LensesTex5");
@@ -1056,18 +1062,21 @@ function PopulateOutfitsList()
     GroupTranspose2(PS_DressLegs,PS_Legs,1);
     GroupTranspose(PS_Skirt,2,4);
     GroupTranspose(PS_Torso_F,3);
+    GroupTranspose2(PS_Ponytail,PS_Body_F,7,6,5);
     
     //Defaults
     AddDefaultReference("default_b");
     
     //Nicollette DuClare's outfit
     BeginNewOutfitL("nicolette",28);
+    OutfitAddPartReference("hair_pt");
     OutfitAddPartReference("nicolette_pf");
     OutfitAddPartReference("nicolette_s");
     OutfitAddPartReference("nicolette_sk");
     
     //Sarah Mead
     BeginNewOutfitL("meadsarah",40);
+    OutfitAddPartReference("default_pt");
     OutfitAddPartReference("sarah_pf");
     OutfitAddPartReference("sarah_s");
     OutfitAddPartReference("sarah_sk");
@@ -1100,16 +1109,20 @@ function PopulateOutfitsList()
     GroupTranspose(PS_Legs,6);
     GroupTranspose2(PS_Legs_F,PS_Legs,6);
     GroupTranspose(PS_Torso_F,7);
-    GroupTranspose2(PS_Mask,PS_Body_F,2,0,-1);
+    //GroupTranspose(PS_Ponytail,2,1);
+    //GroupTranspose2(PS_Mask,PS_Body_F,-1); //Still waiting on female mask textures
+    GroupTranspose2(PS_Ponytail,PS_Body_F,-1,2,1); //Still waiting on female mask textures
     
     //Defaults
     AddDefaultReference("default_b");
+    //AddDefaultReference("nothing_pt");
     
     BeginNewOutfitL("anna",38);
     OutfitAddPartReference("anna_p");
     OutfitAddPartReference("anna_s");
     
     BeginNewOutfitL("bum",21);
+    OutfitAddPartReference("default_pt");
     OutfitAddPartReference("bum_p");
     OutfitAddPartReference("bum_sf");
     
@@ -1118,22 +1131,27 @@ function PopulateOutfitsList()
     OutfitAddPartReference("dentonclone_pf");
     
     BeginNewOutfitL("tiffany",39);
+    OutfitAddPartReference("default_pt");
     OutfitAddPartReference("tiffany_p");
     OutfitAddPartReference("tiffany_s");
     
     BeginNewOutfitL("shea",41);
+    OutfitAddPartReference("default_pt");
     OutfitAddPartReference("shea_s");
     OutfitAddPartReference("mib_p");
     
     BeginNewOutfitL("junkie",54);
+    OutfitAddPartReference("hair_pt");
     OutfitAddPartReference("junkie_s");
     OutfitAddPartReference("junkie_p2");
     
     BeginNewOutfitL("lowclass",60);
+    OutfitAddPartReference("hair_pt");
     OutfitAddPartReference("lowclass_sf");
     OutfitAddPartReference("lowclass_p");
     
     BeginNewOutfitL("sandrarenton",61);
+    OutfitAddPartReference("hairtail_pt");
     OutfitAddPartReference("sandrarenton_s");
     OutfitAddPartReference("mib_p"); //Yes, really!
 
@@ -1887,7 +1905,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.Secretary");
     AddNPCGroupClass("DeusEx.BusinessWoman1");
     AddNPCGroupClass("DeusEx.Nurse");
-    AddNPCGroupClass("DeusEx.AlexJacobson");
+    AddNPCGroupClass("DeusEx.AlexJacobson",true);
     AddNPCGroupClass("DeusEx.ScientistFemale");
     AddNPCGroupClass("DeusEx.Female2");
     AddNPCGroupClass("DeusEx.Female3");
@@ -3314,6 +3332,9 @@ defaultproperties
 
      //1.2 stuff
      partNames(182)="MJ12 Helmet (Slimline)"
+     partNames(183)="Ponytail"
+     partNames(184)="Long Hair"
+     partNames(185)="Long Hair and Ponytail"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"

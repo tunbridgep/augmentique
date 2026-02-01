@@ -27,7 +27,8 @@ enum PartSlot
     PS_Legs, //Common Legs
     PS_Legs_M, //Male exclusive legs
     PS_Legs_F, //Female exclusive legs
-    PS_DressLegs //Legs used for dresses, stockings etc.
+    PS_DressLegs, //Legs used for dresses, stockings etc.
+    PS_Ponytail,    //Ponytail used by women (and some men?)
 };
 
 

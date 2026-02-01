@@ -18,9 +18,9 @@ var PersonaCheckBoxWindow     chkAccessories;
 var PersonaCheckBoxWindow     chkDescriptions;
 var ViewportWindow            winViewport;
 
-var PersonaActionButtonWindow   btnSlotsNext[19];
-var PersonaActionButtonWindow   btnSlotsPrev[19];
-var PersonaHeaderTextWindow     txtSlots[19];
+var PersonaActionButtonWindow   btnSlotsNext[23];
+var PersonaActionButtonWindow   btnSlotsPrev[23];
+var PersonaHeaderTextWindow     txtSlots[23];
 var PersonaHeaderTextWindow     txtDescription;
 
 var PersonaActionButtonWindow   btnModelVariantNext;
@@ -37,7 +37,7 @@ var localized String EditButtonLabel;
 var localized String SettingsButtonLabel;
 var localized String NewLabel;
 var localized String ModelVariantLabel;
-var localized String PartButtonNames[19];
+var localized String PartButtonNames[23];
 
 //The offset for the start of the buttons
 var int customButtonStartOffsetX;
@@ -109,25 +109,29 @@ function CreateOutfitPartButtons()
     customButtonStartOffsetX = 20;
     customButtonStartOffsetY = 25;
     customButtonAddPerButtonY = 20;
-    CreatePartButton(0,PartButtonNames[0]);
-    CreatePartButton(1,PartButtonNames[0]);
-    CreatePartButton(2,PartButtonNames[1]);
-    CreatePartButton(3,PartButtonNames[1]);
-    CreatePartButton(4,PartButtonNames[1]);
-    CreatePartButton(5,PartButtonNames[2]);
-    CreatePartButton(6,PartButtonNames[2]);
-    CreatePartButton(7,PartButtonNames[2]);
-    CreatePartButton(8,PartButtonNames[2]);
-    CreatePartButton(9,PartButtonNames[2]);
-    CreatePartButton(10,PartButtonNames[3]);
-    CreatePartButton(11,PartButtonNames[3]);
-    CreatePartButton(12,PartButtonNames[3]);
-    CreatePartButton(13,PartButtonNames[3]);
-    CreatePartButton(14,PartButtonNames[4]);
-    CreatePartButton(15,PartButtonNames[5]);
-    CreatePartButton(16,PartButtonNames[6]);
-    CreatePartButton(17,PartButtonNames[7]);
-    CreatePartButton(18,PartButtonNames[8]);
+    CreatePartButton(0);
+    CreatePartButton(1);
+    CreatePartButton(2);
+    CreatePartButton(3);
+    CreatePartButton(4);
+    CreatePartButton(5);
+    CreatePartButton(6);
+    CreatePartButton(7);
+    CreatePartButton(8);
+    CreatePartButton(9);
+    CreatePartButton(10);
+    CreatePartButton(11);
+    CreatePartButton(12);
+    CreatePartButton(13);
+    CreatePartButton(14);
+    CreatePartButton(15);
+    CreatePartButton(16);
+    CreatePartButton(17);
+    CreatePartButton(18);
+    CreatePartButton(19);
+    CreatePartButton(20);
+    CreatePartButton(21);
+    CreatePartButton(22);
     UpdateOutfitPartButtons();
 }
 
@@ -135,25 +139,29 @@ function UpdateOutfitPartButtons()
 {
     customButtonCount = 0;
     UpdateModelVariantsButtons();
-    UpdateOutfitPartButton(0);
-    UpdateOutfitPartButton(1);
-    UpdateOutfitPartButton(2);
-    UpdateOutfitPartButton(3);
-    UpdateOutfitPartButton(4);
-    UpdateOutfitPartButton(5);
-    UpdateOutfitPartButton(6);
-    UpdateOutfitPartButton(7);
-    UpdateOutfitPartButton(8);
-    UpdateOutfitPartButton(9);
-    UpdateOutfitPartButton(10);
-    UpdateOutfitPartButton(11);
-    UpdateOutfitPartButton(12);
-    UpdateOutfitPartButton(13);
-    UpdateOutfitPartButton(14);
-    UpdateOutfitPartButton(15);
-    UpdateOutfitPartButton(16);
-    UpdateOutfitPartButton(17);
-    UpdateOutfitPartButton(18);
+    UpdateOutfitPartButton(0,"");
+    UpdateOutfitPartButton(1,PartButtonNames[0]);
+    UpdateOutfitPartButton(2,PartButtonNames[0]);
+    UpdateOutfitPartButton(3,PartButtonNames[1]);
+    UpdateOutfitPartButton(4,PartButtonNames[6]);
+    UpdateOutfitPartButton(5,PartButtonNames[8]);
+    UpdateOutfitPartButton(6,PartButtonNames[7]);
+    UpdateOutfitPartButton(7,PartButtonNames[9]);
+    UpdateOutfitPartButton(8,PartButtonNames[2]);
+    UpdateOutfitPartButton(9,PartButtonNames[2]);
+    UpdateOutfitPartButton(10,PartButtonNames[2]);
+    UpdateOutfitPartButton(11,PartButtonNames[3]);
+    UpdateOutfitPartButton(12,PartButtonNames[3]);
+    UpdateOutfitPartButton(13,PartButtonNames[3]);
+    UpdateOutfitPartButton(14,PartButtonNames[3]);
+    UpdateOutfitPartButton(15,PartButtonNames[3]);
+    UpdateOutfitPartButton(16,PartButtonNames[3]);
+    UpdateOutfitPartButton(17,PartButtonNames[5]);
+    UpdateOutfitPartButton(18,PartButtonNames[4]);
+    UpdateOutfitPartButton(19,PartButtonNames[4]);
+    UpdateOutfitPartButton(20,PartButtonNames[4]);
+    UpdateOutfitPartButton(21,PartButtonNames[4]);
+    UpdateOutfitPartButton(22,PartButtonNames[10]);
 }
 
 function UpdateModelVariantsButtons()
@@ -172,7 +180,7 @@ function UpdateModelVariantsButtons()
             btnModelVariantPrev.SetPos(customButtonStartOffsetX,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY));
             btnModelVariantNext.SetPos(customButtonStartOffsetX + 30,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY));
             txtModelVariant.SetPos(customButtonStartOffsetX + 60,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY) + 2);
-            txtModelVariant.SetText(O.currOutfit.partsGroup.GetMeshMenuName(O.currOutfit.groupMeshID));
+            txtModelVariant.SetText(ModelVariantLabel $ ":" @ O.currOutfit.partsGroup.GetMeshMenuName(O.currOutfit.groupMeshID));
             btnModelVariantNext.Show();
             btnModelVariantPrev.Show();
             txtModelVariant.Show();
@@ -215,7 +223,7 @@ function SetNextModelVariant(optional bool bPrevious)
     }
 }
 
-function UpdateOutfitPartButton(int id)
+function UpdateOutfitPartButton(int id, string label)
 {
     //SARGE: I have no idea why this is required...
     local OutfitManager O;
@@ -237,7 +245,7 @@ function UpdateOutfitPartButton(int id)
             btnSlotsNext[id].Show();
             txtSlots[id].SetPos(customButtonStartOffsetX + 60,customButtonStartOffsetY + (customButtonCount * customButtonAddPerButtonY) + 2);
             txtSlots[id].Show();
-            txtSlots[id].SetText(O.currOutfit.GetPartOfType(id).name);
+            txtSlots[id].SetText(label $ ":" @ O.currOutfit.GetPartOfType(id).name);
             customButtonCount++;
             return;
         }
@@ -268,7 +276,7 @@ function PersonaActionButtonWindow CreateModelVariantButton()
     txtModelVariant.Hide();
 }
 
-function PersonaActionButtonWindow CreatePartButton(int partID, string label)
+function PersonaActionButtonWindow CreatePartButton(int partID)
 {
     local PersonaActionButtonWindow newBtn;
     local PersonaHeaderTextWindow newTxt;
@@ -589,6 +597,7 @@ function NextCustomOutfitSlot(int slot)
 function bool ButtonActivated( Window buttonPressed )
 {
 	local bool bHandled;
+    local int i;
 
 	bHandled = True;
 
@@ -623,51 +632,28 @@ function bool ButtonActivated( Window buttonPressed )
         case btnSettings:
             player.InvokeUIScreen(class'OutfitSettingsMenu');
 			break;
-
-        case btnSlotsPrev[0]: PrevCustomOutfitSlot(0); break;
-        case btnSlotsPrev[1]: PrevCustomOutfitSlot(1); break;
-        case btnSlotsPrev[2]: PrevCustomOutfitSlot(2); break;
-        case btnSlotsPrev[3]: PrevCustomOutfitSlot(3); break;
-        case btnSlotsPrev[4]: PrevCustomOutfitSlot(4); break;
-        case btnSlotsPrev[5]: PrevCustomOutfitSlot(5); break;
-        case btnSlotsPrev[6]: PrevCustomOutfitSlot(6); break;
-        case btnSlotsPrev[7]: PrevCustomOutfitSlot(7); break;
-        case btnSlotsPrev[8]: PrevCustomOutfitSlot(8); break;
-        case btnSlotsPrev[9]: PrevCustomOutfitSlot(9); break;
-        case btnSlotsPrev[10]: PrevCustomOutfitSlot(10); break;
-        case btnSlotsPrev[11]: PrevCustomOutfitSlot(11); break;
-        case btnSlotsPrev[12]: PrevCustomOutfitSlot(12); break;
-        case btnSlotsPrev[13]: PrevCustomOutfitSlot(13); break;
-        case btnSlotsPrev[14]: PrevCustomOutfitSlot(14); break;
-        case btnSlotsPrev[15]: PrevCustomOutfitSlot(15); break;
-        case btnSlotsPrev[16]: PrevCustomOutfitSlot(16); break;
-        case btnSlotsPrev[17]: PrevCustomOutfitSlot(17); break;
-        case btnSlotsPrev[18]: PrevCustomOutfitSlot(18); break;
-
-        case btnSlotsNext[0]: NextCustomOutfitSlot(0); break;
-        case btnSlotsNext[1]: NextCustomOutfitSlot(1); break;
-        case btnSlotsNext[2]: NextCustomOutfitSlot(2); break;
-        case btnSlotsNext[3]: NextCustomOutfitSlot(3); break;
-        case btnSlotsNext[4]: NextCustomOutfitSlot(4); break;
-        case btnSlotsNext[5]: NextCustomOutfitSlot(5); break;
-        case btnSlotsNext[6]: NextCustomOutfitSlot(6); break;
-        case btnSlotsNext[7]: NextCustomOutfitSlot(7); break;
-        case btnSlotsNext[8]: NextCustomOutfitSlot(8); break;
-        case btnSlotsNext[9]: NextCustomOutfitSlot(9); break;
-        case btnSlotsNext[10]: NextCustomOutfitSlot(10); break;
-        case btnSlotsNext[11]: NextCustomOutfitSlot(11); break;
-        case btnSlotsNext[12]: NextCustomOutfitSlot(12); break;
-        case btnSlotsNext[13]: NextCustomOutfitSlot(13); break;
-        case btnSlotsNext[14]: NextCustomOutfitSlot(14); break;
-        case btnSlotsNext[15]: NextCustomOutfitSlot(15); break;
-        case btnSlotsNext[16]: NextCustomOutfitSlot(16); break;
-        case btnSlotsNext[17]: NextCustomOutfitSlot(17); break;
-        case btnSlotsNext[18]: NextCustomOutfitSlot(18); break;
-
 		default:
 			bHandled = False;
-			break;
+            break;
 	}
+
+    for (i = 0;i < ArrayCount(btnSlotsPrev);i++) 
+    {
+        if (buttonPressed == btnSlotsPrev[i])
+        {
+            PrevCustomOutfitSlot(i);
+            bHandled = true;
+        }
+    }
+    
+    for (i = 0;i < ArrayCount(btnSlotsNext);i++) 
+    {
+        if (buttonPressed == btnSlotsNext[i])
+        {
+            NextCustomOutfitSlot(i);
+            bHandled = true;
+        }
+    }
 
 	if ( !bHandled )
 		bHandled = Super.ButtonActivated(buttonPressed);
@@ -780,41 +766,6 @@ function Equip(int index)
 }
 
 // ----------------------------------------------------------------------
-// SaveSettings()
-// ----------------------------------------------------------------------
-
-function SaveSettings()
-{
-	DestroyImages();
-}
-
-// ----------------------------------------------------------------------
-// DestroyImages()
-//
-// Unload texture memory used by the images
-// ----------------------------------------------------------------------
-
-function DestroyImages()
-{
-	local DataVaultImage image;
-	local int listIndex;
-	local int rowId;
-
-	for(listIndex=0; listIndex<lstOutfits.GetNumRows(); listIndex++)
-	{
-		rowId = lstOutfits.IndexToRowId(listIndex);
-
-		if (lstOutfits.GetFieldValue(rowId, 2) > 0)
-		{
-			image = DataVaultImage(lstOutfits.GetRowClientObject(rowId));
-
-			if (image != None)
-				image.UnloadTextures(player);
-		}
-	}
-}
-
-// ----------------------------------------------------------------------
 // ----------------------------------------------------------------------
 
 defaultproperties
@@ -829,14 +780,16 @@ defaultproperties
      ModelVariantLabel="Body Type"
      NewLabel="(New)"
      PartButtonNames(0)="Skin"
-     PartButtonNames(1)="Coat"
-     PartButtonNames(2)="Torso"
-     PartButtonNames(3)="Legs"
-     PartButtonNames(4)="Skirt"
-     PartButtonNames(5)="Glasses"
-     PartButtonNames(6)="Helmet"
-     PartButtonNames(7)="Main"
-     PartButtonNames(8)="Mask"
+     PartButtonNames(1)="Main"
+     PartButtonNames(2)="Coat"
+     PartButtonNames(3)="Torso"
+     PartButtonNames(4)="Legs"
+     PartButtonNames(5)="Skirt"
+     PartButtonNames(6)="Glasses"
+     PartButtonNames(7)="Helmet"
+     PartButtonNames(8)="Hat"
+     PartButtonNames(9)="Mask"
+     PartButtonNames(10)="Ponytail"
      clientBorderOffsetY=35
      ClientWidth=617
      ClientHeight=439
