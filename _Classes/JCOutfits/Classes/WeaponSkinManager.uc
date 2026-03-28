@@ -169,12 +169,13 @@ function private bool IsUnlocked(string id)
     return false;
 }
 
-function UnlockSkin(string id, optional bool bNoMessage, optional DeusExWeapon source)
+//Returns FALSE if the skin is already unlocked
+function bool UnlockSkin(string id, optional bool bNoMessage)
 {
     local int i;
 
     if (id == "")
-        return;
+        return false;
 
     if (!IsUnlocked(id))
     {
@@ -192,26 +193,29 @@ function UnlockSkin(string id, optional bool bNoMessage, optional DeusExWeapon s
         for (i = 0;i < numWeaponSkins;i++)
         {
             if (WeaponSkins[i].id == id)
-            {
                 WeaponSkins[i].bUnlocked = true;
-
-                if (!bNoMessage)
-                {
-                    player.ClientMessage(sprintf(msgUnlocked,WeaponSkins[i].skinName));
-                    if (source != None)
-                    {
-                        source.PlaySound(source.CopyModsSound,SLOT_None,0.8);
-
-                        //Copy the new skin across automatically. Not strictly required.
-                        if (DeusExWeapon(player.Weapon) != None && string(player.Weapon.Class) == WeaponSkins[i].weaponClass)
-                        {
-                            DeusExWeapon(player.Weapon).currentWeaponSkin = WeaponSkins[i].id;
-                            UpdateWeaponSkinTextures(DeusExWeapon(player.Weapon));
-                        }
-                    }
-                }
-            }
         }
+
+        if (!bNoMessage)
+            player.ClientMessage(sprintf(msgUnlocked,WeaponSkins[i].skinName));
+        return true;
+    }
+    return false;
+}
+
+//Transfer the skin from the weapon we just picked up to our current weapon
+function TransferSkin(DeusExWeapon wep)
+{
+    local DeusExWeapon PW;
+    
+    PW = DeusExWeapon(player.Weapon);
+
+    //If the items match, and our weapon is using the default skin, swap it.
+    if (PW != None && PW.Class == wep.Class && PW.currentWeaponSkin == "default")
+    {
+        wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
+        PW.currentWeaponSkin = wep.currentWeaponSkin;
+        UpdateWeaponSkinTextures(PW);
     }
 }
 
