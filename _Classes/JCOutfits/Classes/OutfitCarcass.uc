@@ -6,21 +6,7 @@ function CopyOutfitFrom(Actor A)
     local ScriptedPawn S;
     S = ScriptedPawn(A);
 
-    //GMDX Specific Code
-    if (S != None && IsHDTP())
-    {
-        augmentiqueData.textures[0] = S.augmentiqueData.textures[0];
-        augmentiqueData.textures[1] = S.augmentiqueData.textures[1];
-        augmentiqueData.textures[2] = S.augmentiqueData.textures[2];
-        augmentiqueData.textures[3] = S.augmentiqueData.textures[3];
-        augmentiqueData.textures[4] = S.augmentiqueData.textures[4];
-        augmentiqueData.textures[5] = S.augmentiqueData.textures[5];
-        augmentiqueData.textures[6] = S.augmentiqueData.textures[6];
-        augmentiqueData.textures[7] = S.augmentiqueData.textures[7];
-        augmentiqueData.textures[8] = S.augmentiqueData.textures[8];
-        augmentiqueData.bRandomized = S.augmentiqueData.bRandomized;
-    }
-    else if (S != None)
+    if (S != None)
     {
         augmentiqueData.textures[0] = S.MultiSkins[0];
         augmentiqueData.textures[1] = S.MultiSkins[1];

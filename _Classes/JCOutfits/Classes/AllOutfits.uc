@@ -119,6 +119,9 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\PonyTailTex1_S1.pcx"                           NAME="PonyTailTex1_S1"                     GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\PonyTailTex1_S4.pcx"                           NAME="PonyTailTex1_S4"                     GROUP="Outfits"
 
+//BorderlineSilence Halo
+#exec TEXTURE IMPORT FILE="Textures\BorderlineSilence\BorderlineHalo.pcx"                          NAME="BorderlineHalo"                      GROUP="Outfits"
+
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\BoatPersonTex1_S0.bmp"                         NAME="BoatPersonTex1"                      GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\BoatPersonTex1_S1.bmp"                         NAME="BoatPersonTex1_S1"                   GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\BoatPersonTex1_S2.bmp"                         NAME="BoatPersonTex1_S2"                   GROUP="Outfits"

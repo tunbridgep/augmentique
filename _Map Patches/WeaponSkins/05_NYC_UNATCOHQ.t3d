@@ -1,0 +1,18 @@
+Begin Map
+Begin Actor Class=WeaponStealthPistol Name=WeaponStealthPistol0
+    currentWeaponSkin="black"
+End Actor
+Begin Actor Class=WeaponPistol Name=WeaponPistol0
+    currentWeaponSkin="goldengun"
+    LastRenderTime=31.007828
+    DistanceFromPlayer=2001.677490
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=WeaponPistol
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=2340,ZoneNumber=5)
+    Location=(X=1364.274170,Y=-955.360718,Z=-18.899889)
+    Rotation=(Yaw=12432)
+    OldLocation=(X=1363.465820,Y=-951.533325,Z=-18.899889)
+    bSelected=True
+    Name=WeaponPistol0
+End Actor
+End Map

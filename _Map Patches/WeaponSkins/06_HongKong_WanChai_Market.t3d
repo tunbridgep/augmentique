@@ -1,0 +1,15 @@
+Begin Map
+Begin Actor Class=WeaponFlamethrower Name=WeaponFlamethrower0
+    currentWeaponSkin="hongkong"
+End Actor
+Begin Actor Class=WeaponCombatKnife Name=WeaponCombatKnife1
+    currentWeaponSkin="hongkong"
+    LastRenderTime=322.021210
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=WeaponCombatKnife
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=2127,ZoneNumber=1)
+    Location=(X=245.217499,Y=-612.217468,Z=136.900482)
+    OldLocation=(X=242.217499,Y=-618.217468,Z=136.900482)
+    Name=WeaponCombatKnife1
+End Actor
+End Map

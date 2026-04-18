@@ -361,6 +361,7 @@ var Computers ActiveComputer;
 // ----------------------------------------------------------------------
 
 var travel OutfitManagerBase outfitManager;
+var travel WeaponSkinManagerBase weaponSkinManager;
 var globalconfig string unlockedOutfits[255];
 
 // native Functions

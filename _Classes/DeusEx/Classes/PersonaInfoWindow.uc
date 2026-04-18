@@ -11,6 +11,79 @@ var PersonaNormalLargeTextWindow winText;			// Last text
 
 var int textVerticalOffset;
 
+//AUGMENTIQUE - Weapon Skin Selection
+var localized string msgSkinNext;
+var localized string msgSkinPrev;
+var localized string msgSkinName;
+var PersonaNormalLargeTextWindow winSkinName;
+var PersonaActionButtonWindow buttonNextSkin;
+var PersonaActionButtonWindow buttonPrevSkin;
+var Inventory skinWeapon;
+
+// ----------------------------------------------------------------------
+// AUGMENTIQUE: AddSkinsButtons()
+// ----------------------------------------------------------------------
+
+function AddSkinsButtons(DeusExWeapon wep)
+{
+    local PersonaButtonBarWindow skinBtnWin;
+	if (wep != None)
+	{
+        winSkinName = SetText(sprintf(msgSkinName,player.WeaponSkinManager.GetSkinName(wep)));
+		skinBtnWin = PersonaButtonBarWindow(winTile.NewChild(class'PersonaButtonBarWindow'));
+		skinBtnWin.SetWidth(32);
+		skinBtnWin.FillAllSpace(false);
+		
+        buttonNextSkin = PersonaActionButtonWindow(skinBtnWin.NewChild(class'PersonaActionButtonWindow'));
+        buttonNextSkin.SetButtonText(msgSkinNext);
+
+		buttonPrevSkin = PersonaActionButtonWindow(skinBtnWin.NewChild(class'PersonaActionButtonWindow'));
+        buttonPrevSkin.SetButtonText(msgSkinPrev);
+
+		skinWeapon = wep;
+		AddLine();
+	}
+}
+
+function UpdateSkinName()
+{
+    local DeusExWeapon wep;
+    wep = DeusExWeapon(skinWeapon);
+
+    if (winSkinName != None && wep != None)
+        winSkinName.SetText(sprintf(msgSkinName,player.WeaponSkinManager.GetSkinName(wep)));
+}
+
+function bool ButtonActivated (Window buttonPressed)
+{
+    local bool bHandled;
+
+	if (Super.ButtonActivated(buttonPressed))
+		return true;
+
+	bHandled = true;
+
+    switch(buttonPressed)
+    {
+		case buttonPrevSkin:
+            DeusExWeapon(skinWeapon).SelectPreviousSkin();
+            UpdateSkinName();
+            break;
+		case buttonNextSkin:
+            DeusExWeapon(skinWeapon).SelectNextSkin();
+            UpdateSkinName();
+            break;
+		default:
+			bHandled = false;
+			break;
+    }
+
+    return bHandled;
+}
+
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
+
 // ----------------------------------------------------------------------
 // InitWindow()
 //
@@ -157,4 +230,7 @@ function bool ChildRequestedReconfiguration(window child)
 defaultproperties
 {
      textVerticalOffset=20
+     msgSkinNext="Next"
+     msgSkinPrev="Prev"
+     msgSkinName="Current Skin: %s"
 }

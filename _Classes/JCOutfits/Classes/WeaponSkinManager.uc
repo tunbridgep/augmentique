@@ -70,6 +70,9 @@ struct WeaponSkin
     var string id;
     var bool bUnlocked;
     var string weaponClass;
+    var string ownerClass;
+    var string beltIconTex;
+    var string largeIconTex;
 };
 
 var private const localized string WeaponSkinNames[255]; //SARGE: Allow localization
@@ -90,71 +93,323 @@ const SKIN_PREFIX = "Augmentique.WeaponSkins.";
 
 function Init(DeusExPlayer newPlayer)
 {
+    local DeusExLevelInfo dxInfo;
+
     if (bInited)
         return;
 
     player = newPlayer;
     currentWeaponSkin = -1;
+    dxInfo = player.GetLevelInfo();
     
-    //Pistol Skins
-    AddSkin("goldengun","DeusEx.WeaponPistol");
+    ////AssaultGun
+
+    //Lemon-Lime Assault Gun
+    AddSkinL("lemonlime","DeusEx.WeaponAssaultGun",4);
+    AddSkinTex(1,SKIN_PREFIX $ "AssaultGunLemonLime1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunLemonLime3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunLemonLime3rd");
+    
+    //UNATCO Assault Gun
+    AddSkinL("unatco","DeusEx.WeaponAssaultGun",2);
+    AddSkinOwnerClass("DeusEx.UNATCOTroop");
+    AddSkinTex(1,SKIN_PREFIX $ "AssaultGunUNATCO1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunUNATCO3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunUNATCO3rd");
+    
+    //MJ12 Assault Gun
+    AddSkinL("mj12","DeusEx.WeaponAssaultGun",7);
+    AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinTex(1,SKIN_PREFIX $ "AssaultGunMJ121");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunMJ123rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunMJ123rd");
+    
+    //HK Assault Gun
+    AddSkinL("hongkong","DeusEx.WeaponAssaultGun",9);
+    AddSkinOwnerClass("DeusEx.HKMilitary");
+    AddSkinTex(1,SKIN_PREFIX $ "AssaultGunHK1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunHK3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunHK3rd");
+
+    ////Assault Shotgun
+    
+    //UNATCO Assault Shotgun
+    AddSkinL("unatco","DeusEx.WeaponAssaultShotgun",2);
+    AddSkinOwnerClass("DeusEx.UNATCOTroop");
+    AddSkinTex(0,SKIN_PREFIX $ "AssaultShotgunUNATCO1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultShotgunUNATCO3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultShotgunUNATCO3rd");
+
+    //Smugglers Special
+    AddSkinL("smuggler","DeusEx.WeaponAssaultShotgun",5);
+    AddSkinTex(0,SKIN_PREFIX $ "SmugglerShotgun1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "SmugglerShotgun3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "SmugglerShotgun3rd");
+    
+    //MJ12 Assault Shotgun
+    AddSkinL("mj12","DeusEx.WeaponAssaultShotgun",7);
+    AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinTex(0,SKIN_PREFIX $ "MJ12AssaultShotgun1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "MJ12AssaultShotgun3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "MJ12AssaultShotgun3rd");
+
+    ////Baton
+
+    //Riot Gear
+    AddSkinL("riot","DeusEx.WeaponBaton",8);
+    AddSkinOwnerClass("DeusEx.RiotCop");
+    AddSkinTex(0,SKIN_PREFIX $ "RiotPoliceBaton1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "RiotPoliceBaton3rd");
+    
+    ////Combat Knife
+
+    //HK
+    AddSkinL("hongkong","DeusEx.WeaponCombatKnife",9);
+    AddSkinOwnerClass("DeusEx.HKMilitary");
+    AddSkinTex(0,SKIN_PREFIX $ "CombatKnifeHK1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "CombatKnifeHK3rd");
+    
+    ////Flamethrower (Flammenwerfer)
+
+    //HK
+    AddSkinL("hongkong","DeusEx.WeaponFlamethrower",9);
+    AddSkinOwnerClass("DeusEx.HKMilitary");
+    AddSkinTex(2,SKIN_PREFIX $ "FlamethrowerHK1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "FlamethrowerHK3rd");
+    
+    ////LAM
+
+    //Green
+    AddSkinL("green","DeusEx.WeaponLAM",10);
+    AddSkinTex(1,SKIN_PREFIX $ "GreenLAM1");
+    AddSkinTex(3,SKIN_PREFIX $ "GreenLAM1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "GreenLAM3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "GreenLAM3rd");
+    
+    ////GEPGUN
+
+    //Hotpink
+    AddSkinL("hotpink","DeusEx.WeaponGEPGun",11);
+    AddSkinTex(1,SKIN_PREFIX $ "HotpinkGEPGun1");
+    AddSkinTex(0,SKIN_PREFIX $ "HotpinkGEPGun1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "HotpinkGEPGun3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "HotpinkGEPGun3rd");
+    Add3rdSkinTex(2,SKIN_PREFIX $ "HotpinkGEPGun3rd");
+    
+    ////Pepper
+
+    //Riot Gear
+    AddSkinL("riot","DeusEx.WeaponPepperGun",8);
+    AddSkinOwnerClass("DeusEx.RiotCop");
+    AddSkinTex(3,SKIN_PREFIX $ "RiotPolicePepperGun1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "RiotPolicePepperGun3rd");
+
+    ////Pistol
+
+    //Chrome Pistol
+    AddSkinL("chrome","DeusEx.WeaponPistol",0);
+    AddSkinTex(3,SKIN_PREFIX $ "ChromePistol1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "ChromePistol3rd");
+    
+    //Golden Gun
+    AddSkinL("goldengun","DeusEx.WeaponPistol",1);
     AddSkinTex(3,SKIN_PREFIX $ "goldengun1");
     Add3rdSkinTex(0,SKIN_PREFIX $ "goldengun3rd");
-    //UnlockSkin("goldengun");
+    
+    //UNATCO Pistol
+    AddSkinL("unatco","DeusEx.WeaponPistol",2);
+    AddSkinOwnerClass("DeusEx.UNATCOTroop");
+    AddSkinTex(3,SKIN_PREFIX $ "UNATCOPistol1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "UNATCOPistol3rd");
+    
+    //Riot Police Pistol
+    AddSkinL("riot","DeusEx.WeaponPistol",8);
+    AddSkinOwnerClass("DeusEx.RiotCop");
+    AddSkinTex(3,SKIN_PREFIX $ "RiotPolicePistol1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "RiotPolicePistol3rd");
+    
+    ////Crossbow
+
+    //Black Crossbow
+    AddSkinL("black","DeusEx.WeaponMiniCrossbow",3);
+    AddSkinOwnerClass("DeusEx.ScubaDiver");
+    AddSkinTex(1,SKIN_PREFIX $ "BlackCrossbow1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "BlackCrossbow3rd");
+    
+    ////EMP Grenade
+
+    //Hotpink
+    AddSkinL("hotpink","DeusEx.WeaponEMPGrenade",12);
+    AddSkinTex(2,SKIN_PREFIX $ "HotPinkEMP1");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "HotPinkEMP3rd");
+    
+    ////Sawed Off
+
+    //Hotpink
+    AddSkinL("hotpink","DeusEx.WeaponSawedOffShotgun",11);
+    AddSkinTex(1,SKIN_PREFIX $ "HotpinkShotgun1");
+    AddSkinTex(2,SKIN_PREFIX $ "HotpinkShotgun1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "HotpinkShotgun3rd");
+    
+    ////Stealth Pistol
+
+    //Black Stealth Pistol
+    AddSkinL("black","DeusEx.WeaponStealthPistol",3);
+    AddSkinTex(2,SKIN_PREFIX $ "BlackStealthPistol1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "BlackStealthPistol3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "BlackStealthPistol3rd");
+    
+    //JoJo Fine Stealth Pistol
+    AddSkinL("jojofine","DeusEx.WeaponStealthPistol",6);
+    AddSkinOwnerClass("DeusEx.JoJoFine");
+    AddSkinTex(2,SKIN_PREFIX $ "JoJosPistol");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "JoJosPistol3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "JoJosPistol3rd");
+    
+    ////Rifle
+    AddSkinL("mj12","DeusEx.WeaponRifle",7);
+    AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinTex(1,SKIN_PREFIX $ "MJ12SniperRifle1");
+    AddSkinTex(7,SKIN_PREFIX $ "MJ12SniperRifle1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "MJ12SniperRifle3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "MJ12SniperRifle3rd");
+    
+    ////Plasma Rifle
+    AddSkinL("mj12","DeusEx.WeaponPlasmaRifle",7);
+    AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinTex(0,SKIN_PREFIX $ "MJ12PlasmaRifle1");
+    //AddSkinTex(1,SKIN_PREFIX $ "MJ12PlasmaRifleSFX");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "MJ12PlasmaRifle3rd");
+    //Add3rdSkinTex(3,SKIN_PREFIX $ "MJ12PlasmaRifleSFX");
+    
+    ////Sword
+
+    //Hotpink
+    AddSkinL("hotpink","DeusEx.WeaponSword",11);
+    AddSkinTex(1,SKIN_PREFIX $ "HotPinkSword1");
+    AddSkinTex(8,SKIN_PREFIX $ "HotPinkSwordEnv"); //Reflection
+    Add3rdSkinTex(0,SKIN_PREFIX $ "HotPinkSword3rd");
 
     //Log("WeaponSkinManager: Inited");
 
     //Refresh the unlock state from the stored data
     SyncFromStoredData();
+    
+    //When we finish the game, or if we're in training, copy our weapon skins out permanently
+    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0))
+        CopyUnlocksToConfig();
 
     //RefreshAllWeapons();
 
     bInited = true;
 }
 
-function ApplyWeaponSkin(DeusExWeapon Wep)
+//Unlocks skins when searching carcasses for items we can't pick up
+function GetSkinFromCarcass(DeusExPlayer P, DeusExWeapon weapon, DeusExCarcass carc)
 {
-    local int i;
+    local WeaponSkinDisplayItem temp;
 
-    if (wep.Mesh == wep.PlayerViewMesh)
+    if (weapon.currentWeaponSkin != "default" && weapon.currentWeaponSkin != "" && !IsUnlocked(weapon.currentWeaponSkin))
     {
-        for (i = 0;i < 8;i++)
-            if (wep.multiSkins[i] != Texture'PinkMaskTex' && wep.skinTextures[i] != None)
-                wep.multiSkins[i] = wep.skinTextures[i];
-    }
-    else
-    {
-        for (i = 0;i < 8;i++)
-            if (wep.multiSkins[i] != Texture'PinkMaskTex' && wep.skinTextures3rd[i] != None)
-                wep.multiSkins[i] = wep.skinTextures3rd[i];
-    }
+        UnlockSkin(weapon.currentWeaponSkin);
 
+        //Create a temp object for the new item
+        temp = carc.spawn(class'WeaponSkinDisplayItem',,, carc.Location);
+
+        //Show the new icon
+        //carc.PlaySound(weapon.CopyModsSound,SLOT_None,0.8);
+        carc.AddReceivedItem(P,temp,1);
+
+        //Destroy the temp item
+        temp.Destroy();
+        temp = None;
+    }
 }
 
 function RefreshAllWeapons()
 {
     local DeusExWeapon W;
+    local Pawn P;
 
     if (player == None)
         return;
-
+        
     //Refresh all weapons in the map
 	foreach player.AllActors(class'DeusExWeapon', W)
     {
-        //Log("Updating skin for " $ W $ " with skin " $ W.currentWeaponSkin);
         UpdateWeaponSkinTextures(W);
+        ApplyWeaponSkin(W,false);
+    }
+
+    P = player.Level.PawnList;
+    while (P != None)
+    {
+        if (P.IsA('ScriptedPawn'))
+        {
+            //Log("WHO THE FUCKING FUCK!!!" @ P);
+            //ScriptedPawn(P).UpdateWeaponSkins();
+            UpdateWeaponSkinsForPawn(ScriptedPawn(P));
+        }
+        P = P.nextPawn;
     }
 }
 
-function private AddSkin(string id, string className, optional bool bUnlocked)
+//Special localized version of AddSkin
+function private AddSkinL(string id, string className, int skinNameIndex, optional bool bUnlocked)
+{
+    AddSkin(id, className, default.WeaponSkinNames[skinNameIndex], bUnlocked);
+}
+
+function AddSkin(string id, string className, string skinName, optional bool bUnlocked)
 {
     numWeaponSkins++;
     currentWeaponSkin++;
     WeaponSkins[currentWeaponSkin].id = id;
     WeaponSkins[currentWeaponSkin].weaponClass = className;
-    WeaponSkins[currentWeaponSkin].skinName = default.WeaponSkinNames[currentWeaponSkin];
+    WeaponSkins[currentWeaponSkin].skinName = skinName;
     if (bUnlocked)
-        UnlockSkin(id);
+        UnlockSkin(id,true);
+}
+
+function AddSkinOwnerClass(string ownerClass)
+{
+    WeaponSkins[currentWeaponSkin].ownerClass = ownerClass;
+}
+
+/*
+function AddSkinMapName(string mapName, optional string tag)
+{
+}
+*/
+
+function SetDefaultSkin(DeusExWeapon weapon, Actor Owner)
+{
+    local int i;
+    local bool bOwnerCheck;
+
+    if (Owner == None || Owner.IsA('PlayerPawn'))
+        return;
+
+    //Log("SetDefaultSkin: " $ weapon @ Owner);
+
+    for (i=0;i < numWeaponSkins;i++)
+    {
+        bOwnerCheck = WeaponSkins[i].ownerClass ~= string(Owner.Class) || WeaponSkins[i].ownerClass ~= (string(Owner.Class)$"Carcass");
+    
+
+        //Log(" - Checking: " $ WeaponSkins[i].id $ ", " $ WeaponSkins[i].skinName @ "for" @ Owner);
+        //Log("   -> " $ Caps(WeaponSkins[i].ownerClass) @ Caps(string(Owner.Class)));
+        //Log("   -> " $ Caps(WeaponSkins[i].weaponClass) @ Caps(string(weapon.Class)));
+        //Weapon Class and Skin Owner matches
+        if (bOwnerCheck && WeaponSkins[i].weaponClass ~= string(weapon.Class))
+        {
+            weapon.currentWeaponSkin = WeaponSkins[i].id;
+            //Log("   -> MATCH!" @ weapon.currentWeaponSkin);
+            UpdateWeaponSkinTextures(weapon);
+            ApplyWeaponSkin(weapon,false);
+        }
+    }
+    //Log("---");
 }
 
 function private bool IsUnlocked(string id)
@@ -193,11 +448,15 @@ function bool UnlockSkin(string id, optional bool bNoMessage)
         for (i = 0;i < numWeaponSkins;i++)
         {
             if (WeaponSkins[i].id == id)
+            {
                 WeaponSkins[i].bUnlocked = true;
-        }
 
-        if (!bNoMessage)
-            player.ClientMessage(sprintf(msgUnlocked,WeaponSkins[i].skinName));
+                if (!bNoMessage)
+                    player.ClientMessage(sprintf(msgUnlocked,WeaponSkins[i].skinName));
+
+                break;
+            }
+        }
         return true;
     }
     return false;
@@ -213,7 +472,7 @@ function TransferSkin(DeusExWeapon wep)
     //If the items match, and our weapon is using the default skin, swap it.
     if (PW != None && PW.Class == wep.Class && PW.currentWeaponSkin == "default")
     {
-        wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
+        //wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
         PW.currentWeaponSkin = wep.currentWeaponSkin;
         UpdateWeaponSkinTextures(PW);
     }
@@ -246,7 +505,13 @@ function private CopyUnlocksToConfig()
         unlockedWeaponSkinsGlobal[i] = unlockedWeaponSkins[i];
 }
 
-function private AddSkinTex(int texNum, string tex)
+function AddSkinIcons(string beltIconTex, string largeIconTex)
+{
+    WeaponSkins[currentWeaponSkin].beltIconTex = beltIconTex;
+    WeaponSkins[currentWeaponSkin].largeIconTex = largeIconTex;
+}
+
+function AddSkinTex(int texNum, string tex)
 {
     switch (texNum)
     {
@@ -262,7 +527,7 @@ function private AddSkinTex(int texNum, string tex)
     }
 }
 
-function private Add3rdSkinTex(int texNum, string tex)
+function Add3rdSkinTex(int texNum, string tex)
 {
     switch (texNum)
     {
@@ -284,7 +549,7 @@ function private bool IsSkinValidForWeapon(int skinIndex, DeusExWeapon wep, bool
     //Log("   ->" @ WeaponSkins[skinIndex].bUnlocked||!bCheckUnlocked $ "," @ (!bMatchSelected || WeaponSkins[skinIndex].id == wep.currentWeaponSkin));
     //Log("Total: " $ (WeaponSkins[skinIndex].bUnlocked||!bCheckUnlocked) && string(wep.Class) == WeaponSkins[skinIndex].weaponClass && (!bMatchSelected || WeaponSkins[skinIndex].id == wep.currentWeaponSkin));
     //Log("   for" @ wep.currentWeaponSkin);
-    return (WeaponSkins[skinIndex].bUnlocked||!bCheckUnlocked) && string(wep.Class) == WeaponSkins[skinIndex].weaponClass && (!bMatchSelected || WeaponSkins[skinIndex].id == wep.currentWeaponSkin);
+    return (WeaponSkins[skinIndex].bUnlocked||!bCheckUnlocked||class'OutfitManager'.default.bDebugMode) && string(wep.Class) == WeaponSkins[skinIndex].weaponClass && (!bMatchSelected || WeaponSkins[skinIndex].id == wep.currentWeaponSkin);
 }
 
 function private bool GetFirstValidSkinForWeapon(DeusExWeapon wep, bool bMatchSelected, out int index)
@@ -335,6 +600,14 @@ function private Texture GetTexture3(string tex, string alternative, string alte
 	return TTex;
 }
 
+//Probably not needed...
+function private Texture GetTexture(string tex, optional bool debug)
+{
+    local Texture TTex;
+    TTex = Texture(DynamicLoadObject(tex, class'Texture', !debug));
+    return TTex;
+}
+
 //SARGE: Updates the weapon skin texture array
 //This is a fucking garbage function
 function UpdateWeaponSkinTextures(DeusExWeapon wep)
@@ -342,9 +615,10 @@ function UpdateWeaponSkinTextures(DeusExWeapon wep)
     local bool hdtp, fomod;
     local WeaponSkin skin;
     local int index;
+    local Texture texes[9], tex3rds[9];
 
     //Bad skin time.
-    if (wep.currentWeaponSkin == "")
+    if (wep == None/* || wep.currentWeaponSkin == ""*/)
         return;
 
     //Log("Weapon Skin Updating for:" @ wep @ wep.currentWeaponSkin);
@@ -371,40 +645,62 @@ function UpdateWeaponSkinTextures(DeusExWeapon wep)
         wep.skinTextures3rd[6] = None;
         wep.skinTextures3rd[7] = None;
         wep.skinTextures3rd[8] = None;
-        return;
     }
-
-    if (GetFirstValidSkinForWeapon(wep,true,index))
+    else if (GetFirstValidSkinForWeapon(wep,true,index))
     {
         skin = WeaponSkins[index];
         hdtp = IsHDTP(wep);
         fomod = IsFomod(wep);
 
-        //SARGE: Massive horrible hardcoded mess follows!
-        wep.SkinTextures[0] = GetTexture3(skin.fomodTex0,skin.hdtpTex0,skin.tex0,fomod,hdtp);
-        wep.SkinTextures[1] = GetTexture3(skin.fomodTex1,skin.hdtpTex1,skin.tex1,fomod,hdtp);
-        wep.SkinTextures[2] = GetTexture3(skin.fomodTex2,skin.hdtpTex2,skin.tex2,fomod,hdtp);
-        wep.SkinTextures[3] = GetTexture3(skin.fomodTex3,skin.hdtpTex3,skin.tex3,fomod,hdtp);
-        wep.SkinTextures[4] = GetTexture3(skin.fomodTex4,skin.hdtpTex4,skin.tex4,fomod,hdtp);
-        wep.SkinTextures[5] = GetTexture3(skin.fomodTex5,skin.hdtpTex5,skin.tex5,fomod,hdtp);
-        wep.SkinTextures[6] = GetTexture3(skin.fomodTex6,skin.hdtpTex6,skin.tex6,fomod,hdtp);
-        wep.SkinTextures[7] = GetTexture3(skin.fomodTex7,skin.hdtpTex7,skin.tex7,fomod,hdtp);
+        texes[0] = GetTexture3(skin.fomodTex0,skin.hdtpTex0,skin.tex0,fomod,hdtp);
+        texes[1] = GetTexture3(skin.fomodTex1,skin.hdtpTex1,skin.tex1,fomod,hdtp);
+        texes[2] = GetTexture3(skin.fomodTex2,skin.hdtpTex2,skin.tex2,fomod,hdtp);
+        texes[3] = GetTexture3(skin.fomodTex3,skin.hdtpTex3,skin.tex3,fomod,hdtp);
+        texes[4] = GetTexture3(skin.fomodTex4,skin.hdtpTex4,skin.tex4,fomod,hdtp);
+        texes[5] = GetTexture3(skin.fomodTex5,skin.hdtpTex5,skin.tex5,fomod,hdtp);
+        texes[6] = GetTexture3(skin.fomodTex6,skin.hdtpTex6,skin.tex6,fomod,hdtp);
+        texes[7] = GetTexture3(skin.fomodTex7,skin.hdtpTex7,skin.tex7,fomod,hdtp);
+        texes[8] = GetTexture3(skin.fomodMainTexture,skin.hdtpMainTexture,skin.mainTexture,fomod,hdtp);
         
-        wep.SkinTextures[8] = GetTexture3(skin.fomodMainTexture,skin.hdtpMainTexture,skin.mainTexture,fomod,hdtp);
-        
-        wep.SkinTextures3rd[0] = GetTexture3(skin.fomodTex03rd,skin.hdtpTex03rd,skin.tex03rd,fomod,hdtp);
-        wep.SkinTextures3rd[1] = GetTexture3(skin.fomodTex13rd,skin.hdtpTex13rd,skin.tex13rd,fomod,hdtp);
-        wep.SkinTextures3rd[2] = GetTexture3(skin.fomodTex23rd,skin.hdtpTex23rd,skin.tex23rd,fomod,hdtp);
-        wep.SkinTextures3rd[3] = GetTexture3(skin.fomodTex33rd,skin.hdtpTex33rd,skin.tex33rd,fomod,hdtp);
-        wep.SkinTextures3rd[4] = GetTexture3(skin.fomodTex43rd,skin.hdtpTex43rd,skin.tex43rd,fomod,hdtp);
-        wep.SkinTextures3rd[5] = GetTexture3(skin.fomodTex53rd,skin.hdtpTex53rd,skin.tex53rd,fomod,hdtp);
-        wep.SkinTextures3rd[6] = GetTexture3(skin.fomodTex63rd,skin.hdtpTex63rd,skin.tex63rd,fomod,hdtp);
-        wep.SkinTextures3rd[7] = GetTexture3(skin.fomodTex73rd,skin.hdtpTex73rd,skin.tex73rd,fomod,hdtp);
-        
-        wep.SkinTextures3rd[8] = GetTexture3(skin.fomodMainTexture3rd,skin.hdtpMainTexture3rd,skin.mainTexture3rd,fomod,hdtp);
+        tex3rds[0] = GetTexture3(skin.fomodTex03rd,skin.hdtpTex03rd,skin.tex03rd,fomod,hdtp);
+        tex3rds[1] = GetTexture3(skin.fomodTex13rd,skin.hdtpTex13rd,skin.tex13rd,fomod,hdtp);
+        tex3rds[2] = GetTexture3(skin.fomodTex23rd,skin.hdtpTex23rd,skin.tex23rd,fomod,hdtp);
+        tex3rds[3] = GetTexture3(skin.fomodTex33rd,skin.hdtpTex33rd,skin.tex33rd,fomod,hdtp);
+        tex3rds[4] = GetTexture3(skin.fomodTex43rd,skin.hdtpTex43rd,skin.tex43rd,fomod,hdtp);
+        tex3rds[5] = GetTexture3(skin.fomodTex53rd,skin.hdtpTex53rd,skin.tex53rd,fomod,hdtp);
+        tex3rds[6] = GetTexture3(skin.fomodTex63rd,skin.hdtpTex63rd,skin.tex63rd,fomod,hdtp);
+        tex3rds[7] = GetTexture3(skin.fomodTex73rd,skin.hdtpTex73rd,skin.tex73rd,fomod,hdtp);
+        tex3rds[8] = GetTexture3(skin.fomodMainTexture3rd,skin.hdtpMainTexture3rd,skin.mainTexture3rd,fomod,hdtp);
 
-        ApplyWeaponSkin(wep);
+        //SARGE: Massive horrible hardcoded mess follows!
+        wep.SkinTextures[0] = texes[0];
+        wep.SkinTextures[1] = texes[1];
+        wep.SkinTextures[2] = texes[2];
+        wep.SkinTextures[3] = texes[3];
+        wep.SkinTextures[4] = texes[4];
+        wep.SkinTextures[5] = texes[5];
+        wep.SkinTextures[6] = texes[6];
+        wep.SkinTextures[7] = texes[7];
+        wep.SkinTextures[8] = texes[4];
+        
+        wep.SkinTextures3rd[0] = tex3rds[0];
+        wep.SkinTextures3rd[1] = tex3rds[1];
+        wep.SkinTextures3rd[2] = tex3rds[2];
+        wep.SkinTextures3rd[3] = tex3rds[3];
+        wep.SkinTextures3rd[4] = tex3rds[4];
+        wep.SkinTextures3rd[5] = tex3rds[5];
+        wep.SkinTextures3rd[6] = tex3rds[6];
+        wep.SkinTextures3rd[7] = tex3rds[7];
+        wep.SkinTextures3rd[8] = tex3rds[8];
     }
+
+    //Apply belt and inventory icon changes as well.
+    if (skin.beltIconTex != "")
+        wep.skinBeltIconTex = GetTexture(skin.beltIconTex);
+    if (skin.largeIconTex != "")
+        wep.skinBeltIconTex = GetTexture(skin.largeIconTex);
+        
+    //ApplyWeaponSkin(wep);
 }
 
 function int GetSkinCountFor(DeusExWeapon wep, optional bool bCountLocked)
@@ -416,7 +712,7 @@ function int GetSkinCountFor(DeusExWeapon wep, optional bool bCountLocked)
 
     for (i = 0;i < numWeaponSkins;i++)
     {
-        if ((WeaponSkins[i].bUnlocked || bCountLocked) && WeaponSkins[i].weaponClass == string(wep.Class))
+        if ((WeaponSkins[i].bUnlocked || bCountLocked || class'OutfitManager'.default.bDebugMode) && WeaponSkins[i].weaponClass == string(wep.Class))
             ret++;
     }
 
@@ -437,7 +733,7 @@ function SelectNextSkin(DeusExWeapon wep)
     local int i;
     local bool bFound;
     
-    wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
+    //wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
 
     if (wep.currentWeaponSkin == "default")
         bFound = true;
@@ -473,7 +769,7 @@ function SelectPreviousSkin(DeusExWeapon wep)
     local int i;
     local bool bFound;
                         
-    wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
+    //wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
 
     if (wep.currentWeaponSkin == "default")
         bFound = true;
@@ -512,6 +808,18 @@ function SelectPreviousSkin(DeusExWeapon wep)
 defaultproperties
 {
     msgDefault="Default"
-    msgUnlocked="%s Skin Unlocked!"
-    weaponSkinNames(0)="Golden Gun"
+    msgUnlocked="%d Skin Unlocked!"
+    weaponSkinNames(0)="Stainless Steel"
+    weaponSkinNames(1)="Golden Gun"
+    weaponSkinNames(2)="UNATCO Special Issue"
+    weaponSkinNames(3)="Tactical Gear"
+    weaponSkinNames(4)="Lemon Lime"
+    weaponSkinNames(5)="Smuggler's Special"
+    weaponSkinNames(6)="JoJo's Fine Stealth Pistol"
+    weaponSkinNames(7)="MJ12 Special Issue"
+    weaponSkinNames(8)="Riot Gear"
+    weaponSkinNames(9)="Hong Kong Military Gear"
+    weaponSkinNames(10)="Green Eggs and LAM"
+    weaponSkinNames(11)="Hot Pink"
+    weaponSkinNames(12)="EMPink"
 }

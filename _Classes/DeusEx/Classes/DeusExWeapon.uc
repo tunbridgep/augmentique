@@ -203,6 +203,13 @@ var bool		bClientReadyToFire, bClientReady, bInProcess, bFlameOn, bLooping;
 var int		SimClipCount, flameShotCount, SimAmmoAmount;
 var float	TimeLockSet;
 
+//SARGE: Augmentique Skin system
+var(Augmentique) travel string currentWeaponSkin;
+var Texture skinTextures[9]; //SARGE: Holds the textures for our current weapon skin.
+var Texture skinTextures3rd[9]; //SARGE: Holds the textures for our current weapon skin (on the floor).
+var Texture skinBeltIconTex;        //SARGE: If we have any updated belt texture
+var Texture skinLargeIconTex;        //SARGE: If we have any updated belt texture
+
 //
 // network replication
 //
@@ -225,6 +232,78 @@ replication
     reliable if ( Role == ROLE_Authority )
       RefreshScopeDisplay, ReadyClientToFire, SetClientAmmoParams, ClientDownWeapon, ClientActive, ClientReload;
 }
+
+// ----------------------------------------------------------------------
+// AUGMENTIQUE: Skin Stuff()
+// ----------------------------------------------------------------------
+
+function SelectNextSkin()
+{
+    if (DeusExPlayer(owner) != None)
+        DeusExPlayer(owner).WeaponSkinManager.SelectNextSkin(self);
+}
+
+function SelectPreviousSkin()
+{
+    if (DeusExPlayer(owner) != None)
+        DeusExPlayer(owner).WeaponSkinManager.SelectPreviousSkin(self);
+}
+
+function UpdateSkin()
+{
+    local DeusExPlayer pl;
+    if (DeusExPlayer(owner) != None)
+        pl = DeusExPlayer(owner);
+    else
+        pl = DeusExPlayer(GetPlayerPawn());
+
+    if (pl != None && pl.WeaponSkinManager != None)
+        pl.WeaponSkinManager.UpdateWeaponSkinTextures(self);
+}
+
+simulated event RenderOverlays(canvas Canvas)
+{
+    local int i;
+    for(i = 0;i < 8;i++)
+        multiskins[i] = default.multiskins[i];
+
+    DisplayWeaponSkin(true);
+    super.RenderOverlays(canvas);
+    DisplayWeaponSkin(false);
+}
+
+function DisplayWeaponSkin(bool overlay)
+{
+    local int i;
+
+    for(i = 0;i < 8;i++)
+    {
+        if (overlay)
+        {
+            if (multiSkins[i] != Texture'PinkMaskTex' && skinTextures[i] != None)
+                multiSkins[i] = skinTextures[i];
+        }
+        else
+        {
+            if (multiSkins[i] != Texture'PinkMaskTex' && skinTextures3rd[i] != None)
+                multiSkins[i] = skinTextures3rd[i];
+        }
+    }
+
+    if (overlay)
+    {
+        if (Texture != Texture'PinkMaskTex' && skinTextures[8] != None)
+            Texture = skinTextures[8];
+    }
+    else
+    {
+        if (Texture != Texture'PinkMaskTex' && skinTextures3rd[8] != None)
+            Texture = skinTextures3rd[8];
+    }
+}
+
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 // ---------------------------------------------------------------------
 // PropagateLockState()
@@ -327,6 +406,10 @@ function PostBeginPlay()
          bNeedToSetMPPickupAmmo = False;
       }
    }
+
+    //AUGMENTIQUE: Sets the weapon skin based on the owner.
+    if (DeusExPlayer(GetPlayerPawn()) != None)
+        DeusExPlayer(GetPlayerPawn()).WeaponSkinManager.SetDefaultSkin(self,Owner);
 }
 
 singular function BaseChange()
@@ -2678,6 +2761,10 @@ simulated function bool UpdateInfo(Object winObject)
 	winInfo.SetTitle(itemName);
 	winInfo.SetText(msgInfoWeaponStats);
 	winInfo.AddLine();
+
+    //SARGE: Add Skins Button
+    if (DeusExPlayer(P).WeaponSkinManager.GetSkinCountFor(self) > 1)
+        winInfo.AddSkinsButtons(self);
 
 	// Create the ammo buttons.  Start with the AmmoNames[] array,
 	// which is used for weapons that can use more than one 

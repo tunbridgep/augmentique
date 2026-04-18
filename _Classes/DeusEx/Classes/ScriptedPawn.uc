@@ -434,8 +434,19 @@ function ApplyCurrentOutfit()
 {
     local int i;
     
-    //Reset Skin
-    ResetSkinStyle();
+    if (bCloakOn)
+        return;
+    
+    //Reset Skin. We can't use ResetSkinStyle,
+    //because we're respecting non-augmentique skin changes,
+    //So we wrote our own version here
+	for (i=0; i<8; i++)
+    {
+        if (augmentiqueData.textures[i] != None)
+            MultiSkins[i] = Default.MultiSkins[i];
+    }
+    if (augmentiqueData.textures[8] != None)
+        Texture = default.Texture;
 
     if (!augmentiqueData.bRandomized)
         return;
@@ -446,6 +457,9 @@ function ApplyCurrentOutfit()
     if (augmentiqueData.textures[8] != None)
         Texture = augmentiqueData.textures[8];
 }
+
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 native(2102) final function ConBindEvents();
 
@@ -514,6 +528,9 @@ function PostBeginPlay()
 		KillShadow();
 		bHasShadow = False;
 	}
+
+    //Augmentique
+    ApplyCurrentOutfit();
 }
 
 

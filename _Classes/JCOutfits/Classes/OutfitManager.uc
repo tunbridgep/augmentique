@@ -1341,7 +1341,8 @@ function PopulateOutfitsList()
     //EDIT: These should probably be exclusive to GM_Suit
     AddPartL(PS_Hat,126,true,"chef_h",,,,,,,,"ChefTex3");
     AddPartL(PS_Hat,127,true,"sailor_h","SailorSkin",,,,,,,"SailorTex3");
-    AddPartL(PS_Hat,128,true,"ponytail_g",,,,,,,,"PonyTailTex1");
+    AddPartL(PS_Hat,128,true,"ponytail_h",,,,,,,,"PonyTailTex1");
+    AddPartL(PS_Hat,186,true,"halo_h",,,,,,,,"BorderlineHalo");
     
     //Defaults
     AddDefaultReference("default_b");
@@ -1378,7 +1379,8 @@ function PopulateOutfitsList()
     
     //Luminous Path
     BeginNewOutfitL("lumpath",78);
-    OutfitAddPartReference("ponytail_g"); //SARGE: Looks like crap
+    OutfitAddPartReference("halo_h");
+    OutfitAddPartReference("ponytail_h"); //SARGE: Looks like crap
     OutfitAddPartReference("chef_p");
     OutfitAddPartReference("lumpath_s");
     
@@ -2069,6 +2071,7 @@ function PopulateNPCOutfitsList()
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Female1");
     AddNPCFaces(0,1,2,false,true,false,false,false,false);
+    AddNPCGlasses(3,4,true,true,true,true);
     AddNPCShirts(7,-1, false, true);
     AddNPCPants(6, false, false, true, false);
 
@@ -2080,6 +2083,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.LowerClassFemale");
     AddNPCGroupClass("DeusEx.JunkieFemale");
     AddNPCFaces(0,1,2,false,true,false,true,false,false);
+    AddNPCGlasses(3,4,true,true,false,false);
     AddNPCShirts(7,-1, false, false);
     AddNPCPants(6, false, false, false, true);
 
@@ -2088,7 +2092,13 @@ function PopulateNPCOutfitsList()
     //Some NPCs simply change pants and keep everything else the same
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.JordanShea",true);
+    AddNPCGlasses(3,4,true,true,true,false);
     AddNPCPants(6, false, true, false, false);
+    
+    //Anna Navarre just gets glasses
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.AnnaNavarre",true);
+    AddNPCGlasses(3,4,true,true,true,false);
     
     //////////////////////////////////////////////////////////
     //               ---GM_Suit---
@@ -3335,6 +3345,8 @@ defaultproperties
      partNames(183)="Ponytail"
      partNames(184)="Long Hair"
      partNames(185)="Long Hair and Ponytail"
+     
+     partNames(186)="BorderlineHalo"
 
      CustomOutfitName="(Custom)"
      NothingName="Nothing"

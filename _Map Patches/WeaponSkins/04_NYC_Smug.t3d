@@ -1,0 +1,13 @@
+Begin Map
+Begin Actor Class=WeaponAssaultShotgun Name=WeaponAssaultShotgun0
+    currentWeaponSkin="smuggler"
+    PickupAmmoCount=0
+    LastRenderTime=58.711700
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=WeaponAssaultShotgun
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=661,ZoneNumber=1)
+    Location=(X=-593.065918,Y=1729.493652,Z=248.100555)
+    OldLocation=(X=-593.065918,Y=1729.493652,Z=248.100555)
+    Name=WeaponAssaultShotgun0
+End Actor
+End Map

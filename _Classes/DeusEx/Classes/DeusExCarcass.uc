@@ -54,24 +54,19 @@ struct AugmentiqueOutfitData
 
 var travel AugmentiqueOutfitData augmentiqueData;
 
-//Copied from ScriptedPawn
-function ResetSkinStyle()
-{
-	local int i;
-
-	for (i=0; i<8; i++)
-		MultiSkins[i] = Default.MultiSkins[i];
-	Skin      = Default.Skin;
-	ScaleGlow = Default.ScaleGlow;
-	Style     = Default.Style;
-}
-
 //Augmentique: Update our textures to our Augmentique outfit
 function ApplyCurrentOutfit()
 {
     local int i;
-
-    ResetSkinStyle();
+    
+    //Reset Skin
+	for (i=0; i<8; i++)
+    {
+        if (augmentiqueData.textures[i] != None)
+            MultiSkins[i] = Default.MultiSkins[i];
+    }
+    if (augmentiqueData.textures[8] != None)
+        Texture = default.Texture;
 
     if (!augmentiqueData.bRandomized)
         return;
@@ -135,6 +130,9 @@ function CopyAugmentiqueDataFromPOVCorpse(POVCorpse pov)
     augmentiqueData.bUnique = pov.augmentiqueData.bUnique;
     ApplyCurrentOutfit();
 }
+
+// ----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 
 // ----------------------------------------------------------------------
@@ -248,6 +246,8 @@ function PostBeginPlay()
 	SetTimer(30.0, False);
 
 	Super.PostBeginPlay();
+
+    ApplyCurrentOutfit();
 }
 
 // ----------------------------------------------------------------------
@@ -525,6 +525,10 @@ function Frob(Actor Frobber, Inventory frobWith)
 				
 				if (item != None)
 				{
+                    //AUGMENTIQUE: Apply weapon skins for weapons we didn't pick up.
+                    if (DeusExPlayer(P) != None && DeusExPlayer(P).WeaponSkinManager != None)
+                        DeusExPlayer(P).WeaponSkinManager.GetSkinFromCarcass(DeusExPlayer(P),DeusExWeapon(item),self);
+
 					bFoundSomething = True;
 
 					if (item.IsA('NanoKey'))
