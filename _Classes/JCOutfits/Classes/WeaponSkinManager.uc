@@ -70,7 +70,8 @@ struct WeaponSkin
     var string id;
     var bool bUnlocked;
     var string weaponClass;
-    var string ownerClass;
+    var string ownerClasses[10];
+    var int numOwnerClasses;
     var string beltIconTex;
     var string largeIconTex;
 };
@@ -120,6 +121,8 @@ function Init(DeusExPlayer newPlayer)
     //MJ12 Assault Gun
     AddSkinL("mj12","DeusEx.WeaponAssaultGun",7);
     AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinOwnerClass("DeusEx.MJ12Elite");
+    AddSkinOwnerClass("DeusEx.MJ12Elite2");
     AddSkinTex(1,SKIN_PREFIX $ "AssaultGunMJ121");
     Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunMJ123rd");
     Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunMJ123rd");
@@ -149,6 +152,8 @@ function Init(DeusExPlayer newPlayer)
     //MJ12 Assault Shotgun
     AddSkinL("mj12","DeusEx.WeaponAssaultShotgun",7);
     AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinOwnerClass("DeusEx.MJ12Elite");
+    AddSkinOwnerClass("DeusEx.MJ12Elite2");
     AddSkinTex(0,SKIN_PREFIX $ "MJ12AssaultShotgun1");
     Add3rdSkinTex(0,SKIN_PREFIX $ "MJ12AssaultShotgun3rd");
     Add3rdSkinTex(1,SKIN_PREFIX $ "MJ12AssaultShotgun3rd");
@@ -269,6 +274,8 @@ function Init(DeusExPlayer newPlayer)
     ////Rifle
     AddSkinL("mj12","DeusEx.WeaponRifle",7);
     AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinOwnerClass("DeusEx.MJ12Elite");
+    AddSkinOwnerClass("DeusEx.MJ12Elite2");
     AddSkinTex(1,SKIN_PREFIX $ "MJ12SniperRifle1");
     AddSkinTex(7,SKIN_PREFIX $ "MJ12SniperRifle1");
     Add3rdSkinTex(0,SKIN_PREFIX $ "MJ12SniperRifle3rd");
@@ -277,6 +284,8 @@ function Init(DeusExPlayer newPlayer)
     ////Plasma Rifle
     AddSkinL("mj12","DeusEx.WeaponPlasmaRifle",7);
     AddSkinOwnerClass("DeusEx.MJ12Troop");
+    AddSkinOwnerClass("DeusEx.MJ12Elite");
+    AddSkinOwnerClass("DeusEx.MJ12Elite2");
     AddSkinTex(0,SKIN_PREFIX $ "MJ12PlasmaRifle1");
     //AddSkinTex(1,SKIN_PREFIX $ "MJ12PlasmaRifleSFX");
     Add3rdSkinTex(1,SKIN_PREFIX $ "MJ12PlasmaRifle3rd");
@@ -309,20 +318,23 @@ function GetSkinFromCarcass(DeusExPlayer P, DeusExWeapon weapon, DeusExCarcass c
 {
     local WeaponSkinDisplayItem temp;
 
-    if (weapon.currentWeaponSkin != "default" && weapon.currentWeaponSkin != "" && !IsUnlocked(weapon.currentWeaponSkin))
+    //Log("GetSkinFromCarcass:" @ weapon.currentWeaponSkin @ IsUnlocked(weapon));
+
+    if (weapon.currentWeaponSkin != "default" && weapon.currentWeaponSkin != "" && !IsUnlocked(weapon))
     {
-        UnlockSkin(weapon.currentWeaponSkin);
+        if (UnlockSkin(weapon))
+        {
+            //Create a temp object for the new item
+            temp = carc.spawn(class'WeaponSkinDisplayItem',,, carc.Location);
 
-        //Create a temp object for the new item
-        temp = carc.spawn(class'WeaponSkinDisplayItem',,, carc.Location);
+            //Show the new icon
+            //carc.PlaySound(weapon.CopyModsSound,SLOT_None,0.8);
+            carc.AddReceivedItem(P,temp,1);
 
-        //Show the new icon
-        //carc.PlaySound(weapon.CopyModsSound,SLOT_None,0.8);
-        carc.AddReceivedItem(P,temp,1);
-
-        //Destroy the temp item
-        temp.Destroy();
-        temp = None;
+            //Destroy the temp item
+            temp.Destroy();
+            temp = None;
+        }
     }
 }
 
@@ -364,16 +376,24 @@ function AddSkin(string id, string className, string skinName, optional bool bUn
 {
     numWeaponSkins++;
     currentWeaponSkin++;
-    WeaponSkins[currentWeaponSkin].id = id;
+    WeaponSkins[currentWeaponSkin].id = id $ "_" $ className;
     WeaponSkins[currentWeaponSkin].weaponClass = className;
     WeaponSkins[currentWeaponSkin].skinName = skinName;
     if (bUnlocked)
-        UnlockSkin(id,true);
+        UnlockSkinByID(id $ "_" $ className,true);
 }
 
 function AddSkinOwnerClass(string ownerClass)
 {
-    WeaponSkins[currentWeaponSkin].ownerClass = ownerClass;
+    local int num;
+    num = WeaponSkins[currentWeaponSkin].numOwnerClasses;
+
+    if (num == 10)
+        return;
+    
+    //Log("Adding owner class " $ num @ ownerClass $ " for skin " $ weaponSkins[currentWeaponSkin].id);
+    WeaponSkins[currentWeaponSkin].ownerClasses[num] = ownerClass;
+    WeaponSkins[currentWeaponSkin].numOwnerClasses++;
 }
 
 /*
@@ -381,6 +401,18 @@ function AddSkinMapName(string mapName, optional string tag)
 {
 }
 */
+
+function bool CheckOwnerClasses(int id, Actor owner)
+{
+    local int i;
+
+    for (i = 0;i < WeaponSkins[id].numOwnerClasses;i++)
+    {
+        if (WeaponSkins[id].ownerClasses[i] ~= string(Owner.Class) || WeaponSkins[id].ownerClasses[i] ~= (string(Owner.Class)$"Carcass"))
+            return true;
+    }
+    return false;
+}
 
 function SetDefaultSkin(DeusExWeapon weapon, Actor Owner)
 {
@@ -392,13 +424,16 @@ function SetDefaultSkin(DeusExWeapon weapon, Actor Owner)
 
     //Log("SetDefaultSkin: " $ weapon @ Owner);
 
+    weapon.currentWeaponSkin = "default";
+    UpdateWeaponSkinTextures(weapon);
+    ApplyWeaponSkin(weapon,false);
+
     for (i=0;i < numWeaponSkins;i++)
     {
-        bOwnerCheck = WeaponSkins[i].ownerClass ~= string(Owner.Class) || WeaponSkins[i].ownerClass ~= (string(Owner.Class)$"Carcass");
-    
+        bOwnerCheck = CheckOwnerClasses(i,Owner);
 
         //Log(" - Checking: " $ WeaponSkins[i].id $ ", " $ WeaponSkins[i].skinName @ "for" @ Owner);
-        //Log("   -> " $ Caps(WeaponSkins[i].ownerClass) @ Caps(string(Owner.Class)));
+        //Log("   -> " $ /*Caps(WeaponSkins[i].ownerClass) @ Caps(string(Owner.Class))*/bOwnerCheck);
         //Log("   -> " $ Caps(WeaponSkins[i].weaponClass) @ Caps(string(weapon.Class)));
         //Weapon Class and Skin Owner matches
         if (bOwnerCheck && WeaponSkins[i].weaponClass ~= string(weapon.Class))
@@ -412,7 +447,12 @@ function SetDefaultSkin(DeusExWeapon weapon, Actor Owner)
     //Log("---");
 }
 
-function private bool IsUnlocked(string id)
+function private bool IsUnlocked(DeusExWeapon weapon)
+{
+    return IsIDUnlocked(weapon.currentWeaponSkin $ "_" $ string(weapon.Class));
+}
+
+function private bool IsIDUnlocked(string id)
 {
     local int i;
 
@@ -424,15 +464,25 @@ function private bool IsUnlocked(string id)
     return false;
 }
 
+function bool UnlockSkin(DeusExWeapon weapon, optional bool bNoMessage)
+{
+    if (weapon != None)
+        return UnlockSkinByID(weapon.currentWeaponSkin,false,weapon.itemName);
+    return false;
+}
+
 //Returns FALSE if the skin is already unlocked
-function bool UnlockSkin(string id, optional bool bNoMessage)
+function bool UnlockSkinByID(string id, optional bool bNoMessage, optional string messageExtra)
 {
     local int i;
+    local string msg;
 
     if (id == "")
         return false;
 
-    if (!IsUnlocked(id))
+    Log("UnlockSkinById: " $ id);
+
+    if (!IsIDUnlocked(id))
     {
         //Find somewhere to put it
         for (i = 0;i < ArrayCount(unlockedWeaponSkins);i++)
@@ -452,7 +502,13 @@ function bool UnlockSkin(string id, optional bool bNoMessage)
                 WeaponSkins[i].bUnlocked = true;
 
                 if (!bNoMessage)
-                    player.ClientMessage(sprintf(msgUnlocked,WeaponSkins[i].skinName));
+                {
+                    msg = sprintf(msgUnlocked,WeaponSkins[i].skinName);
+                    if (messageExtra != "")
+                        msg = msg @ "[" $ messageExtra $ "]";
+
+                    player.ClientMessage(msg);
+                }
 
                 break;
             }
@@ -485,7 +541,7 @@ function private SyncFromStoredData()
        
     //Copy over unlocks from config
     for (i = 0;i < ArrayCount(unlockedWeaponSkinsGlobal); i++)
-        UnlockSkin(unlockedWeaponSkinsGlobal[i]);
+        UnlockSkinByID(unlockedWeaponSkinsGlobal[i]);
 
     //Set "bUnlocked" on anything we've unlocked
     for (i = 0;i < ArrayCount(unlockedWeaponSkins);i++)
@@ -568,17 +624,6 @@ function private bool GetFirstValidSkinForWeapon(DeusExWeapon wep, bool bMatchSe
         }
     }
     return false;
-}
-
-//Detect HDTP model using mesh path. Disgusting
-function private bool IsHDTP(DeusExWeapon wep)
-{
-    return InStr(caps(string(wep.Mesh)),"HDTPItems.") == 0;
-}
-
-function private bool IsFomod(DeusExWeapon wep)
-{
-    return InStr(caps(string(wep.Mesh)),"FOMOD.") == 0;
 }
 
 //Gets a texture, or a backup texture if the first one fails, or a backup texture if the second one fails
