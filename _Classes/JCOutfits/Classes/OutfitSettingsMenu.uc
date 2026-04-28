@@ -5,31 +5,38 @@
 class OutfitSettingsMenu expands MenuUIScreenWindow;
 
 var OutfitManager O;
+var WeaponSkinManager S;
 
 event InitWindow()
 {
 	Super.InitWindow();
 
     if (player != None)
-    O = OutfitManager(player.outfitManager);
+    {
+        O = OutfitManager(player.outfitManager);
+        S = WeaponSkinManager(player.weaponSkinManager);
+    }
 }
 
 function SaveSettings()
 {
     super.SaveSettings();
     O.SaveConfig();
+    S.SaveConfig();
 }
 
 function ResetToDefaults()
 {
     super.ResetToDefaults();
     O.SaveConfig();
+    S.SaveConfig();
 }
 
 defaultproperties
 {
      choices(0)=Class'Augmentique.MenuChoice_ShowDescriptions'
      choices(1)=Class'Augmentique.MenuChoice_NPCs'
+     choices(2)=Class'Augmentique.MenuChoice_SelectWeaponSkins'
      actionButtons(0)=(Align=HALIGN_Right,Action=AB_OK)
      actionButtons(1)=(Action=AB_Reset)
      Title="Augmentique Settings"
