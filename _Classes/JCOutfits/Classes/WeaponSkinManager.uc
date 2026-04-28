@@ -76,6 +76,14 @@ struct WeaponSkin
     var string largeIconTex;
 };
 
+struct ProjectileSkin
+{
+    var string id;
+    var string texes[9];
+    var string hdtpTexes[9];
+    var string fomodTexes[9];
+};
+
 var private const localized string WeaponSkinNames[255]; //SARGE: Allow localization
 var private transient WeaponSkin WeaponSkins[255];
 var private transient int numWeaponSkins;
@@ -90,6 +98,12 @@ var const localized string msgUnlocked;
 var travel string unlockedWeaponSkins[255];      //SARGE: The ids of unlocked weapon skins
 var globalconfig string unlockedWeaponSkinsGlobal[255];  //SARGE: the ids of unlocked weapon skins from previous playthroughs.
 
+var private transient ProjectileSkin ProjectileSkins[255];
+var private transient int numProjectileSkins;
+var private transient int currentProjectileSkin;
+
+var globalconfig bool bSwitchToNewSkins;
+
 const SKIN_PREFIX = "Augmentique.WeaponSkins.";
 
 function Init(DeusExPlayer newPlayer)
@@ -101,6 +115,7 @@ function Init(DeusExPlayer newPlayer)
 
     player = newPlayer;
     currentWeaponSkin = -1;
+    currentProjectileSkin = -1;
     dxInfo = player.GetLevelInfo();
     
     ////AssaultGun
@@ -188,8 +203,12 @@ function Init(DeusExPlayer newPlayer)
     AddSkinL("green","DeusEx.WeaponLAM",10);
     AddSkinTex(1,SKIN_PREFIX $ "GreenLAM1");
     AddSkinTex(3,SKIN_PREFIX $ "GreenLAM1");
-    Add3rdSkinTex(0,SKIN_PREFIX $ "GreenLAM3rd");
-    Add3rdSkinTex(1,SKIN_PREFIX $ "GreenLAM3rd");
+    //Add3rdSkinTex(0,SKIN_PREFIX $ "GreenLAM3rd");
+    //Add3rdSkinTex(1,SKIN_PREFIX $ "GreenLAM3rd");
+
+    AddProjectileSkin("green","DeusEx.WeaponLAM");
+    AddProjectileSkinTex(0,SKIN_PREFIX $ "GreenLAM3rd");
+    AddProjectileSkinTex(1,SKIN_PREFIX $ "GreenLAM3rd");
     
     ////GEPGUN
 
@@ -247,6 +266,9 @@ function Init(DeusExPlayer newPlayer)
     AddSkinL("hotpink","DeusEx.WeaponEMPGrenade",12);
     AddSkinTex(2,SKIN_PREFIX $ "HotPinkEMP1");
     Add3rdSkinTex(1,SKIN_PREFIX $ "HotPinkEMP3rd");
+
+    AddProjectileSkin("hotpink","DeusEx.WeaponEMPGrenade");
+    AddProjectileSkinTex(1,SKIN_PREFIX $ "HotPinkEMP3rd");
     
     ////Sawed Off
 
@@ -313,12 +335,82 @@ function Init(DeusExPlayer newPlayer)
     bInited = true;
 }
 
+//Detect HDTP model using mesh path. Disgusting
+function static bool IsHDTP(Actor wep)
+{
+    return InStr(caps(string(wep.Mesh)),"HDTPITEMS.") == 0;
+}
+
+function static bool IsFomod(Actor wep)
+{
+    return InStr(caps(string(wep.Mesh)),"FOMOD.") == 0;
+}
+
+function ApplyWeaponSkin(DeusExWeapon wep, bool firstPerson)
+{
+    local int i;
+
+    for(i = 0;i < 8;i++)
+    {
+        if (firstPerson)
+        {
+            //Log(wep.currentWeaponSkin @ "Skin: " $ wep.skinTextures[i]);
+            if (wep.multiSkins[i] == None)
+                wep.multiSkins[i] = wep.skinTextures[i];
+        }
+        else
+        {
+            //Log(wep.currentWeaponSkin @ "Skin: " $ wep.skinTextures3rd[i]);
+            if (wep.multiSkins[i] == None)
+                wep.multiSkins[i] = wep.skinTextures3rd[i];
+        }
+    }
+
+    if (firstPerson)
+    {
+        //Log(wep.currentWeaponSkin @ "Skin: " $ wep.Skin);
+        if (wep.Skin == None)
+            wep.Skin = wep.skinTextures[0];
+        if (wep.Texture == None)
+            wep.Texture = wep.skinTextures[8];
+    }
+    else
+    {
+        //Log(wep.currentWeaponSkin @ "Skin: " $ wep.Skin);
+        if (wep.Skin == None)
+            wep.Skin = wep.skinTextures3rd[0];
+        if (wep.Texture == None)
+            wep.Texture = wep.skinTextures3rd[8];
+    }
+}
+
+//AUGMENTIQUE: Once our weapons are created, we need to update their skins
+function UpdateWeaponSkinsForPawn(ScriptedPawn P)
+{
+    local Inventory I;
+    
+    if (DeusExWeapon(P.Weapon) != None)
+        SetDefaultSkin(DeusExWeapon(P.Weapon),P);
+
+    I = P.Inventory;
+    while (I != None)
+    {
+        if (I.IsA('DeusExWeapon'))
+            SetDefaultSkin(DeusExWeapon(I),P);
+
+        I = I.Inventory;
+    }
+}
+
 //Unlocks skins when searching carcasses for items we can't pick up
 function GetSkinFromCarcass(DeusExPlayer P, DeusExWeapon weapon, DeusExCarcass carc)
 {
     local WeaponSkinDisplayItem temp;
 
     //Log("GetSkinFromCarcass:" @ weapon.currentWeaponSkin @ IsUnlocked(weapon));
+
+    if (weapon == None || carc == None)
+        return;
 
     if (weapon.currentWeaponSkin != "default" && weapon.currentWeaponSkin != "" && !IsUnlocked(weapon))
     {
@@ -327,13 +419,17 @@ function GetSkinFromCarcass(DeusExPlayer P, DeusExWeapon weapon, DeusExCarcass c
             //Create a temp object for the new item
             temp = carc.spawn(class'WeaponSkinDisplayItem',,, carc.Location);
 
-            //Show the new icon
-            //carc.PlaySound(weapon.CopyModsSound,SLOT_None,0.8);
-            carc.AddReceivedItem(P,temp,1);
+            if (temp != None)
+            {
 
-            //Destroy the temp item
-            temp.Destroy();
-            temp = None;
+                //Show the new icon
+                //carc.PlaySound(weapon.CopyModsSound,SLOT_None,0.8);
+                carc.AddReceivedItem(P,temp,1);
+                
+                //Destroy it
+                temp.Destroy();
+                temp = None;
+            }
         }
     }
 }
@@ -341,6 +437,7 @@ function GetSkinFromCarcass(DeusExPlayer P, DeusExWeapon weapon, DeusExCarcass c
 function RefreshAllWeapons()
 {
     local DeusExWeapon W;
+    local DeusExProjectile PR;
     local Pawn P;
 
     if (player == None)
@@ -351,6 +448,13 @@ function RefreshAllWeapons()
     {
         UpdateWeaponSkinTextures(W);
         ApplyWeaponSkin(W,false);
+    }
+    
+    //Refresh all projectiles in the map
+	foreach player.AllActors(class'DeusExProjectile', PR)
+    {
+        UpdateProjectileSkinTextures(PR);
+        ApplyProjectileSkin(PR);
     }
 
     P = player.Level.PawnList;
@@ -383,6 +487,16 @@ function AddSkin(string id, string className, string skinName, optional bool bUn
         UnlockSkinByID(id $ "_" $ className,true);
 }
 
+function AddProjectileSkin(string id, string className)
+{
+    if (numProjectileSkins >= 255)
+        return;
+    
+    numProjectileSkins++;
+    currentProjectileSkin++;
+    ProjectileSkins[currentProjectileSkin].id = id $ "_" $ className;
+}
+
 function AddSkinOwnerClass(string ownerClass)
 {
     local int num;
@@ -401,6 +515,42 @@ function AddSkinMapName(string mapName, optional string tag)
 {
 }
 */
+
+function ApplyProjectileSkinFrom(DeusExWeapon wep, DeusExProjectile proj)
+{
+    if (wep == none || proj == none)
+        return;
+
+    proj.currentWeaponSkin = wep.currentWeaponSkin;
+    UpdateProjectileSkinTextures(proj);
+    ApplyProjectileSkin(proj);
+}
+
+function ApplyProjectileSkin(DeusExProjectile proj)
+{
+    local int i;
+    
+    //Dirty hack for LAMs
+    if (LAM(proj) != None)
+    {
+        LAM(proj).lightSkinTex = proj.skinTextures[1];
+        return;
+    }
+
+    for(i = 0;i < 8;i++)
+    {
+        if (proj.multiSkins[i] == None)
+            proj.multiSkins[i] = proj.skinTextures[i];
+    }
+
+    //Log(wep.currentWeaponSkin @ "Skin: " $ wep.Skin);
+    if (proj.Skin == None)
+        proj.Skin = proj.skinTextures[0];
+    if (LAM(proj) != None)
+    if (proj.Texture == None)
+        proj.Texture = proj.skinTextures[8];
+
+}
 
 function bool CheckOwnerClasses(int id, Actor owner)
 {
@@ -526,7 +676,7 @@ function TransferSkin(DeusExWeapon wep)
     PW = DeusExWeapon(player.Weapon);
 
     //If the items match, and our weapon is using the default skin, swap it.
-    if (PW != None && PW.Class == wep.Class && PW.currentWeaponSkin == "default")
+    if (PW != None && PW.Class == wep.Class && bSwitchToNewSkins/* && PW.currentWeaponSkin == "default"*/)
     {
         //wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
         PW.currentWeaponSkin = wep.currentWeaponSkin;
@@ -599,8 +749,20 @@ function Add3rdSkinTex(int texNum, string tex)
     }
 }
 
+function AddProjectileSkinTex(int texNum, string tex)
+{
+    ProjectileSkins[currentProjectileSkin].texes[texNum] = tex;
+}
+
 function private bool IsSkinValidForWeapon(int skinIndex, DeusExWeapon wep, bool bCheckUnlocked, bool bMatchSelected)
 {
+    if (wep == None)
+        return false;
+
+    //SARGE: Hacky fix
+    if (WeaponSkins[skinIndex].id == (wep.currentWeaponSkin $ "_" $ string(wep.Class)))
+        wep.currentWeaponSkin = wep.currentWeaponSkin $ "_" $ string(wep.Class);
+
     //Log("IsSkinValidForWeapon:" @ WeaponSkins[skinIndex].weaponClass $ "," @ string(wep.Class));
     //Log("   ->" @ WeaponSkins[skinIndex].bUnlocked||!bCheckUnlocked $ "," @ (!bMatchSelected || WeaponSkins[skinIndex].id == wep.currentWeaponSkin));
     //Log("Total: " $ (WeaponSkins[skinIndex].bUnlocked||!bCheckUnlocked) && string(wep.Class) == WeaponSkins[skinIndex].weaponClass && (!bMatchSelected || WeaponSkins[skinIndex].id == wep.currentWeaponSkin));
@@ -661,15 +823,22 @@ function UpdateWeaponSkinTextures(DeusExWeapon wep)
     local WeaponSkin skin;
     local int index;
     local Texture texes[9], tex3rds[9];
+    local bool bMeshCheck;
 
     //Bad skin time.
     if (wep == None/* || wep.currentWeaponSkin == ""*/)
         return;
 
+    //SARGE: We intend to support HDTP/FOMOD in the future, but for now, just ignore any non-default model meshes.
+    hdtp = IsHDTP(wep);
+    fomod = IsFomod(wep);
+    //bMeshCheck = wep.Mesh == wep.default.PlayerViewMesh || wep.Mesh == wep.default.ThirdPersonMesh || wep.Mesh == wep.default.PickupViewMesh;
+    bMeshCheck = !hdtp && !fomod;
+
     //Log("Weapon Skin Updating for:" @ wep @ wep.currentWeaponSkin);
 
     //Special case for default skin - don't even bother searching.
-    if (wep.currentWeaponSkin == "default")
+    if (wep.currentWeaponSkin == "default" || !bMeshCheck)
     {
         wep.skinTextures[0] = None;
         wep.skinTextures[1] = None;
@@ -694,8 +863,6 @@ function UpdateWeaponSkinTextures(DeusExWeapon wep)
     else if (GetFirstValidSkinForWeapon(wep,true,index))
     {
         skin = WeaponSkins[index];
-        hdtp = IsHDTP(wep);
-        fomod = IsFomod(wep);
 
         texes[0] = GetTexture3(skin.fomodTex0,skin.hdtpTex0,skin.tex0,fomod,hdtp);
         texes[1] = GetTexture3(skin.fomodTex1,skin.hdtpTex1,skin.tex1,fomod,hdtp);
@@ -746,6 +913,59 @@ function UpdateWeaponSkinTextures(DeusExWeapon wep)
         wep.skinBeltIconTex = GetTexture(skin.largeIconTex);
         
     //ApplyWeaponSkin(wep);
+}
+
+function UpdateProjectileSkinTextures(DeusExProjectile proj)
+{
+    local bool hdtp, fomod;
+    local ProjectileSkin skin;
+    local int index;
+    local int i;
+    local Texture texes[9];
+    local bool bMeshCheck;
+
+    //Bad skin time.
+    if (proj == None)
+        return;
+
+    Log("UpdateProjectileSkinTextures:" @ proj.currentWeaponSkin);
+
+    //SARGE: We intend to support HDTP/FOMOD in the future, but for now, just ignore any non-default model meshes.
+    hdtp = IsHDTP(proj);
+    fomod = IsFomod(proj);
+    bMeshCheck = !hdtp && !fomod;
+
+    if (proj.currentWeaponSkin == "default" || !bMeshCheck)
+    {
+        Log("Applying default projectile skin");
+        for (i = 0;i < 9;i++)
+            proj.skinTextures[i] = None;
+    }
+    else if (GetProjectileSkin(proj.currentWeaponSkin, index))
+    {
+        Log("Applying projectile skin: " $ proj.currentWeaponSkin @ index);
+        skin = ProjectileSkins[index];
+
+        for (i = 0;i < 9;i++)
+            proj.skinTextures[i] = GetTexture3(skin.fomodTexes[i],skin.hdtpTexes[i],skin.texes[i],fomod,hdtp);
+    }
+}
+
+function bool GetProjectileSkin(string id, out int index)
+{
+    local int i;
+    
+    Log("Projectile skin Search: " $ id);
+    for (i = 0; i < numProjectileSkins;i++)
+    {
+        Log(i $ "   -> " $ id @ projectileSkins[i].id @ projectileSkins[i].id ~= id);
+        if (projectileSkins[i].id != "" && projectileSkins[i].id ~= id)
+        {
+            index = i;
+            return true;
+        }
+    }
+    return false;
 }
 
 function int GetSkinCountFor(DeusExWeapon wep, optional bool bCountLocked)
@@ -867,4 +1087,5 @@ defaultproperties
     weaponSkinNames(10)="Green Eggs and LAM"
     weaponSkinNames(11)="Hot Pink"
     weaponSkinNames(12)="EMPink"
+    bSwitchToNewSkins=true
 }
