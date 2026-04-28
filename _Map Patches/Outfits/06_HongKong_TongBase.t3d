@@ -14,6 +14,7 @@ Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner1
 End Actor
 Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner3
     Id="gordonquick"
+    requiredFlag="Have_ROM"
     bDynamicLight=True
     LastRenderTime=102.584885
     Level=LevelInfo'MyLevel.LevelInfo0'
@@ -23,5 +24,19 @@ Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner3
     OldLocation=(X=-467.054413,Y=795.275085,Z=6.099649)
     bSelected=True
     Name=OutfitSpawner3
+End Actor
+Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner0
+    Id="jaimereyes"
+    requiredFlag="JaimeRecruited"
+    bDynamicLight=True
+    LastRenderTime=99.985359
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=OutfitSpawner2
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=688,ZoneNumber=1)
+    Location=(X=363.274994,Y=-95.012360,Z=-168.900208)
+    Rotation=(Yaw=14387)
+    OldLocation=(X=363.274994,Y=-95.012360,Z=-168.900208)
+    bSelected=True
+    Name=OutfitSpawner0
 End Actor
 End Map

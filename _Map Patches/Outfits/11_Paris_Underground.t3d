@@ -1,6 +1,7 @@
 Begin Map
 Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner0
     Id="toby"
+    requiredFlag="templar_upload"
     bDynamicLight=True
     LastRenderTime=253.245453
     Level=LevelInfo'MyLevel.LevelInfo0'

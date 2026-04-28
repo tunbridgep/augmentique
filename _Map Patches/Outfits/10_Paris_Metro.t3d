@@ -14,6 +14,8 @@ Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner4
 End Actor
 Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner3
     Id="jaimereyes"
+    requiredFlag="JaimeRecruited"
+    requiredFlagInverted=True
     bDynamicLight=True
     LastRenderTime=1252.703247
     Level=LevelInfo'MyLevel.LevelInfo0'

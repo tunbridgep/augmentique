@@ -341,49 +341,37 @@ function SetupOutfitSpawners()
     local Actor a;
     local int i;
     local int index;
+    local bool bValid;
 
 	foreach player.AllActors(class'OutfitSpawner', S)
     {
-        //player.ClientMessage("Found an outfit spawner");
-        if (ValidateSpawn(S.id))
+
+        index = GetOutfitIndexByID(S.id);
+
+        //Set Frob Label and such
+        //S.ItemName = sprintf(S.PickupName,GetOutfitNameByID(S.id));
+        if (index == -1)
         {
-            S.outfitManager = self;
-
-            index = GetOutfitIndexByID(S.id);
-
-            //Set Frob Label and such
-            //S.ItemName = sprintf(S.PickupName,GetOutfitNameByID(S.id));
-            S.ItemName = outfits[index].PickupName;
-
-            //Set up texture
-            T = findTexture(S.LookupTexture);
-            //player.ClientMessage("Setting Skin and Texture to " $ T $ " ("$S.LookupTexture$")");
-            if (T != None)
-            {
-                S.Skin = T;
-                S.Texture = T;
-            }
-
-            //Set Collision
-            S.SetCollision( true, true, false );
-        }
-        else
-        {
-            //player.ClientMessage("OutfitManager failed to validate " $ S.id);
-
-            //Destroy objects linked to spawner
-            foreach player.AllActors(class'Actor', a)
-            {
-                for(i = 0;i < 5;i++)
-                {
-                    if (S.LinkedObjects[i] != "" && S.LinkedObjects[i] == string(a.Name))
-                        a.Destroy();
-                }
-            }
-
-
-            //Destroy Spawner
+            Log("AUGMENTIQUE: Destroying outfitspawner" @ S @ "with invalid ID" @ S.id);
             S.Destroy();
+            continue;
+        }
+    
+        S.outfitManager = self;
+
+        bValid = ValidateSpawn(S);
+
+        S.ShowSpawner(bValid);
+        
+        S.ItemName = outfits[index].PickupName;
+
+        //Set up texture
+        T = findTexture(S.LookupTexture);
+        //player.ClientMessage("Setting Skin and Texture to " $ T $ " ("$S.LookupTexture$")");
+        if (T != None)
+        {
+            S.Skin = T;
+            S.Texture = T;
         }
     }
 }
@@ -2298,7 +2286,7 @@ function PopulateNPCOutfitsList()
     //Thugs have special faces, since they can have a beanie
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.ThugMale2");
-    AddNPCFaces(0,4,-1,true,true,true,false,false,false);
+    AddNPCFaces(0,4,-1,true,true,false,false,false,false);
     AddNPCOutfitPart(PS_Body_M,true,0,4,-1,"ThugMale2Tex0","ThugMale2Tex0"); //Beanie
     
     //MJ12 Troops simply change faces. No special tactical gear as they will look too much like elites.
@@ -2892,11 +2880,22 @@ function Texture findTexture(string tex)
     return t;
 }
 
-function bool ValidateSpawn(string id)
+function bool ValidateSpawn(OutfitSpawner S)
 {
     local int index;
+    local Name flag;
 
-    index = GetOutfitIndexByID(id);
+    index = GetOutfitIndexByID(S.id);
+    
+    //Check Outfit Flag
+    if (S.requiredFlag != "" && player != None && player.rootWindow != None)
+    {
+        flag = player.rootWindow.StringToName(S.requiredFlag);
+        if (S.requiredFlagInverted && player.FlagBase.GetBool(flag))
+            return false;
+        else if (!S.requiredFlagInverted && !player.FlagBase.GetBool(flag))
+            return false;
+    }
 
     return index > 0 && !outfits[index].unlocked;
 }
