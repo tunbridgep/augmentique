@@ -170,6 +170,10 @@ function UpdateModelVariantsButtons()
     local OutfitManager O;
     local int count;
     O = outfitManager;
+            
+    btnModelVariantNext.Hide();
+    btnModelVariantPrev.Hide();
+    txtModelVariant.Hide();
 
     //Only show when we're in edit mode and our outfit has multiple body types
     if (O != None && O.currOutfit == O.customOutfit && bEditMode)
@@ -185,12 +189,6 @@ function UpdateModelVariantsButtons()
             btnModelVariantPrev.Show();
             txtModelVariant.Show();
             customButtonCount++;
-        }
-        else
-        {
-            btnModelVariantNext.Hide();
-            btnModelVariantPrev.Hide();
-            txtModelVariant.Hide();
         }
     }
     AskParentForReconfigure();
