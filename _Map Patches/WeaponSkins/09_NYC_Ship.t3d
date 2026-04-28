@@ -1,0 +1,6 @@
+Begin Map
+Begin Actor Class=WeaponAssaultGun Name=WeaponAssaultGun2
+    currentWeaponSkin="lemonlime"
+End Actor
+End Map
+
