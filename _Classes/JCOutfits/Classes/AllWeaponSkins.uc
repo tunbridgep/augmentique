@@ -68,6 +68,7 @@ class AllWeaponSkins expands Object abstract;
 //Hot Pink
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\GEPGun\hotpink\HotpinkGEPGUN.bmp"			    NAME="HotpinkGEPGun1"			GROUP="WeaponSkins"
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\GEPGun\hotpink\HotpinkGEPGUN3rd.pcx"			NAME="HotpinkGEPGun3rd"	    	GROUP="WeaponSkins" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\GEPGun\hotpink\PinkRocket.pcx"                  NAME="PinkRocket"	            GROUP="WeaponSkins" FLAGS=2
 
 ////Glock
 
@@ -123,7 +124,7 @@ class AllWeaponSkins expands Object abstract;
 
 //Hot Pink
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\SawedOff\hotpink\HotpinkShotgun.bmp"			    NAME="HotpinkShotgun1"			GROUP="WeaponSkins"
-#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\SawedOff\hotpink\HotpinkShotgun3rd.bmp"			    NAME="HotpinkShotgun3rd"		GROUP="WeaponSkins" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\SawedOff\hotpink\HotpinkShotgun3rd.pcx"			    NAME="HotpinkShotgun3rd"		GROUP="WeaponSkins" FLAGS=2
 
 ////Stealth Pistol
 

@@ -220,6 +220,9 @@ function Init(DeusExPlayer newPlayer)
     Add3rdSkinTex(1,SKIN_PREFIX $ "HotpinkGEPGun3rd");
     Add3rdSkinTex(2,SKIN_PREFIX $ "HotpinkGEPGun3rd");
     
+    AddProjectileSkin("hotpink","DeusEx.WeaponGEPGun");
+    AddProjectileSkinTex(0,SKIN_PREFIX $ "PinkRocket");
+    
     ////Pepper
 
     //Riot Gear
@@ -275,8 +278,8 @@ function Init(DeusExPlayer newPlayer)
     //Hotpink
     AddSkinL("hotpink","DeusEx.WeaponSawedOffShotgun",11);
     AddSkinTex(1,SKIN_PREFIX $ "HotpinkShotgun1");
-    AddSkinTex(2,SKIN_PREFIX $ "HotpinkShotgun1");
     Add3rdSkinTex(0,SKIN_PREFIX $ "HotpinkShotgun3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "HotpinkShotgun3rd");
     
     ////Stealth Pistol
 
