@@ -633,7 +633,7 @@ function bool UnlockSkinByID(string id, optional bool bNoMessage, optional strin
     if (id == "")
         return false;
 
-    Log("UnlockSkinById: " $ id);
+    //Log("UnlockSkinById: " $ id);
 
     if (!IsIDUnlocked(id))
     {
@@ -931,7 +931,7 @@ function UpdateProjectileSkinTextures(DeusExProjectile proj)
     if (proj == None)
         return;
 
-    Log("UpdateProjectileSkinTextures:" @ proj.currentWeaponSkin);
+    //Log("UpdateProjectileSkinTextures:" @ proj.currentWeaponSkin);
 
     //SARGE: We intend to support HDTP/FOMOD in the future, but for now, just ignore any non-default model meshes.
     hdtp = IsHDTP(proj);
@@ -940,13 +940,13 @@ function UpdateProjectileSkinTextures(DeusExProjectile proj)
 
     if (proj.currentWeaponSkin == "default" || !bMeshCheck)
     {
-        Log("Applying default projectile skin");
+        //Log("Applying default projectile skin");
         for (i = 0;i < 9;i++)
             proj.skinTextures[i] = None;
     }
     else if (GetProjectileSkin(proj.currentWeaponSkin, index))
     {
-        Log("Applying projectile skin: " $ proj.currentWeaponSkin @ index);
+        //Log("Applying projectile skin: " $ proj.currentWeaponSkin @ index);
         skin = ProjectileSkins[index];
 
         for (i = 0;i < 9;i++)
@@ -958,10 +958,10 @@ function bool GetProjectileSkin(string id, out int index)
 {
     local int i;
     
-    Log("Projectile skin Search: " $ id);
+    //Log("Projectile skin Search: " $ id);
     for (i = 0; i < numProjectileSkins;i++)
     {
-        Log(i $ "   -> " $ id @ projectileSkins[i].id @ projectileSkins[i].id ~= id);
+        //Log(i $ "   -> " $ id @ projectileSkins[i].id @ projectileSkins[i].id ~= id);
         if (projectileSkins[i].id != "" && projectileSkins[i].id ~= id)
         {
             index = i;
