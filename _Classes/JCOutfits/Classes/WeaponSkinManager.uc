@@ -330,7 +330,7 @@ function Init(DeusExPlayer newPlayer)
     SyncFromStoredData();
     
     //When we finish the game, or if we're in training, copy our weapon skins out permanently
-    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0))
+    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0) && !class'OutfitManager'.default.bDebugMode)
         CopyUnlocksToConfig();
 
     //RefreshAllWeapons();

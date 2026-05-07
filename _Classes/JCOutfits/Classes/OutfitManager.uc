@@ -295,7 +295,7 @@ function Setup(DeusExPlayer newPlayer)
     CopyOverUnlockedOutfits();
 
     //When we finish the game, or if we're in training, copy our outfits out permanently
-    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0))
+    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0) && !bDebugMode)
     {
         DebugLog("Copying over outfits");
         CopyOutfitsToPlayer();
