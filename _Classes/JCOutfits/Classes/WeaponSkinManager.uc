@@ -712,6 +712,7 @@ function private CopyUnlocksToConfig()
     local int i;
     for (i = 0;i < ArrayCount(unlockedWeaponSkins); i++)
         unlockedWeaponSkinsGlobal[i] = unlockedWeaponSkins[i];
+    SaveConfig();
 }
 
 function AddSkinIcons(string beltIconTex, string largeIconTex)
