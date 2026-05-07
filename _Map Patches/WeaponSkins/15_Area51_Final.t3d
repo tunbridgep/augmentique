@@ -1,0 +1,13 @@
+Begin Map
+Begin Actor Class=WeaponCombatKnife Name=WeaponCombatKnife0
+    currentWeaponSkin="goldengun"
+    LastRenderTime=63.668331
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=WeaponCombatKnife
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=1331,ZoneNumber=1)
+    Location=(X=-4091.185547,Y=-3705.217529,Z=-583.101624)
+    OldLocation=(X=-4091.185547,Y=-3715.217529,Z=-583.101624)
+    Name=WeaponCombatKnife0
+End Actor
+End Map
+

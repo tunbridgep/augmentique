@@ -12,6 +12,10 @@ class AllWeaponSkins expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultgun\hongkong\AssaultGunHongKong.bmp"		       	NAME="AssaultGunHK1"			    GROUP="WeaponSkins"
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultgun\hongkong\AssaultGunHongKong3rd.pcx"		    NAME="AssaultGunHK3rd"		    	GROUP="WeaponSkins" FLAGS=2
 
+//Gold
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultgun\goldengun\goldassaultgun.bmp"		       	NAME="AssaultGunGold1"			    GROUP="WeaponSkins"
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultgun\goldengun\goldassaultgun3rd.pcx"		        NAME="AssaultGunGold3rd"	    	GROUP="WeaponSkins" FLAGS=2
+
 //Lemon Lime (but I wanted Orange???)
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultgun\LemonLime\AssaultGunLemonLime.bmp"			NAME="AssaultGunLemonLime1"			GROUP="WeaponSkins"
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultgun\LemonLime\AssaultGunLemonLime3rd.pcx"		NAME="AssaultGunLemonLime3rd"		GROUP="WeaponSkins" FLAGS=2
@@ -25,6 +29,10 @@ class AllWeaponSkins expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultgun\MJ12\AssaultGunMJ123rd.pcx"			        NAME="AssaultGunMJ123rd"			GROUP="WeaponSkins" FLAGS=2
 
 ////Assault Shotgun
+
+//Gold
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultshotgun\goldengun\goldenassaultshotgun.bmp"	   	NAME="AssaultShotgunGold1"		    GROUP="WeaponSkins"
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultshotgun\goldengun\goldenassaultshotgun3rd.pcx"   NAME="AssaultShotgunGold3rd"	   	GROUP="WeaponSkins" FLAGS=2
 
 //UNATCO
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Assaultshotgun\UNATCO\AssaultshotgunUNATCO.bmp"		   	NAME="AssaultShotgunUNATCO1"			GROUP="WeaponSkins"
@@ -45,6 +53,10 @@ class AllWeaponSkins expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Baton\Riot\RiotPoliceBaton3rd.bmp"	NAME="RiotPoliceBaton3rd"	GROUP="WeaponSkins"
 
 ////Combat Knife
+
+//Gold
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\CombatKnife\goldengun\goldenknife.bmp"		       	    NAME="CombatKnifeGold1"			    GROUP="WeaponSkins"
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\CombatKnife\goldengun\goldenknife3rd.pcx"		   	    NAME="CombatKnifeGold3rd"		    GROUP="WeaponSkins"
 
 //Hong Kong
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\CombatKnife\hongkong\HongKongCombatKnife.bmp"		       	NAME="CombatKnifeHK1"			    GROUP="WeaponSkins"

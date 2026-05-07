@@ -148,8 +148,20 @@ function Init(DeusExPlayer newPlayer)
     AddSkinTex(1,SKIN_PREFIX $ "AssaultGunHK1");
     Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunHK3rd");
     Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunHK3rd");
+    
+    //Golden Assault Gun
+    AddSkinL("goldengun","DeusEx.WeaponAssaultGun",13);
+    AddSkinTex(1,SKIN_PREFIX $ "AssaultGunGold1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunGold3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunGold3rd");
 
     ////Assault Shotgun
+    
+    //Gold
+    AddSkinL("goldengun","DeusEx.WeaponAssaultShotgun",13);
+    AddSkinTex(0,SKIN_PREFIX $ "AssaultShotgunGold1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultShotgunGold3rd");
+    Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultShotgunGold3rd");
     
     //UNATCO Assault Shotgun
     AddSkinL("unatco","DeusEx.WeaponAssaultShotgun",2);
@@ -182,6 +194,11 @@ function Init(DeusExPlayer newPlayer)
     Add3rdSkinTex(0,SKIN_PREFIX $ "RiotPoliceBaton3rd");
     
     ////Combat Knife
+    
+    //Gold
+    AddSkinL("goldengun","DeusEx.WeaponCombatKnife",13);
+    AddSkinTex(0,SKIN_PREFIX $ "CombatKnifeGold1");
+    Add3rdSkinTex(0,SKIN_PREFIX $ "CombatKnifeGold3rd");
 
     //HK
     AddSkinL("hongkong","DeusEx.WeaponCombatKnife",9);
@@ -1091,5 +1108,6 @@ defaultproperties
     weaponSkinNames(10)="Green Eggs and LAM"
     weaponSkinNames(11)="Hot Pink"
     weaponSkinNames(12)="EMPink"
+    weaponSkinNames(13)="Gold Plated"
     bSwitchToNewSkins=true
 }

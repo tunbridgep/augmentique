@@ -1,0 +1,12 @@
+Begin Map
+Begin Actor Class=WeaponAssaultGun Name=WeaponAssaultGun0
+    currentWeaponSkin="goldengun"
+    LastRenderTime=73.721024
+    Level=LevelInfo'MyLevel.LevelInfo0'
+    Tag=WeaponAssaultGun
+    Region=(Zone=LevelInfo'MyLevel.LevelInfo0',iLeaf=1610,ZoneNumber=1)
+    Location=(X=3251.202881,Y=-1973.778076,Z=62.199936)
+    OldLocation=(X=2695.202881,Y=-3262.778076,Z=33.199936)
+    Name=WeaponAssaultGun0
+End Actor
+End Map
