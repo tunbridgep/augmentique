@@ -16,3 +16,6 @@ class AllMisc expands Object abstract;
 
 ////Outfits Screen
 #exec TEXTURE IMPORT FILE="Textures\Menus\OutfitsBackground_5.pcx"      NAME="OutfitsBackground_5"    GROUP="UserInterface"
+
+////Cat Texture
+#exec TEXTURE IMPORT FILE="Textures\Cat\CatTex2.bmp"                                NAME="CatTex2"                              GROUP="Misc"

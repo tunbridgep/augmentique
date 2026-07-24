@@ -2320,6 +2320,16 @@ function PopulateNPCOutfitsList()
     AddNPCOutfitPart(PS_Torso_M,false,1,5,-1,"ChildMaleTex1","ChildMaleTex1");
     AddNPCOutfitPart(PS_Torso_M,false,1,5,-1,"ChildMale2Tex1","ChildMale2Tex1");
     AddNPCPants(2, true, false, true, true);
+
+    //////////////////////////////////////////////////////////
+    //                  ---MISC STUFF---
+    //////////////////////////////////////////////////////////
+
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.Cat");
+    _NPCSkin(PS_Main,false,"DeusExCharacters.Skins.CatTex1"); //Default cat
+    _NPCSkin(PS_Main,false,"Misc.CatTex2"); //IW Cat
+
 }
 
 //Add a reference that will be added to all outfits for this particular parts group
