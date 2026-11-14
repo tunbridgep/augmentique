@@ -9,6 +9,9 @@ var int numOutfitParts;
 var DeusExPlayer player;
 var OutfitManager manager;
 
+var string groupFlags[10];
+var int numGroupFlags;
+
 //add default parts to each outfit that is added to this group
 var transient string defaultParts[50];
 var transient int defaultPartsNum;
@@ -24,6 +27,13 @@ var private MeshInfo MeshInfos[5];
 var int meshes;
 var int selectedMesh;
 
+function AddGroupFlag(string flag)
+{
+    if (numGroupFlags >= 10)
+        return;
+
+    groupFlags[numGroupFlags++] = flag;
+}
 
 function AddMesh(Mesh M, Mesh CM, string meshName)
 {
@@ -72,6 +82,18 @@ function bool HasMesh(Mesh M)
     
     return false;
 }
+
+/*
+function bool HasDefaultPart(string defRef)
+{
+    local int i, j;
+    for (i = 0;i < defaultPartsNum;i++)
+        for (j = 0;j < numOutfitParts;j++)
+            if (defaultParts[i] == PartsList[j].partID)
+                return true;
+    return false;
+}
+*/
 
 function AddDefaultReference(string defRef)
 {
@@ -138,7 +160,7 @@ function bool IsFemale()
     return player.FlagBase != None && player.FlagBase.GetBool('LDDPJCIsFemale');
 }
 
-function AddPart(OutfitPart P)
+function AddPart(OutfitPart P, optional string flag)
 {
     local int i;
 
@@ -169,6 +191,7 @@ function AddTransposePart(OutfitPart P,int bodySlot,int slot0, int slot1, int sl
     P2 = new(Self) class'OutfitPart';
 
     P2.partID = P.partID;
+    P2.flag = P.flag;
     P2.name = P.name;
     P2.bodySlot = bodySlot;
     P2.isAccessory = P.isAccessory;

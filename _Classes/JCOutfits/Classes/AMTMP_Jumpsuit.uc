@@ -105,3 +105,7 @@ class AMTMP_Jumpsuit expands Object abstract;
 #exec MESH NOTIFY MESH=AMTMP_Jumpsuit SEQ=DeathBack        TIME=0.5        FUNCTION=PlayBodyThud
 #exec MESH NOTIFY MESH=AMTMP_Jumpsuit SEQ=Tread            TIME=0.3        FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTMP_Jumpsuit SEQ=TreadShoot       TIME=0.3        FUNCTION=PlayFootStep
+
+defaultproperties
+{
+}

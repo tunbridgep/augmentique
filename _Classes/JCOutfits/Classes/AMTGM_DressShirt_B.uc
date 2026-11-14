@@ -105,3 +105,7 @@ class AMTGM_DressShirt_B expands Object abstract;
 #exec MESH NOTIFY MESH=AMTGM_DressShirt_B SEQ=DeathBack	TIME=0.5	FUNCTION=PlayBodyThud
 #exec MESH NOTIFY MESH=AMTGM_DressShirt_B SEQ=Tread		TIME=0.3	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGM_DressShirt_B SEQ=TreadShoot	TIME=0.3	FUNCTION=PlayFootStep
+
+defaultproperties
+{
+}

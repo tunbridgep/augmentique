@@ -35,6 +35,8 @@ var globalconfig int iEquipNPCs;
 //Print outfit part names to the console
 var globalconfig bool bDebugMode;
 
+var globalconfig bool bGlobalUnlocks;              //Always unlocks outfits/skins globally, rather than per playthrough. Don't use this.
+
 //part names
 var const localized string partNames[1000];
 
@@ -55,7 +57,7 @@ struct LocalizedOutfitInfo
     var const localized string Article;
 };
 
-var const LocalizedOutfitInfo outfitInfos[255];
+var const localized LocalizedOutfitInfo outfitInfos[255];
 
 //Custom Outfit Name
 var const localized string CustomOutfitName;
@@ -76,6 +78,7 @@ var transient int numParts;
 var transient PartsGroup Groups[50];
 var transient int numPartsGroups;
 var transient PartsGroup currentPartsGroup;
+var transient OutfitPart currentPart;
 
 //New 1.1 stuff! For handling NPC outfits
 var transient NPCOutfitGroup NPCGroups[50];
@@ -92,6 +95,70 @@ var transient bool bDescriptionsCheckbox;
 var const localized string BodyTypeRegular;
 var const localized string BodyTypeFat;
 var const localized string BodyTypeSkinny;
+
+function SetFlag(string flagName, bool value, optional bool bNoDelete)
+{
+    local Name flag;
+    if (player != None && player.rootWindow != None && player.FlagBase != None)
+    {
+        flag = player.rootWindow.StringToName("JCOutfits_" $ flagName);
+
+        if (value || bNoDelete)
+            Player.FlagBase.SetBool(flag,value,true,0);
+        else
+            Player.FlagBase.DeleteFlag(flag,FLAG_Bool);
+    }
+
+}
+
+function SetOutfitFlags(Outfit outfit, bool value)
+{
+    local int i, j;
+    local bool bSet;
+
+    if (outfit == None)
+        return;
+    
+    //Set flags for outfit
+    SetFlag("Equipped_" $ outfit.id, value);
+    DebugLog("Set Outfit Flags for" @ outfit.Name);
+
+    //Apply the flags for the outfit group
+    for (i = 0; i < outfit.partsGroup.numGroupFlags; i++)
+    {
+        if (outfit.partsGroup.groupFlags[i] != "")
+        {
+            DebugLog("  Group Flag: " $ outfit.partsGroup.groupFlags[i]);
+            //player.ClientMessage("Flag: " $ outfit.partsGroup.groupFlags[i]);
+            SetFlag(outfit.partsGroup.groupFlags[i], value);
+        }
+    }
+
+
+    //Apply the flags for the outfit parts
+    for (i = 0; i < outfit.numParts; i++)
+    {
+        bSet = true;
+        if (outfit.parts[i].flag != "")
+        {
+            DebugLog("  Flag: " $ outfit.parts[i].flag);
+            //Check if there's any other part with the same bodyslot
+            for (j = (i + 1); j < outfit.numParts; j++)
+                if (outfit.parts[j].bodySlot == outfit.parts[i].bodySlot)
+                {
+                    DebugLog("  Not setting flag: " $ outfit.parts[i].flag);
+                    bSet = false;
+                }
+
+            if (bSet)
+            {
+                DebugLog("  Setting Flag: " $ outfit.parts[i].flag);
+                //player.ClientMessage("Flag: " $ outfit.parts[i].flag);
+                SetFlag(outfit.parts[i].flag, value);
+            }
+        }
+    }
+}
 
 function bool Installed()
 {
@@ -168,6 +235,8 @@ function GlobalAddPart(PartSlot slot,string name,bool isAccessory,string id, opt
     PartsList[numParts] = P;
     P.index = numParts;
     numParts++;
+
+    currentPart = P;
 }
 
 //Localised version of AddPart.
@@ -199,6 +268,22 @@ function AddPart(PartSlot slot,string name,bool isAccessory,string id, optional 
     P = CreateNewOutfitPart(slot,name,isAccessory,id,t0,t1,t2,t3,t4,t5,t6,t7,tm);
 
     currentPartsGroup.AddPart(P);
+    currentPart = P;
+}
+
+function AddGroupFlag(string flag)
+{
+    if (currentPartsGroup != None)
+        currentPartsGroup.AddGroupFlag(flag);
+}
+
+function AddPartFlag(string flag)
+{
+    if (currentPart != None)
+    {
+        currentPart.flag = flag;
+        DebugLog("adding flag to current part: " $ currentPart.partID @ flag);
+    }
 }
 
 //Add a new mesh variant for an existing group, such as a "Fat" GM_Trench variant.
@@ -288,17 +373,15 @@ function Setup(DeusExPlayer newPlayer)
         defaultTextures[7] = string(player.MultiSkins[7]);
         defaultMesh = string(player.Mesh);
         //Set flag for default outfit
-        Player.FlagBase.SetBool('JCOutfits_Equipped_default',true,true,0);
         savedOutfitIndex = -1;
     }
 
     CopyOverUnlockedOutfits();
 
     //When we finish the game, or if we're in training, copy our outfits out permanently
-    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0) && !bDebugMode)
+    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0 || bGlobalUnlocks) && !bDebugMode)
     {
-        DebugLog("Copying over outfits");
-        CopyOutfitsToPlayer();
+        GloballyUnlockOutfits();
     }
     //else
     //    DebugLog("Not Copying over outfits");
@@ -312,6 +395,9 @@ function Setup(DeusExPlayer newPlayer)
     PopulateNPCOutfitsList();
 
     SetupNPCOutfits();
+    
+    //Set the installed flag
+    SetFlag("Installed", true);
 }
 
 function SetupCustomOutfit()
@@ -376,7 +462,7 @@ function SetupOutfitSpawners()
     }
 }
 
-function SpawnerPickup(OutfitSpawner S)
+function SpawnerPickup(OutfitSpawner S, optional bool bAutoEquip)
 {
     local int index;
     index = GetOutfitIndexByID(S.id);
@@ -397,11 +483,18 @@ function SpawnerPickup(OutfitSpawner S)
         
     Unlock(S.id);
 
+    if (bGlobalUnlocks)
+        GloballyUnlockOutfits();
+
     //Decorations don't support pickup sounds, so do it here
 	player.PlaySound(PickupSound, SLOT_None);
 
     //Set outfit as new
     outfits[index].bNew = true;
+	
+	//If set to auto equip, then equip the outfit immediately
+	if (bAutoEquip && IsEquippable(index))
+		EquipOutfit(index);
 
     S.Destroy();
 }
@@ -424,6 +517,7 @@ function PopulateOutfitsList()
     //Default "Nothing" accessories/textures
     GlobalAddPart(PS_Ponytail,NothingName,true,"nothing_pt","none","none");
     GlobalAddPart(PS_Glasses,NothingName,true,"nothing_g","none","none");
+    AddPartFlag("No_Glasses");
     GlobalAddPart(PS_Hat,NothingName,true,"nothing_h","none","none");
     GlobalAddPart(PS_Helmet,NothingName,true,"nothing_h","none","none");
     GlobalAddPartL(PS_Body_M,0,false,"default_b","default");
@@ -478,13 +572,21 @@ function PopulateOutfitsList()
     //Pants
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
     GlobalAddPartL(PS_Legs_M,12,false,"lab_p","PantsTex1");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,13,false,"gilbertrenton_p","PantsTex3"); //Also used by Ford Schick and Boat Person
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,8,false,"100%_p","Outfit1_Tex1");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,14,false,"paul_p","PantsTex8"); //Also used by Toby Atanwe and others
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,15,false,"businessman1_p","Businessman1Tex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,16,false,"businessman2_p","Businessman2Tex2");
-    GlobalAddPartL(PS_Legs,114,false,"chef_p","PantsTex10"); //Also used by Luminous Path members //TODO:
+    AddPartFlag("No_Leather");
+    GlobalAddPartL(PS_Legs,114,false,"chef_p","PantsTex10"); //Also used by Luminous Path members
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,17,false,"ajacobson_p","AlexJacobsonTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,18,false,"unatco_p","UnatcoTroopTex1");
     GlobalAddPartL(PS_Legs,19,false,"mechanic_p","MechanicTex2");
     GlobalAddPartL(PS_Legs,20,false,"soldier_p","SoldierTex2");
@@ -493,41 +595,67 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Legs,23,false,"mj12_p","MJ12TroopTex1");
     GlobalAddPartL(PS_Legs,24,false,"carter_p","SamCarterTex2");
     GlobalAddPartL(PS_Legs,25,false,"sailor_p","SailorTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,26,false,"bum_p","PantsTex4");
+    AddPartFlag("No_Leather");
     //GlobalAddPartL(PS_Legs,22,false,"lebedev_p","JuanLebedevTex3"); //Exactly the same as the regular NSF pants
     GlobalAddPartL(PS_Legs,27,false,"thug_p","ThugMale2Tex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,28,false,"thug2_p","ThugMaleTex3");
     GlobalAddPartL(PS_Legs,29,false,"mib_p","PantsTex5"); //Also used for Butler, and several others
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,30,false,"brown_p","PantsTex7");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,31,false,"secretservice_p","SecretServiceTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,32,false,"junkie_p","JunkieMaleTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,33,false,"jojo_p","JoJoFineTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartLO(PS_Legs,64,false,"thug3_p","ThugMale3Tex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,34,false,"cop_p","CopTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,35,false,"howardstrong_p","HowardStrongTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,36,false,"chad_p","ChadTex2");
+    AddPartFlag("No_Leather");
     //GlobalAddPartLO(PS_Legs,29,false,"dentonclone_p","DentonCloneTex2"); //FAIL, these suck
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,37,false,"lowclass_p","PantsTex6");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,38,false,"lowclass_p2","PantsTex2"); //Also used by Jaime Reyes, and others
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,39,false,"lowclass2_p","LowerClassMale2Tex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,40,false,"janitor_p","JanitorTex2");
     GlobalAddPartL(PS_Legs,41,false,"martialartist_p","Male4Tex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,42,false,"tong_p","TracerTongTex2");
     GlobalAddPartL(PS_Legs,43,false,"hkmilitary_p","HKMilitaryTex2");
     GlobalAddPartL(PS_Legs,44,false,"vp_p","MichaelHamnerTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,45,false,"vinny_p","NathanMadisonTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,46,false,"page_p","BobPageTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,47,false,"gordonquick_p","GordonQuickTex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,48,false,"redarrow_p","TriadRedArrowTex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,49,false,"jock_p","JockTex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,50,false,"maxchen_p","MaxChenTex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartLO(PS_Legs,35,false,"prisoner_p","PrisonerTex2");
     GlobalAddPartL(PS_Legs,178,false,"midnight_p","MidnightTex2");
 
     //Female
     GlobalAddPartL(PS_Legs,11,false,"default_p","JCDentonTex3");
     GlobalAddPartL(PS_Legs_F,12,false,"lab_p","ScientistFemaleTex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,129,false,"goldbrown_p","Outfit2F_Tex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs,130,false,"matrix_p","Outfit4F_Tex3");
     GlobalAddPartL(PS_Legs,131,false,"goth_p","Outfit3F_Tex3");
     GlobalAddPartL(PS_Legs,132,false,"anna_p","PantsTex9");
@@ -535,7 +663,9 @@ function PopulateOutfitsList()
     
     //TODO: These are female only
     GlobalAddPartL(PS_Legs_F,134,false,"junkie_p2","JunkieFemaleTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_Legs_F,135,false,"dentonclone_pf","DentonCloneTex2Fem");
+    AddPartFlag("No_Leather");
     
     //Trenchcoat Torsos
     GlobalAddPartL(PS_Trench_Shirt_M,51,false,"lab_s","TrenchShirtTex3");
@@ -586,6 +716,7 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Trench,82,false,"gordonquick_t","GordonQuickTex2","GordonQuickTex2");
     GlobalAddPartL(PS_Trench,83,false,"redarrow_t","TriadRedArrowTex2","TriadRedArrowTex2");
     GlobalAddPartL(PS_Trench_M,84,false,"jock_t","JockTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Trench,85,false,"toby_t","TobyAtanweTex2","TobyAtanweTex2");
     GlobalAddPartL(PS_Trench,86,false,"maxchen_t","MaxChenTex2","MaxChenTex2");
     GlobalAddPartL(PS_Trench,87,false,"manderley_t","JosephManderleyTex2","JosephManderleyTex2");
@@ -594,78 +725,138 @@ function PopulateOutfitsList()
     GlobalAddPartL(PS_Trench_F,8,false,"100%_t","Outfit1_Tex1","Outfit1_Tex1");
     GlobalAddPartL(PS_Trench,164,false,"goldbrown_t","Outfit2F_Tex2","Outfit2F_Tex2");
     GlobalAddPartL(PS_Trench,165,false,"matrix_t","Outfit4F_Tex2","Outfit4F_Tex2");
-    GlobalAddPartL(PS_Trench,166,false,"goth_t","Female4Tex2","Female4Tex2");
+    GlobalAddPartL(PS_Trench,166,false,"goth_t","Outfit3F_Tex2","Outfit3F_Tex2");
     GlobalAddPartL(PS_Trench,176,false,"midnight_t","MidnightTex3","MidnightTex3");
+    GlobalAddPartL(PS_Trench,187,false,"pride_t","PrideTex3","PrideTex3");
     
     GlobalAddPartL(PS_Trench_M,0,false,"default_t","JCDentonTex2","JCDentonTex2");
     GlobalAddPartL(PS_Trench_F,0,false,"default_t","FemJC.JCDentonFemaleTex2","FemJC.JCDentonFemaleTex2");
 
     //Dress Pants
     GlobalAddPartL(PS_DressLegs,136,false,"nurse_pf","LegsTex1");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,137,false,"stockings_pf","LegsTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,138,false,"hooker_pf","Hooker1Tex1");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,139,false,"hooker2_pf","Hooker2Tex1");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,140,false,"alex_pf","Outfit5F_Tex1");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,141,false,"rachel_pf","RachelMeadTex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,142,false,"business_pf","BusinessWoman1Tex2");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,143,false,"nicolette_pf","NicoletteDuClareTex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,144,false,"sarah_pf","SarahMeadTex3");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,145,false,"office_pf","Female2Tex1");
+    AddPartFlag("No_Leather");
     GlobalAddPartL(PS_DressLegs,146,false,"lowclass2_pf","Female3Tex2");
+    AddPartFlag("No_Leather");
 
     //Skirts
     GlobalAddPartL(PS_Skirt,160,false,"nicolette_sk","NicoletteDuClareTex2","NicoletteDuClareTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Skirt,161,false,"sarah_sk","SarahMeadTex2","SarahMeadTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Skirt,162,false,"hooker_sk","Hooker1Tex2","Hooker1Tex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Skirt,163,false,"hooker2_sk","Hooker2Tex2","Hooker2Tex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Skirt,175,false,"alex_sk","Outfit5F_Tex2","Outfit5F_Tex2");
+    AddPartFlag("No_Coat");
 
     //Shirts etc
     GlobalAddPartL(PS_Torso_M,89,false,"ajacobson_s","AlexJacobsonTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,90,false,"unatco_s","UNATCOTroopTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,91,false,"mechanic_s","MechanicTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,92,false,"soldier_s","SoldierTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,93,false,"riotcop_s","RiotCopTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,55,false,"nsf_s","TerroristTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,94,false,"mj12_s","MJ12TroopTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,95,false,"carter_s","SamCarterTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,96,false,"thug_s","ThugMale2Tex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,97,false,"joegreene_s","JoeGreeneTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,98,false,"junkie_s","JunkieMaleTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,99,false,"jojo_s","JoJoFineTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,100,false,"bartender_s","BartenderTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,101,false,"cop_s","CopTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,102,false,"howardstrong_s","HowardStrongTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,103,false,"adam_s","AdamJensenTex3");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,104,false,"adam_s2","AdamJensenTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,63,false,"dentonclone_s","DentonCloneTex3");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,105,false,"everett_s","MorganEverettTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,106,false,"boatperson_s","BoatPersonTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,107,false,"lowclass_s","LowerClassMaleTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,108,false,"chad_s","ChadTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,109,false,"janitor_s","JanitorTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,110,false,"martialartist_s","Male4Tex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,111,false,"tong_s","TracerTongTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,112,false,"hkmilitary_s","HKMilitaryTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M,113,false,"alex_s","AlexDentonMaleTex2");
+    AddPartFlag("No_Coat");
     GlobalAddPartLO(PS_Torso_M,35,false,"prisoner_s","PrisonerTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M_B,148,false,"gunther_s","GuntherHermannTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_M_B,115,false,"thug3_s","ThugMale3Tex1");
+    AddPartFlag("No_Coat");
 
     //Female
     GlobalAddPartL(PS_Torso_F,147,false,"nicolette_s","NicoletteDuClareTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,148,false,"anna_s","AnnaNavarreTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,149,false,"tiffany_s","TiffanySavageTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,150,false,"sarah_s","SarahMeadTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,151,false,"shea_s","JordanSheaTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,152,false,"hooker_s","Hooker1Tex3");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,153,false,"hooker2_s","Hooker2Tex3");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,154,false,"junkie_s","JunkieFemaleTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,155,false,"alex_s","Outfit5F_Tex3");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,156,false,"bum_sf","BumFemaleTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,157,false,"lowclass_sf","LowerClassFemaleTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,158,false,"sandrarenton_s","SandraRentonTex1");
+    AddPartFlag("No_Coat");
     GlobalAddPartL(PS_Torso_F,159,false,"dentonclone_sf","DentonCloneTex3Fem");
+    AddPartFlag("No_Coat");
     
     //========================================================
     //  GM_Trench
@@ -700,7 +891,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_t");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
-    OutfitAddPartReference("party_g");
+    //OutfitAddPartReference("party_g");
     OutfitAddPartReference("default_g");
 
     //100% Black Outfit M
@@ -875,6 +1066,14 @@ function PopulateOutfitsList()
     OutfitAddPartReference("midnight_s");
     OutfitAddPartReference("midnight_t");
     OutfitAddPartReference("midnight_p");
+    
+    //Pride Trenchcoat
+    BeginNewOutfitL("pride",101);
+    OutfitAddPartReference("bald_b");
+    OutfitAddPartReference("pride_t");
+    OutfitAddPartReference("chef_p");
+    OutfitAddPartReference("gordonquick_s");
+    OutfitAddPartReference("party_g");
 
     //========================================================
     //  GFM_Trench
@@ -901,7 +1100,7 @@ function PopulateOutfitsList()
     OutfitAddPartReference("default_t");
     OutfitAddPartReference("default_p");
     OutfitAddPartReference("default_s");
-    OutfitAddPartReference("party_g");
+    //OutfitAddPartReference("party_g");
     OutfitAddPartReference("default_g");
     
     //Alternate Fem Jewellery
@@ -954,6 +1153,13 @@ function PopulateOutfitsList()
     OutfitAddPartReference("goth_p");
     OutfitAddPartReference("goth_t");
     OutfitAddPartReference("sunglasses_g");
+    
+    //Pride Trenchcoat
+    BeginNewOutfitL("pride",101);
+    OutfitAddPartReference("pride_t");
+    OutfitAddPartReference("chef_p");
+    OutfitAddPartReference("goth_s");
+    OutfitAddPartReference("party_g");
 
     //========================================================
     //  GFM_SuitSkirt
@@ -968,7 +1174,7 @@ function PopulateOutfitsList()
     //GroupTranspose2(PS_Legs_F,PS_Legs,3);
     GroupTranspose(PS_DressLegs,3);
     GroupTranspose(PS_Glasses,6,7);
-    
+
     //Unique Torsos
     AddPartLO(PS_Torso_F,19,false,"wib_sf",,,,,"WIBTex1","WIBTex1");
     AddPartLO(PS_Torso_F,27,false,"maggie_sf",,,,,"MaggieChowTex1","MaggieChowTex1");
@@ -1055,6 +1261,9 @@ function PopulateOutfitsList()
     //Defaults
     AddDefaultReference("default_b");
     
+    //Default Flags
+    AddGroupFlag("No_Glasses");
+    
     //Nicollette DuClare's outfit
     BeginNewOutfitL("nicolette",28);
     OutfitAddPartReference("hair_pt");
@@ -1105,6 +1314,9 @@ function PopulateOutfitsList()
     AddDefaultReference("default_b");
     //AddDefaultReference("nothing_pt");
     
+    //Default Flags
+    AddGroupFlag("No_Glasses");
+    
     BeginNewOutfitL("anna",38);
     OutfitAddPartReference("anna_p");
     OutfitAddPartReference("anna_s");
@@ -1148,6 +1360,11 @@ function PopulateOutfitsList()
     //========================================================
 
     BeginNewPartsGroup("GM_ScubaSuit","GM_ScubaSuit_Carcass", true, true);
+    
+    //Default Flags
+    AddGroupFlag("No_Glasses");
+    AddGroupFlag("No_Leather");
+    AddGroupFlag("No_Coat");
     
     //Main Textures
     AddPartLO(PS_Main,33,false,"scuba","none","ScubasuitTex0","ScubasuitTex1","none","none","none","none","none","ScubasuitTex1");
@@ -1429,6 +1646,10 @@ function PopulateOutfitsList()
     //Defaults
     AddDefaultReference("default_b");
     AddDefaultReference("nothing_h");
+    
+    //Default Flags
+    AddGroupFlag("No_Glasses");
+    AddGroupFlag("No_Coat");
 
     //test
     //AddPartLO(PS_Torso_M,31,false,"sailor_s",,,"SailorTex1");
@@ -1567,7 +1788,20 @@ function AddNPCOutfitPart(PartSlot part,bool bSkinPart,int slot0, int slot1, int
     _NPCSkin(part,bSkinPart,slots[0],slots[1],slots[2],slots[3],slots[4],slots[5],slots[6],slots[7],slots[8]);
 }
 
-function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, bool tactical, bool lowlife, bool triad, bool butler)
+//SARGE: Added for 1.3 to make HK look a bit less strange
+function AddNPCFacesAsian(int slot0, int slot1, int slot2, bool bMale)
+{
+    //AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex1","SkinTex1","PinkMaskTex");
+    AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"BoatPersonTex0","BoatPersonTex0","PinkMaskTex");
+    AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex2","SkinTex2","PinkMaskTex");
+    AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPathTex0","TriadLumPathTex0","PinkMaskTex");
+    AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPath2Tex0","TriadLumPath2Tex0","PinkMaskTex");
+    AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TriadRedArrowTex0","TriadRedArrowTex0","PinkMaskTex");
+    AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ScientistMaleTex0","ScientistMaleTex0","PinkMaskTex");
+    AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"Male1Tex0","Male1Tex0","PinkMaskTex");
+}
+
+function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, bool tactical, bool lowlife, bool triad, bool butler, bool earwig, bool soldier)
 {
     if (tactical)
     {
@@ -1611,7 +1845,7 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex2","SkinTex2","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex3","SkinTex3","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SkinTex4","SkinTex4","PinkMaskTex");
-            AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ThugMaleTex0","ThugMaleTex0","PinkMaskTex");
+            //AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ThugMaleTex0","ThugMaleTex0","PinkMaskTex");
             AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"TriadLumPathTex0","TriadLumPathTex0","PinkMaskTex");
             //AddNPCOutfitPart(true,slot0,slot1,slot2,"TriadRedArrowTex0","RedArrowTex0","PinkMaskTex"); //Has a recognisable face tatoo
         }
@@ -1641,6 +1875,16 @@ function AddNPCFaces(int slot0, int slot1, int slot2, bool bMale, bool generic, 
     if (butler)
     {
         AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"ButlerTex0","ButlerTex0","PinkMaskTex"); //Too old for general use.
+    }
+
+    if (earwig)
+    {
+        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SecretServiceTex0","SecretServiceTex0","PinkMaskTex"); //Secret Service Face with Earwig
+    }
+    
+    if (soldier)
+    {
+        AddNPCOutfitPart(PS_Body_M,true,slot0,slot1,slot2,"SoldierTex0","SoldierTex0","PinkMaskTex"); //Secret Service Face with Earwig
     }
 }
 
@@ -1923,8 +2167,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.Doctor");
     AddNPCGroupClass("DeusEx.ScientistMale");
     AddNPCGroupClass("DeusEx.ThugMale");
-    AddNPCGroupClass("DeusEx.TriadRedArrow");
-    AddNPCFaces(0,3,-1,true,true,false,false,false,true);
+    AddNPCFaces(0,3,-1,true,true,false,false,false,true,false,false);
 
     //Bum Faces
     BeginNPCOutfitGroup();
@@ -1934,7 +2177,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupException("Curly");
     AddNPCGroupException("CharlieFann");
     AddNPCGroupException("ParkBum1");
-    AddNPCFaces(0,3,-1,true,true,false,true,false,true);
+    AddNPCFaces(0,3,-1,true,true,false,true,false,true,false,false);
 
     ////GLASSES
     
@@ -2041,7 +2284,7 @@ function PopulateNPCOutfitsList()
     //Keep the lab coat, but everything else can change
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.ScientistFemale");
-    AddNPCFaces(0,3,-1,false,true,false,false,false,false);
+    AddNPCFaces(0,3,-1,false,true,false,false,false,false,false,false);
     AddNPCGlasses(6,7,true,true,false,false);
     //AddNPCTrenchShirts(false,true,false,true,false,false);
     //AddNPCPants(2, false, true, false, false);
@@ -2058,7 +2301,7 @@ function PopulateNPCOutfitsList()
     //nice attire
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Female1");
-    AddNPCFaces(0,1,2,false,true,false,false,false,false);
+    AddNPCFaces(0,1,2,false,true,false,false,false,false,false,false);
     AddNPCGlasses(3,4,true,true,true,true);
     AddNPCShirts(7,-1, false, true);
     AddNPCPants(6, false, false, true, false);
@@ -2070,7 +2313,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.BumFemale");
     AddNPCGroupClass("DeusEx.LowerClassFemale");
     AddNPCGroupClass("DeusEx.JunkieFemale");
-    AddNPCFaces(0,1,2,false,true,false,true,false,false);
+    AddNPCFaces(0,1,2,false,true,false,true,false,false,false,false);
     AddNPCGlasses(3,4,true,true,false,false);
     AddNPCShirts(7,-1, false, false);
     AddNPCPants(6, false, false, false, true);
@@ -2102,7 +2345,7 @@ function PopulateNPCOutfitsList()
     //AddNPCGroupClass("DeusEx.Chef");
     //AddNPCGroupClass("DeusEx.MIB");
     AddNPCGroupClass("DeusEx.LowerClassMale2");
-    AddNPCFaces(0,2,-1,true,true,false,false,false,true);
+    AddNPCFaces(0,2,-1,true,true,false,false,false,true,false,false);
     AddNPCGlasses(5,6,true,true,false,false);
     //AddNPCSuitShirts(3,4);
     //AddNPCPants(1,true,true,true,false);
@@ -2128,19 +2371,13 @@ function PopulateNPCOutfitsList()
     //Sailors keep their uniforms, but can have any face, including the faces with a hat
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Sailor");
-    AddNPCFaces(0,2,7,true,true,false,false,false,true);
+    AddNPCFaces(0,2,7,true,true,false,false,false,true,false,false);
     AddNPCOutfitPart(PS_Body_M,true,0,2,7,"SailorTex0","SailorTex0","SailorTex3");
     
     //Some people keep their outfits, only randomise their faces.
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Chef");
-    AddNPCFaces(0,2,-1,true,true,false,false,false,true);
-
-    //Triad LumPath are the same, except no old-man butler faces
-    BeginNPCOutfitGroup();
-    AddNPCGroupClass("DeusEx.TriadLumPath");
-    AddNPCGroupClass("DeusEx.TriadLumPath2");
-    AddNPCFaces(0,2,-1,true,true,false,false,false,false);
+    AddNPCFaces(0,2,-1,true,true,false,false,false,true,false,false);
 
     //////////////////////////////////////////////////////////
     //               ---GM_DressShirt---
@@ -2155,7 +2392,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.Bartender");
     AddNPCGroupClass("DeusEx.LowerClassMale");
     AddNPCGroupClass("DeusEx.BoatPerson");
-    AddNPCFaces(0,4,-1,true,false,false,true,false,true);
+    AddNPCFaces(0,4,-1,true,false,false,true,false,true,false,false);
 
     ///FACES - Bum Male - GM_DressShirt
     BeginNPCOutfitGroup();
@@ -2163,7 +2400,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.JunkieMale");
     AddNPCGroupClass("DeusEx.Bartender");
     AddNPCGroupException("Lenny");
-    AddNPCFaces(0,4,-1,true,false,false,true,false,true);
+    AddNPCFaces(0,4,-1,true,false,false,true,false,true,false,false);
 
     ///REGULAR MALES
     BeginNPCOutfitGroup();
@@ -2178,6 +2415,7 @@ function PopulateNPCOutfitsList()
     
     ///Bums
     BeginNPCOutfitGroup();
+    AddNPCGroupClass("SickMan",true); //Battery Park Sick Man (somebody kill me! Anybody!)
     AddNPCGroupClass("DeusEx.JunkieMale");
     AddNPCGroupClass("DeusEx.BoatPerson");
     AddNPCGlasses(6,7, true, true, false, false);
@@ -2191,7 +2429,7 @@ function PopulateNPCOutfitsList()
     //Keep the school girl outfit, but swap the face.
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.SarahMead");
-    AddNPCFaces(6,7,0,false,true,false,false,false,false);
+    AddNPCFaces(6,7,0,false,true,false,false,false,false,false,false);
 
 
     //////////////////////////////////////////////////////////
@@ -2206,7 +2444,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.BusinessWoman1");
     AddNPCGroupClass("DeusEx.Female2");
     AddNPCGroupClass("DeusEx.Female3");
-    AddNPCFaces(0,1,2,false,true,false,false,false,false);
+    AddNPCFaces(0,1,2,false,true,false,false,false,false,false,false);
     AddNPCSkirts(4,5);
     AddNPCDressLegs(3);
     
@@ -2215,7 +2453,7 @@ function PopulateNPCOutfitsList()
     //Nurses keep their nurse outfit, but change everything else
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Nurse");
-    AddNPCFaces(0,1,2,false,true,false,false,false,false);
+    AddNPCFaces(0,1,2,false,true,false,false,false,false,false,false);
     AddNPCDressLegs(3);
 
     //////////////////////////////////////////////////////////
@@ -2225,7 +2463,7 @@ function PopulateNPCOutfitsList()
     //Cops can have regular faces or the cop face, but should otherwise stay in uniform
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Cop");
-    AddNPCFaces(0,4,-1,true,true,false,false,false,true);
+    AddNPCFaces(0,4,-1,true,true,false,false,false,true,true,false);
     //Add special cop helmets.
     AddNPCOutfitPart(PS_Hack,true,2,-1,-1,"PinkMaskTex"); //Empty head slot hack.
     AddNPCOutfitPart(PS_Body_M,true,0,2,4,"CopTex0","CopTex0","CopTex0");
@@ -2235,7 +2473,7 @@ function PopulateNPCOutfitsList()
     //But keep their uniform as is.
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.Mechanic");
-    AddNPCFaces(0,3,4,true,true,false,false,false,true);
+    AddNPCFaces(0,3,4,true,true,false,false,false,true,false,false);
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"MechanicTex3"); //Mechanic Helmet
     AddNPCOutfitPart(PS_Helmet,true,6,3,4,"MechanicTex3","MiscTex1","MiscTex1"); //Mechanic Helmet with FaceMask
@@ -2246,7 +2484,7 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.Terrorist");
     AddNPCGroupException("TerroristLeader"); //Mole People terrorist commander
     AddNPCGroupException("Miguel");
-    AddNPCFaces(0,3,4,true,true,false,false,false,false);
+    AddNPCFaces(0,3,4,true,true,false,false,false,false,false,false);
     //Add in a few extra nothings to reduce the chances of having them always in tactical gear.
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
@@ -2272,31 +2510,32 @@ function PopulateNPCOutfitsList()
     BeginNPCOutfitGroup();
     AddNPCGroupClass("Scott",true);
     AddNPCGroupClass("DeusEx.UNATCOTroop");
-    AddNPCFaces(0,3,4,true,true,true,false,false,false);
+    AddNPCFaces(0,3,4,true,true,true,false,false,false,true,true);
     //AddNPCOutfitPart(PS_Helmet,false,6,3,4,"PinkMaskTex"); //Nothing
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"UnatcoTroopTex3"); //Unatco Helm
     AddNPCOutfitPart(PS_Helmet,false,6,3,4,"UnatcoTroopTex3","MiscTex3","MiscTex3"); //Unatco Helm with Face Mask
+    AddNPCOutfitPart(PS_Body_M,true,0,3,4,"SoldierTex0","SoldierTex0","PinkMaskTex"); //Soldier Face
+    AddNPCOutfitPart(PS_Body_M,true,0,3,4,"SecretServiceTex0","SecretServiceTex0","PinkMaskTex"); //Secret Service Face with Earwig
     
     //Unatco Troop Carcass with no helmet. Only randomise the face
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.UNATCOTroopCarcassDehelm",,true);
-    AddNPCFaces(0,3,4,true,true,true,false,false,false);
+    AddNPCFaces(0,3,4,true,true,true,false,false,false,true,false);
     AddNPCOutfitPart(PS_Body_M,false,3,4,-1,"MiscTex3","MiscTex3"); //Face Mask
     
     //Thugs have special faces, since they can have a beanie
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.ThugMale2");
-    AddNPCFaces(0,4,-1,true,true,false,false,false,false);
+    AddNPCFaces(0,4,-1,true,true,true,false,false,false,false,false);
     AddNPCOutfitPart(PS_Body_M,true,0,4,-1,"ThugMale2Tex0","ThugMale2Tex0"); //Beanie
+    AddNPCOutfitPart(PS_Body_M,true,0,4,-1,"ThugMale3Tex0","ThugMale2Tex0"); //Beanie
     
     //MJ12 Troops simply change faces. No special tactical gear as they will look too much like elites.
-    //And now others too
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DeusEx.MJ12Troop");
-    AddNPCGroupClass("DeusEx.HKMilitary");
     AddNPCGroupClass("DeusEx.Soldier");
-    AddNPCFaces(0,3,4,true,true,false,false,false,false);
-    
+    AddNPCFaces(0,3,4,true,true,false,false,false,false,true,true);
+
     //Rock keeps everything except his visor, which can be swapped out
     BeginNPCOutfitGroup();
     AddNPCGroupClass("DrugDealer",true);
@@ -2308,7 +2547,7 @@ function PopulateNPCOutfitsList()
     BeginNPCOutfitGroup();
     AddNPCGroupClass("ThugMale3");
     AddNPCGroupException("Jughead"); //El Ray
-    AddNPCFaces(2,3,-1,true,true,true,false,false,false);
+    AddNPCFaces(2,3,-1,true,true,true,false,false,false,false,false);
 
     //There are only 2 children and they share the same model...
     BeginNPCOutfitGroup();
@@ -2329,6 +2568,25 @@ function PopulateNPCOutfitsList()
     AddNPCGroupClass("DeusEx.Cat");
     _NPCSkin(PS_Main,false,"DeusExCharacters.Skins.CatTex1"); //Default cat
     _NPCSkin(PS_Main,false,"Misc.CatTex2"); //IW Cat
+    
+
+    ////Asian Only Faces
+
+    //HKMilitary only allow Chinese faces
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.HKMilitary");
+    AddNPCFacesAsian(0,3,4,true);
+
+    //Triad LumPath are the same
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.TriadLumPath");
+    AddNPCGroupClass("DeusEx.TriadLumPath2");
+    AddNPCFacesAsian(0,2,-1,true);
+    
+    //Triad Red Arrow are also the same.
+    BeginNPCOutfitGroup();
+    AddNPCGroupClass("DeusEx.TriadRedArrow");
+    AddNPCFacesAsian(0,3,-1,true);
 
 }
 
@@ -2527,24 +2785,17 @@ function PartsGroup GetPartsGroupByID(string id)
 
 function EquipOutfit(int index)
 {
-    local Name flag;
     local int i;
-
+    
     if (outfits[index].index == currOutfit.index)
         return;
 
-    //Set Flags
-    if (player != None && player.rootWindow != None)
-    {
-        //Set flag for new outfit
-        flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ outfits[index].id);
-        Player.FlagBase.SetBool(flag,true,true,0);
-        
-        //Set flag for old outfit
-        flag = player.rootWindow.StringToName("JCOutfits_Equipped_" $ currOutfit.id);
-        Player.FlagBase.DeleteFlag(flag,FLAG_Bool);
-    }
+    if (index > numOutfits)
+        return;
 
+    //Clear old outfit flags
+    SetOutfitFlags(currOutfit, false);
+    
     //Set the outfit as no longer new
     outfits[index].bNew = false;
 
@@ -2556,7 +2807,7 @@ function EquipOutfit(int index)
     {
         Log("Augmentique: Equipping outfit " $ currOutfit.Name);
         for (i = 0;i < currOutfit.numParts;i++)
-            Log("   Outfit Part: " $ currOutfit.parts[i].name $ " with id " $ currOutfit.parts[i].partId);
+            Log("   Outfit Part: " $ currOutfit.parts[i].name $ " with id " $ currOutfit.parts[i].partId $ " and flag " $ currOutfit.parts[i].flag);
     }
 
     ApplyCurrentOutfit();
@@ -2567,6 +2818,9 @@ function EquipCustomOutfit()
     local int i;
     if (savedOutfitIndex == 0)
         return;
+
+    //Clear old outfit flags
+    SetOutfitFlags(currOutfit, false);
     
     currOutfit.CopyPartsListTo(customOutfit);
     customOutfit.name = currOutfit.name @ CustomOutfitName;
@@ -2657,11 +2911,12 @@ function CopyOverUnlockedOutfits()
 //Copies over any unlocked outfits to the global unlocked outfits list.
 //Which makes them available in all playthroughs.
 //Called when we finish the game
-function CopyOutfitsToPlayer()
+function GloballyUnlockOutfits()
 {
     local int i;
         
     //Log("Copying over outfits:");
+    DebugLog("Copying over outfits");
     
     //We should already have all the previously unlocked global outfits.
     //So just copy the entire list over
@@ -2718,7 +2973,7 @@ function Unlock(string id, optional bool bPrintMessage)
         {
             if (outfits[i] != None && outfits[i].id == id)
             {
-                if (bPrintMessage)
+                if (bPrintMessage && IsCorrectGender(i))
                     player.ClientMessage(sprintf(MsgOutfitUnlocked,outfits[i].name));
 
                 outfits[i].SetUnlocked();
@@ -2784,6 +3039,9 @@ function ApplyCurrentOutfit()
 
     if (player == None)
         return;
+    
+    //Set flags for our current outfit
+    SetOutfitFlags(currOutfit, true);
 
     ApplyCurrentOutfitToActor(player);
     
@@ -2893,18 +3151,20 @@ function Texture findTexture(string tex)
 function bool ValidateSpawn(OutfitSpawner S)
 {
     local int index;
-    local Name flag;
+    local int i;
 
     index = GetOutfitIndexByID(S.id);
     
-    //Check Outfit Flag
-    if (S.requiredFlag != "" && player != None && player.rootWindow != None)
+    //Check Outfit Flags
+    for (i =0; i < ArrayCount(S.requiredFlags);i++)
     {
-        flag = player.rootWindow.StringToName(S.requiredFlag);
-        if (S.requiredFlagInverted && player.FlagBase.GetBool(flag))
-            return false;
-        else if (!S.requiredFlagInverted && !player.FlagBase.GetBool(flag))
-            return false;
+        if (player != None && player.FlagBase != None)
+        {
+            if (S.requiredFlags[i] != '' && !player.FlagBase.GetBool(S.requiredFlags[i]))
+                    return false;
+            else if (S.requiredFlagsInverted[i] != '' && player.FlagBase.GetBool(S.requiredFlags[i]))
+                return false;
+        }
     }
 
     return index > 0 && !outfits[index].unlocked;
@@ -3015,130 +3275,18 @@ function SetOutfitSettingsMenuVisibility(bool bValue, optional bool bShowDescrip
 defaultproperties
 {
      savedOutfitIndex=1
-     outfitInfos(0)=(Name="JC Denton's Trenchcoat",Article="-",Desc="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look")
-     outfitInfos(1)=(Name="JC Denton's Trenchcoat (Alt)",Article="-",Desc="JC Denton's Signature Trenchcoat, now with extra jewellery!")
-     outfitInfos(2)=(Name="100% Black",PickupMessage="We're 100% Black",HighlightName="???")
-     outfitInfos(3)=(Name="Alex Jacobson's Outfit",Article="-",Desc="An outfit adorned with computer parts, keyboards, wires and other tech.")
-     outfitInfos(4)=(Name="Lab Coat",Desc="This sleek turtleneck and extra long lab coat are used by scientists and doctors all over the world")
-     outfitInfos(5)=(Name="Paul Denton's Outfit",Article="-",Desc="A dark blue trenchcoat matched with an aqua turtleneck gives this outfit a unique and interesting look")
-     outfitInfos(6)=(Name="Business Suit (Brown)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
-     outfitInfos(7)=(Name="Business Suit (MIB)",Desc="This stylish black suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
-     outfitInfos(8)=(Name="UNATCO Combat Uniform",Desc="The standard issue uniform for UNATCO peacekeepers throughout the world, this protective outfit is a significant improvement over the previous UN combat uniform.")
-     outfitInfos(9)=(Name="Mechanic Jumpsuit",Desc="This high-visibility orange jumpsuit ensures safety while working in low visibility conditions.")
-     outfitInfos(11)=(Name="Chef Outfit",Desc="This all-white clothing and traditional toque is often worn as a symbol of pride by experiened chefs.")
-     outfitInfos(13)=(Name="Gold and Brown Business",PickupName="Gold and Brown Business Outfit",Desc="This fashionable gold and brown outfit with matching jacket is a symbol of power and status.")
-     outfitInfos(14)=() //Unused???
-     outfitInfos(15)=(Name="Matrix Outfit",Desc="")
-     outfitInfos(16)=(Name="Goth GF Outfit",Desc="This goth-themed outfit with fishnet shirt is often worn by punk rockers, outcasts, and rebels of all kinds.")
-     outfitInfos(17)=(Name="Soldier Outfit",Desc="These green fatigues are standard issue for the American military.")
-     outfitInfos(18)=(Name="Riot Gear",Article="some",Desc="Worn during riot control, raids and other dangerous crime-fighting activities, this helmet and body-armor provide a high degree of protection for cops in the field.")
-     outfitInfos(19)=(Name="WIB Suit",Desc="This stylish gray suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
-     outfitInfos(20)=(Name="NSF Sympathiser",PickupName="NSF Uniform",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
-     outfitInfos(21)=(Name="Stained Clothes",Article="some",Desc="These filthy clothes smell disgusting, and look even worse.")
-     outfitInfos(22)=(Name="Juan Lebedev's Outfit",Article="-",Desc="A variant of the standard NSF combat uniform sporting an additional brown trench coat.")
-     outfitInfos(23)=(Name="Smuggler's Outfit",Article="-",Desc="This expensive outfit matches Smuggler's prices")
-     outfitInfos(24)=(Name="FEMA Executive's Outfit",Desc="Designed for augmented agents, this trenchcoat sports access ports and other advanced technology.")
-     outfitInfos(25)=(Name="MJ12 Soldier Uniform",Desc="The standard issue for Majestic 12 troops worldwide, this uniform strikes fear and contempt into the hearts of many.")
-     outfitInfos(26)=(Name="Jock's Outfit",Article="-",Desc="A sleek flight suit often worn by pilots, aircraft crew, and others.")
-     outfitInfos(27)=(Name="Maggie's Outfit",Article="-",Desc="This stylish dragon-themed dress is the height of fashion in Hong Kong.")
-     outfitInfos(28)=(Name="Nicolette's Outfit",Article="-",Desc="Adorned with punk iconography, this outfit is sure to get anyone noticed.")
-     outfitInfos(29)=(Name="Bare Necessities",Article="some",Desc="A basic covering designed for modesty and not much else.")
-     outfitInfos(30)=(Name="Business Suit (Black)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
-     outfitInfos(31)=(Name="Sailor Outfit",Desc="Standard uniform for sailers and deck hands across the world.")
-     outfitInfos(32)=(Name="Carter's Outfit",Article="-",Desc="These modified military fatigues with rolled up sleeves are more comfortable than the standard issue uniform.")
-     outfitInfos(33)=(Name="SCUBA Suit",Desc="An underwater suit with a self contained breathing apparatus, this suit is used by recreational divers, explorers, scavengers, military, and many others across the world for a variety of underwater purposes.")
-     outfitInfos(34)=(Name="100% Black (Alt)")
-     outfitInfos(35)=(Name="Prison Uniform",Desc="Standard issue prison uniform, designed to easily distingush inmates from everyone else in the event of an escape.")
-     outfitInfos(36)=(Name="100% Black (Augmented Edition)")
-     outfitInfos(37)=(Name="Thug Outfit",Desc="This cold-weather outfit is used by mercenaries and criminals alike. Beloved for it's warmth, freedom of movement, and general style.")
-     outfitInfos(38)=(Name="Anna Navarre's Outfit",Article="-",Desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.")
-     outfitInfos(39)=(Name="Tiffany Savage's Outfit",Article="-",Desc="This leather and latex outfit is designed to provide maximum dexterity and comfort during wet-work operations.")
-     outfitInfos(40)=(Name="School Uniform",Desc="This long-sleeve shirt and dress style uniform is used by many religious and private schools across the world.")
-     outfitInfos(41)=(Name="Jordan Shea's Outfit",Article="-",Desc="This sleeveless shirt combined with dress pants is dirty after a long day of work.")
-     outfitInfos(42)=(Name="Hooker Outfit",Desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
-     outfitInfos(43)=(Name="NSF Sympathiser (Alt)",Article="-",Desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.")
-     outfitInfos(44)=(Name="Unwashed Clothes",Article="some",Desc="These dirty unwashed clothes smell awful, and look even worse.")
-     outfitInfos(45)=(Name="Harley Filben's Outfit",Article="-",Desc="This signature green jacket has clearly seen better days.")
-     outfitInfos(46)=(Name="Business Suit (White)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
-     outfitInfos(47)=(Name="Business Suit (Blue)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
-     outfitInfos(48)=(Name="Doctor's Outfit",Desc="This sleek vest, business shirt and extra long lab coat are used by doctors all over the world")
-     outfitInfos(49)=(Name="Nurse's Outfit",Desc="These traditional scrubs have been worn by nurses all over the world for many years.")
-     outfitInfos(50)=(Name="Gilbert Renton's Outfit",Article="-",Desc="This dirty shirt and dirty jeans are perfect attire for the owner of a dirty hotel.")
-     outfitInfos(51)=(Name="Hooker Outfit (Alt)",Desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
-     outfitInfos(52)=(Name="Ford Schick's Outfit",Article="-",Desc="")
-     outfitInfos(53)=(Name="Joe Greene's Outfit",Article="-",Desc="A business suit favored by reporters and journalists all over the world.")
-     outfitInfos(54)=(Name="Soiled Junkie Clothes",Article="some",Desc="This disgusting clothing reeks of sweat, dirt, and other fowl substances.")
-     outfitInfos(55)=(Name="Rook Member Outfit",Desc="This leather jacket, chains, and other tough-guy attire is often worn by punk rockers, outcasts, and rebels of all kinds.")
-     outfitInfos(56)=(Name="Alex Denton's Outfit",Article="-",Desc="This unusual purple outfit is the standard attire for all members of the Tarsus Academy.")
-     outfitInfos(57)=(Name="Business Suit (Dark Brown)",Desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
-     outfitInfos(58)=(Name="White-Collar Dress (Red)",Desc="A red dress designed to stand out and get noticed around the office.")
-     outfitInfos(59)=(Name="White-Collar Dress (Dark Gray)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
-     outfitInfos(60)=(Name="Low Class Outfit",Desc="")
-     outfitInfos(61)=(Name="Sandra Renton's Outfit",Article="-",Desc="These torn and tattered clothes are a staple of someone who has fallen on hard times.")
-     outfitInfos(62)=(Name="JoJo's Outfit",Article="-",Desc="This over-the-top spectacle of fake augmentations and metal is designed to intimidate others and to show dominance.")
-     outfitInfos(63)=(Name="Bartender Outfit",Desc="A white shirt with a bow tie, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
-     outfitInfos(64)=(Name="Tough Guy Outfit") //Unused
-     outfitInfos(65)=(Name="Police Uniform",Desc="The standard uniform for beat-cops and police on patrol.")
-     outfitInfos(66)=(Name="Howard Strong's Outfit",Article="-")
-     outfitInfos(67)=(Name="Adam Jensen's Outfit",Article="-",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
-     outfitInfos(68)=(Name="Average GEPGUN Enjoyer",PickupName="Bare Necessities",Article="some",Desc="What's it like to stand around revving your actuators while the more fashionable agents complete the mission?")
-     outfitInfos(69)=(Name="Morgan Everett's Outfit",Article="-")
-     outfitInfos(70)=(Name="Boat Person Outfit",Desc="While Singlets and Jeans are often associated with the poor, they are also often worn by physical labourors, unloaders, masonists, and other blue-collar workers.")
-     outfitInfos(71)=(Name="Chad's Outfit",Article="-")
-     outfitInfos(72)=(Name="Janitor Uniform",Desc="Designed for comfort while cleaning, these overalls are made of a soft, water-resistant material")
-     //outfitInfos(73)=(Name="Martial Arts Uniform",Desc="These traditional Kasaya are often worn by ordained buddhist monks and martial artists")
-     outfitInfos(73)=(Name="Monk Clothes",Article="some")
-     outfitInfos(74)=(Name="Tracer Tong's Outfit",Article="-")
-     outfitInfos(75)=(Name="Hong Kong Military Uniform",Desc="These green fatigues are standard issue for the Hong Kong military police.")
-     outfitInfos(76)=(Name="MJ12 Elite Uniform",Desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their Totalitarian regime.")
-     outfitInfos(77)=(Name="Traditional Attire",Article="some",Desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.")
-     outfitInfos(78)=(Name="Luminous Path Uniform")
-     outfitInfos(79)=(Name="Navy Dress Uniform",Desc="Formal dress uniform for Navy officers. Normally used for public events such as parades and ceremonies.")
-     outfitInfos(80)=(Name="Butler Uniform",Desc="A black suit with a white shirt, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
-     outfitInfos(81)=(Name="Bob Page's Suit",Article="-",Desc="Signature suit of one of the richest men in the world.")
-     outfitInfos(82)=(Name="Gordon Quick's Outfit",Article="-")
-     outfitInfos(83)=(Name="Red Arrow Uniform")
-     outfitInfos(85)=(Name="Jaime's Outfit",Article="-") //!!!
-     outfitInfos(86)=(Name="Illuminati Coat")
-     outfitInfos(87)=(Name="Vandenberg Scientist Outfit",Desc="A long labcoat over a suit and tie, the signature outfit of X51.")
-     outfitInfos(88)=(Name="Old Clothes",Article="some")
-     outfitInfos(89)=(Name="Dragon Head's Uniform",Article="the")
-     outfitInfos(90)=(Name="White-Collar Dress (Brown)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
-     outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)",Article="-",Desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.")
-     outfitInfos(92)=(Name="White-Collar Dress (Blue and White)",Desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
-     outfitInfos(93)=(Name="Maid Outfit",Desc="A formal cleaning uniform worn by servants, assistants and house cleaners.")
-     outfitInfos(94)=(Name="Manderley's Outfit",Article="-")
-     outfitInfos(95)=(Name="Patterned Dress",Desc="A green dress with a basic pattern, usually worn by lower-middle-class women.")
-     outfitInfos(96)=(Name="Terrorist Commander Outfit",Desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat and blue dress pants.")
-     outfitInfos(97)=(Name="Hitman Suit",Desc="The signature suit of a silent assassin.")
-     
-     //1.1 stuff
-     outfitInfos(98)=(Name="Midnight Trenchcoat",Desc="A trenchcoat equipped for stealth while also looking extremely stylish")
-     outfitInfos(99)=(Name="Gunther's Outfit",Article="-",Desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.")
-
-     //1.2 stuff
-     outfitInfos(100)=(Name="MJ12 Soldier Uniform (Alternate)",Desc="A variant of the MJ12 outfit with a more streamlined helmet for better visibility, but without the tactical goggles or extra protection.")
-
-
-     //Misc
+     iEquipNPCs=1
      partNames(0)="Default"
-
-     //Glasses
      partNames(1)="Slim Sunglasses"
      partNames(2)="Prescription Glasses"
      partNames(3)="Black Bars"
      partNames(4)="Reading Glasses"
      partNames(5)="Aviators"
      partNames(6)="Sunglasses"
-     partNames(7)="Tacticool Goggles" //Unused??!!
-
-     //Skin Textures
+     partNames(7)="Tacticool Goggles"
      partNames(8)="100% Black"
      partNames(9)="Beanie"
      partNames(10)="Jensen"
-     partNames(167)="Bald"
-     
-     //Pants (Male)
      partNames(11)="Blue Tactical Pants with Boots"
      partNames(12)="Tan Business Pants"
      partNames(13)="Dirty Jeans"
@@ -3179,8 +3327,6 @@ defaultproperties
      partNames(48)="Sports Pants"
      partNames(49)="Black Aviator Pants"
      partNames(50)="Max Chen's Pants"
-     
-     //Trench Coat Shirts
      partNames(51)="Beige and Brown Turtleneck"
      partNames(52)="Light Blue Turtleneck"
      partNames(53)="Dirty White and Gray Shirt"
@@ -3200,8 +3346,6 @@ defaultproperties
      partNames(67)="Toby Atanwe's Shirt"
      partNames(68)="Blue Shirt and Red Tie"
      partNames(69)="Max Chen's Shirt"
-
-     //Trench Coats
      partNames(70)="Lab Coat"
      partNames(71)="Gray and Blue Jacket"
      partNames(72)="Old Brown and Blue Jacket"
@@ -3221,8 +3365,6 @@ defaultproperties
      partNames(86)="Dragon Coat"
      partNames(87)="Business Blazer"
      partNames(88)="Gray Jacket"
-
-     //Shirts
      partNames(89)="Hackerman Shirt"
      partNames(90)="UNATCO Combat Vest"
      partNames(91)="Mechanic's Jumpsuit Shirt"
@@ -3248,20 +3390,11 @@ defaultproperties
      partNames(111)="Tracer Tong's Shirt"
      partNames(112)="Military Fatigues with Vest"
      partNames(113)="Alex Denton's Shirt"
-
-     //Missed some previously
      partNames(114)="White Dress Pants"
-     partNames(115)="Fake Augments" //Placeholder
-
-     //Suit Torsos
-     //EDIT: These will just keep their outfit names
-
-     //Jumpsuit Bodies
+     partNames(115)="Fake Augments"
      partNames(116)="Tactical Face Mask"
      partNames(117)="Tactical Equipment"
      partNames(118)="Elite Tactical Equipment"
-
-     //Jumpsuit Helmets
      partNames(119)="UNATCO Helmet"
      partNames(120)="Military Helmet"
      partNames(121)="Hard Hat"
@@ -3269,15 +3402,9 @@ defaultproperties
      partNames(123)="Tacticool Goggles (Yellow)"
      partNames(124)="MJ12 Helmet"
      partNames(125)="MJ12 Elite Helmet"
-
-     //Suit Hats
      partNames(126)="Chef Hat"
      partNames(127)="Sailor Hat"
      partNames(128)="Ponytail"
-
-     //FEMALE STUFF
-
-     //Pants
      partNames(129)="Gold Brown Business Pants"
      partNames(130)="Black Tactical Pants with Boots"
      partNames(131)="Goth Pants with Boots"
@@ -3285,8 +3412,6 @@ defaultproperties
      partNames(133)="Gray Pants with Leather Boots"
      partNames(134)="Soiled Ripped Jeans"
      partNames(135)="Underwear"
-
-     //Dress Pants
      partNames(136)="Stockings with Brown Shoes"
      partNames(137)="Dark Stockings with Black Shoes"
      partNames(138)="Stockings with Red Shoes"
@@ -3298,8 +3423,6 @@ defaultproperties
      partNames(144)="Thigh High Socks"
      partNames(145)="Gray Shoes"
      partNames(146)="Gray Shoes with Socks"
-
-     //Shirts
      partNames(147)="Punk Top"
      partNames(148)="Augmented Body"
      partNames(149)="Leather Top"
@@ -3313,61 +3436,139 @@ defaultproperties
      partNames(157)="Blue and White Top"
      partNames(158)="Tattered Top"
      partNames(159)="Basic Bra"
-
-     //Skirts
      partNames(160)="Punk Skirt"
      partNames(161)="Tartan Skirt"
      partNames(162)="Race-Stripe Miniskirt"
      partNames(163)="Black Skirt"
-
-     //SuitSkirt Torsos
-     //EDIT: Leave these as the outfits for now
-
-     //Extras
+     partNames(164)="Dark Brown Jacket"
+     partNames(165)="Green Patterned Black Jacket"
+     partNames(166)="Red Patterned Black Jacket"
+     partNames(167)="Bald"
      partNames(168)="Agent 47"
      partNames(169)="White Shirt and Red Tie"
      partNames(170)="Fingerless Gloves"
      partNames(171)="Military Helmet (Chin Strap)"
-
-     //Trench Shirts
      partNames(172)="Necklace"
      partNames(173)="Matrix Shirt"
      partNames(174)="Fishnet Shirt"
-     partNames(164)="Dark Brown Jacket"
-     partNames(165)="Green Patterned Black Jacket"
-     partNames(166)="Red Patterned Black Jacket"
      partNames(175)="Alex Denton's Tactical Suit"
-     
-     //1.1 stuff
      partNames(176)="Midnight Jacket"
      partNames(177)="Midnight Shirt"
      partNames(178)="Midnight Pants"
-     
      partNames(179)="Party Glasses"
-     
      partNames(180)="MJ12 Elite Helmet"
      partNames(181)="Tacticool Goggles (Red)"
-     
-
-     //1.2 stuff
      partNames(182)="MJ12 Helmet (Slimline)"
      partNames(183)="Ponytail"
      partNames(184)="Long Hair"
      partNames(185)="Long Hair and Ponytail"
-     
      partNames(186)="BorderlineHalo"
-
+     partNames(187)="Pride Coat"
+     PickupSound=Sound'Augmentique.outfits.BoxPickup'
+     MsgOutfitUnlocked="Outfit %s has been unlocked!"
+     outfitInfos(0)=(Name="JC Denton's Trenchcoat",desc="An old classic. This blue trenchcoat fits well over anything, and gives JC a cool, augmented look",Article="-")
+     outfitInfos(1)=(Name="JC Denton's Trenchcoat (Alt)",desc="JC Denton's Signature Trenchcoat, now with extra jewellery!",Article="-")
+     outfitInfos(2)=(Name="100% Black",highlightName="???",PickupMessage="We're 100% Black")
+     outfitInfos(3)=(Name="Alex Jacobson's Outfit",desc="An outfit adorned with computer parts, keyboards, wires and other tech.",Article="-")
+     outfitInfos(4)=(Name="Lab Coat",desc="This sleek turtleneck and extra long lab coat are used by scientists and doctors all over the world")
+     outfitInfos(5)=(Name="Paul Denton's Outfit",desc="A dark blue trenchcoat matched with an aqua turtleneck gives this outfit a unique and interesting look",Article="-")
+     outfitInfos(6)=(Name="Business Suit (Brown)",desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(7)=(Name="Business Suit (MIB)",desc="This stylish black suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
+     outfitInfos(8)=(Name="UNATCO Combat Uniform",desc="The standard issue uniform for UNATCO peacekeepers throughout the world, this protective outfit is a significant improvement over the previous UN combat uniform.")
+     outfitInfos(9)=(Name="Mechanic Jumpsuit",desc="This high-visibility orange jumpsuit ensures safety while working in low visibility conditions.")
+     outfitInfos(11)=(Name="Chef Outfit",desc="This all-white clothing and traditional toque is often worn as a symbol of pride by experiened chefs.")
+     outfitInfos(13)=(Name="Gold and Brown Business",desc="This fashionable gold and brown outfit with matching jacket is a symbol of power and status.",pickupName="Gold and Brown Business Outfit")
+     outfitInfos(15)=(Name="Matrix Outfit")
+     outfitInfos(16)=(Name="Goth GF Outfit",desc="This goth-themed outfit with fishnet shirt is often worn by punk rockers, outcasts, and rebels of all kinds.")
+     outfitInfos(17)=(Name="Soldier Outfit",desc="These green fatigues are standard issue for the American military.")
+     outfitInfos(18)=(Name="Riot Gear",desc="Worn during riot control, raids and other dangerous crime-fighting activities, this helmet and body-armor provide a high degree of protection for cops in the field.",Article="some")
+     outfitInfos(19)=(Name="WIB Suit",desc="This stylish gray suit was chosen especially for Majestic 12's pharmaceutically-augmented agents to contrast their albino nature.")
+     outfitInfos(20)=(Name="NSF Sympathiser",desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.",pickupName="NSF Uniform")
+     outfitInfos(21)=(Name="Stained Clothes",desc="These filthy clothes smell disgusting, and look even worse.",Article="some")
+     outfitInfos(22)=(Name="Juan Lebedev's Outfit",desc="A variant of the standard NSF combat uniform sporting an additional brown trench coat.",Article="-")
+     outfitInfos(23)=(Name="Smuggler's Outfit",desc="This expensive outfit matches Smuggler's prices",Article="-")
+     outfitInfos(24)=(Name="FEMA Executive's Outfit",desc="Designed for augmented agents, this trenchcoat sports access ports and other advanced technology.")
+     outfitInfos(25)=(Name="MJ12 Soldier Uniform",desc="The standard issue for Majestic 12 troops worldwide, this uniform strikes fear and contempt into the hearts of many.")
+     outfitInfos(26)=(Name="Jock's Outfit",desc="A sleek flight suit often worn by pilots, aircraft crew, and others.",Article="-")
+     outfitInfos(27)=(Name="Maggie's Outfit",desc="This stylish dragon-themed dress is the height of fashion in Hong Kong.",Article="-")
+     outfitInfos(28)=(Name="Nicolette's Outfit",desc="Adorned with punk iconography, this outfit is sure to get anyone noticed.",Article="-")
+     outfitInfos(29)=(Name="Bare Necessities",desc="A basic covering designed for modesty and not much else.",Article="some")
+     outfitInfos(30)=(Name="Business Suit (Black)",desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(31)=(Name="Sailor Outfit",desc="Standard uniform for sailers and deck hands across the world.")
+     outfitInfos(32)=(Name="Carter's Outfit",desc="These modified military fatigues with rolled up sleeves are more comfortable than the standard issue uniform.",Article="-")
+     outfitInfos(33)=(Name="SCUBA Suit",desc="An underwater suit with a self contained breathing apparatus, this suit is used by recreational divers, explorers, scavengers, military, and many others across the world for a variety of underwater purposes.")
+     outfitInfos(34)=(Name="100% Black (Alt)")
+     outfitInfos(35)=(Name="Prison Uniform",desc="Standard issue prison uniform, designed to easily distingush inmates from everyone else in the event of an escape.")
+     outfitInfos(36)=(Name="100% Black (Augmented Edition)")
+     outfitInfos(37)=(Name="Thug Outfit",desc="This cold-weather outfit is used by mercenaries and criminals alike. Beloved for it's warmth, freedom of movement, and general style.")
+     outfitInfos(38)=(Name="Anna Navarre's Outfit",desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.",Article="-")
+     outfitInfos(39)=(Name="Tiffany Savage's Outfit",desc="This leather and latex outfit is designed to provide maximum dexterity and comfort during wet-work operations.",Article="-")
+     outfitInfos(40)=(Name="School Uniform",desc="This long-sleeve shirt and dress style uniform is used by many religious and private schools across the world.")
+     outfitInfos(41)=(Name="Jordan Shea's Outfit",desc="This sleeveless shirt combined with dress pants is dirty after a long day of work.",Article="-")
+     outfitInfos(42)=(Name="Hooker Outfit",desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
+     outfitInfos(43)=(Name="NSF Sympathiser (Alt)",desc="This tan long-sleeve uniform with body armor serves as the primary combat uniform for the NSF forces across the United States.",Article="-")
+     outfitInfos(44)=(Name="Unwashed Clothes",desc="These dirty unwashed clothes smell awful, and look even worse.",Article="some")
+     outfitInfos(45)=(Name="Harley Filben's Outfit",desc="This signature green jacket has clearly seen better days.",Article="-")
+     outfitInfos(46)=(Name="Business Suit (White)",desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(47)=(Name="Business Suit (Blue)",desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(48)=(Name="Doctor's Outfit",desc="This sleek vest, business shirt and extra long lab coat are used by doctors all over the world")
+     outfitInfos(49)=(Name="Nurse's Outfit",desc="These traditional scrubs have been worn by nurses all over the world for many years.")
+     outfitInfos(50)=(Name="Gilbert Renton's Outfit",desc="This dirty shirt and dirty jeans are perfect attire for the owner of a dirty hotel.",Article="-")
+     outfitInfos(51)=(Name="Hooker Outfit (Alt)",desc="Colloquially known as a 'hooker' outfit, due to its popularity among strippers, sex workers, and clubgoing women looking for company.")
+     outfitInfos(52)=(Name="Ford Schick's Outfit",Article="-")
+     outfitInfos(53)=(Name="Joe Greene's Outfit",desc="A business suit favored by reporters and journalists all over the world.",Article="-")
+     outfitInfos(54)=(Name="Soiled Junkie Clothes",desc="This disgusting clothing reeks of sweat, dirt, and other fowl substances.",Article="some")
+     outfitInfos(55)=(Name="Rook Member Outfit",desc="This leather jacket, chains, and other tough-guy attire is often worn by punk rockers, outcasts, and rebels of all kinds.")
+     outfitInfos(56)=(Name="Alex Denton's Outfit",desc="This unusual purple outfit is the standard attire for all members of the Tarsus Academy.",Article="-")
+     outfitInfos(57)=(Name="Business Suit (Dark Brown)",desc="An extremely expensive suit worn by presidents, business people, and the rich elite.")
+     outfitInfos(58)=(Name="White-Collar Dress (Red)",desc="A red dress designed to stand out and get noticed around the office.")
+     outfitInfos(59)=(Name="White-Collar Dress (Dark Gray)",desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
+     outfitInfos(60)=(Name="Low Class Outfit")
+     outfitInfos(61)=(Name="Sandra Renton's Outfit",desc="These torn and tattered clothes are a staple of someone who has fallen on hard times.",Article="-")
+     outfitInfos(62)=(Name="JoJo's Outfit",desc="This over-the-top spectacle of fake augmentations and metal is designed to intimidate others and to show dominance.",Article="-")
+     outfitInfos(63)=(Name="Bartender Outfit",desc="A white shirt with a bow tie, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
+     outfitInfos(64)=(Name="Tough Guy Outfit")
+     outfitInfos(65)=(Name="Police Uniform",desc="The standard uniform for beat-cops and police on patrol.")
+     outfitInfos(66)=(Name="Howard Strong's Outfit",Article="-")
+     outfitInfos(67)=(Name="Adam Jensen's Outfit",desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.",Article="-")
+     outfitInfos(68)=(Name="Average GEPGUN Enjoyer",desc="What's it like to stand around revving your actuators while the more fashionable agents complete the mission?",pickupName="Bare Necessities",Article="some")
+     outfitInfos(69)=(Name="Morgan Everett's Outfit",Article="-")
+     outfitInfos(70)=(Name="Boat Person Outfit",desc="While Singlets and Jeans are often associated with the poor, they are also often worn by physical labourors, unloaders, masonists, and other blue-collar workers.")
+     outfitInfos(71)=(Name="Chad's Outfit",Article="-")
+     outfitInfos(72)=(Name="Janitor Uniform",desc="Designed for comfort while cleaning, these overalls are made of a soft, water-resistant material")
+     outfitInfos(73)=(Name="Monk Clothes",Article="some")
+     outfitInfos(74)=(Name="Tracer Tong's Outfit",Article="-")
+     outfitInfos(75)=(Name="Hong Kong Military Uniform",desc="These green fatigues are standard issue for the Hong Kong military police.")
+     outfitInfos(76)=(Name="MJ12 Elite Uniform",desc="This modified Majestic 12 uniform is used by elite units on missions critical to maintaining their Totalitarian regime.")
+     outfitInfos(77)=(Name="Traditional Attire",desc="Traditional clothing worn by citizens of Hong Kong and other Asian regions.",Article="some")
+     outfitInfos(78)=(Name="Luminous Path Uniform")
+     outfitInfos(79)=(Name="Navy Dress Uniform",desc="Formal dress uniform for Navy officers. Normally used for public events such as parades and ceremonies.")
+     outfitInfos(80)=(Name="Butler Uniform",desc="A black suit with a white shirt, this is typical attire for bartenders, hotel clerks, and other service-industry workers")
+     outfitInfos(81)=(Name="Bob Page's Suit",desc="Signature suit of one of the richest men in the world.",Article="-")
+     outfitInfos(82)=(Name="Gordon Quick's Outfit",Article="-")
+     outfitInfos(83)=(Name="Red Arrow Uniform")
+     outfitInfos(85)=(Name="Jaime's Outfit",Article="-")
+     outfitInfos(86)=(Name="Illuminati Coat",Article="the")
+     outfitInfos(87)=(Name="Vandenberg Scientist Outfit",desc="A long labcoat over a suit and tie, the signature outfit of X51.")
+     outfitInfos(88)=(Name="Old Clothes",Article="some")
+     outfitInfos(89)=(Name="Dragon Head's Uniform",Article="the")
+     outfitInfos(90)=(Name="White-Collar Dress (Brown)",desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
+     outfitInfos(91)=(Name="Adam Jensen's Outfit (Alt)",desc="A symbol of an era passed, these mechanical augmentations are quickly being replaced with nano-augmentations.",Article="-")
+     outfitInfos(92)=(Name="White-Collar Dress (Blue and White)",desc="This business dress is often worn by secretaries, office workers, and white-collar professionals.")
+     outfitInfos(93)=(Name="Maid Outfit",desc="A formal cleaning uniform worn by servants, assistants and house cleaners.")
+     outfitInfos(94)=(Name="Manderley's Outfit",Article="-")
+     outfitInfos(95)=(Name="Patterned Dress",desc="A green dress with a basic pattern, usually worn by lower-middle-class women.")
+     outfitInfos(96)=(Name="Terrorist Commander Outfit",desc="A variant of the standard NSF combat uniform sporting an additional gray trench coat and blue dress pants.")
+     outfitInfos(97)=(Name="Hitman Suit",desc="The signature suit of a silent assassin.")
+     outfitInfos(98)=(Name="Midnight Trenchcoat",desc="A trenchcoat equipped for stealth while also looking extremely stylish")
+     outfitInfos(99)=(Name="Gunther's Outfit",desc="UNATCO employs many augmented agents to provide an advantage for dangerous combat situations. Before the invention of nano-augmentation, agents were surgically modified, often having entire limbs replaced.",Article="-")
+     outfitInfos(100)=(Name="MJ12 Soldier Uniform (Alternate)",desc="A variant of the MJ12 outfit with a more streamlined helmet for better visibility, but without the tactical goggles or extra protection.")
+     outfitInfos(101)=(Name="Pride Outfit",desc="Love conquers all.")
      CustomOutfitName="(Custom)"
      NothingName="Nothing"
      DefaultPickupMessage="You found %s %s"
      DefaultPickupMessage2="You found %s"
-
-     PickupSound=Sound'Augmentique.Outfits.BoxPickup'
-     iEquipNPCs=1
-
-     MsgOutfitUnlocked="Outfit %s has been unlocked!"
-
-     BodyTypeFat="Fat"
      BodyTypeRegular="Average"
+     BodyTypeFat="Fat"
      BodyTypeSkinny="Skinny"
 }

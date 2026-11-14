@@ -77,10 +77,24 @@ function AddMember(Actor A, optional bool bLog, optional bool bAllowRepeats)
     
     members[numMembers++] = A;
     
+    //First, set their data to their current skin
+    for(i = 0;i < 8;i++)
+    {
+        if (P != None)
+            P.augmentiqueData.textures[i] = P.default.MultiSkins[i];
+        if (C != None)
+            C.augmentiqueData.textures[i] = C.default.MultiSkins[i];
+    }
+    if (P != None)
+        P.augmentiqueData.textures[8] = P.default.Texture;
+    if (C != None)
+        C.augmentiqueData.textures[8] = C.default.Texture;
+    
     //Set their carcass
     //if (P != None)
     //    P.CarcassType=class'Augmentique.OutfitCarcass';
 
+    //Then set their data to what we find in the parts
     for (i = 0; i < ArrayCount(partsList);i++)
     {
         if (partsList[i].numParts == 0)
@@ -247,4 +261,8 @@ function ApplyOutfits(bool bAllowRandomise, bool bAllowUnique)
             C.ApplyCurrentOutfit();
         }
     }
+}
+
+defaultproperties
+{
 }

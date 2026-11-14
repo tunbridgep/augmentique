@@ -8,6 +8,7 @@ var bool isAccessory;                   //Whether or not this part is an accesso
 var int index;                          //Index in it's Parts Group
 var bool unlocked;                      //Is this part unlocked?
 var OutfitPart original;                //If a new version was created when transposing, link to the older one
+var string flag;                        //The flag that will be set when we equip this part.
 
 function Unlock()
 {

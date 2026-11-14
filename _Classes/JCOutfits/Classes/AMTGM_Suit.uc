@@ -103,3 +103,7 @@ class AMTGM_Suit extends Object abstract;
 #exec MESH NOTIFY MESH=AMTGM_Suit SEQ=DeathBack	TIME=0.5	FUNCTION=PlayBodyThud
 #exec MESH NOTIFY MESH=AMTGM_Suit SEQ=Tread		TIME=0.3	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGM_Suit SEQ=TreadShoot	TIME=0.3	FUNCTION=PlayFootStep
+
+defaultproperties
+{
+}

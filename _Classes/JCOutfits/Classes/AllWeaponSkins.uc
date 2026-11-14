@@ -73,7 +73,7 @@ class AllWeaponSkins expands Object abstract;
 
 //Hong Kong
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Flamethrower\hongkong\HongKongFlamethrower.bmp"		       	NAME="FlamethrowerHK1"			    GROUP="WeaponSkins"
-#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Flamethrower\hongkong\HongKongFlamethrower3rd.pcx"	       	NAME="FlamethrowerHK3rd"		    GROUP="WeaponSkins"
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Flamethrower\hongkong\HongKongFlamethrower3rd.pcx"	       	NAME="FlamethrowerHK3rd"		    GROUP="WeaponSkins" FLAGS=2
 
 ////GEP Gun
 
@@ -129,7 +129,7 @@ class AllWeaponSkins expands Object abstract;
 ////Rifle
 
 //MJ12
-#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Rifle\MJ12\MJ12SniperRifle2.bmp"			    NAME="MJ12SniperRifle1"			GROUP="WeaponSkins" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Rifle\MJ12\MJ12SniperRifle2.bmp"			    NAME="MJ12SniperRifle1"			GROUP="WeaponSkins"
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Rifle\MJ12\MJ12SniperRifle3rd.pcx"		        NAME="MJ12SniperRifle3rd"		GROUP="WeaponSkins" FLAGS=2
 
 ////Sawed Off
@@ -156,3 +156,7 @@ class AllWeaponSkins expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Sword\hotpink\hotpinksword.bmp"		        	    NAME="HotPinkSword1"			GROUP="WeaponSkins"
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Sword\hotpink\hotpinksword3rd.bmp"		       	    NAME="HotPinkSword3rd"			GROUP="WeaponSkins"
 #exec TEXTURE IMPORT FILE="Textures\WeaponSkins\Sword\hotpink\ReflectionMapPink.bmp"		   	    NAME="HotPinkSwordEnv"			GROUP="WeaponSkins"
+
+defaultproperties
+{
+}

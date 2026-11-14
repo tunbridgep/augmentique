@@ -74,7 +74,7 @@ class AllOutfits expands Object abstract;
 
 //Gold and Brown Business
 //#exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex1.pcx"                         NAME="Outfit2F_Tex1"               GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex2.pcx"                         NAME="Outfit2F_Tex2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex2.pcx"                         NAME="Outfit2F_Tex2"               GROUP="Outfits" FLAGS=2
 #exec TEXTURE IMPORT FILE="Textures\Female\Gold & Brown Business\Tex3.bmp"                         NAME="Outfit2F_Tex3"               GROUP="Outfits"
 
 //Goth GF Outfit
@@ -83,19 +83,22 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S2.bmp"                             NAME="Outfit3F_Tex1_S2"            GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S3.bmp"                             NAME="Outfit3F_Tex1_S3"            GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex1_S4.bmp"                             NAME="Outfit3F_Tex1_S4"            GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex2.pcx"                                NAME="Outfit3F_Tex2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex2.pcx"                                NAME="Outfit3F_Tex2"               GROUP="Outfits" FLAGS=2
 #exec TEXTURE IMPORT FILE="Textures\Female\Goth GF Outfit\Tex3.bmp"                                NAME="Outfit3F_Tex3"               GROUP="Outfits"
 
 //Matrix Outfit
 #exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex1.bmp"                                 NAME="Outfit4F_Tex1"               GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex2.pcx"                                 NAME="Outfit4F_Tex2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex2.pcx"                                 NAME="Outfit4F_Tex2"               GROUP="Outfits" FLAGS=2
 #exec TEXTURE IMPORT FILE="Textures\Female\Matrix Outfit\Tex3.bmp"                                 NAME="Outfit4F_Tex3"               GROUP="Outfits"
 
 //Alex Denton Outfit (ButaneBoss)
 #exec TEXTURE IMPORT FILE="Textures\Female\ButaneBoss\Alex\Tex0.pcx"                                 NAME="Outfit5F_Tex0"               GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Female\ButaneBoss\Alex\Tex1.pcx"                                 NAME="Outfit5F_Tex1"               GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Female\ButaneBoss\Alex\Tex2.pcx"                                 NAME="Outfit5F_Tex2"               GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Female\ButaneBoss\Alex\Tex2.pcx"                                 NAME="Outfit5F_Tex2"               GROUP="Outfits" FLAGS=2
 #exec TEXTURE IMPORT FILE="Textures\Female\ButaneBoss\Alex\Tex3.pcx"                                 NAME="Outfit5F_Tex3"               GROUP="Outfits"
+
+//Pride
+#exec TEXTURE IMPORT FILE="Textures\Pride\Tex1.bmp"                                                  NAME="PrideTex3"               GROUP="Outfits"
 
 //========================================================
 //Import Vanilla Textures with new Skins and Circuitry added
@@ -388,11 +391,11 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex1_S3.bmp"                            NAME="Hooker1Tex1_S3"                       GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex1_S4.bmp"                            NAME="Hooker1Tex1_S4"                       GROUP="Outfits"
 
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S0.pcx"                            NAME="Hooker1Tex2"                          GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S1.pcx"                            NAME="Hooker1Tex2_S1"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S2.pcx"                            NAME="Hooker1Tex2_S2"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S3.pcx"                            NAME="Hooker1Tex2_S3"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S4.pcx"                            NAME="Hooker1Tex2_S4"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S0.pcx"                            NAME="Hooker1Tex2"                          GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S1.pcx"                            NAME="Hooker1Tex2_S1"                       GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S2.pcx"                            NAME="Hooker1Tex2_S2"                       GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S3.pcx"                            NAME="Hooker1Tex2_S3"                       GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex2_S4.pcx"                            NAME="Hooker1Tex2_S4"                       GROUP="Outfits" FLAGS=2
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex3_S0.bmp"                            NAME="Hooker1Tex3"                          GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker1Tex3_S1.bmp"                            NAME="Hooker1Tex3_S1"                       GROUP="Outfits"
@@ -406,11 +409,11 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex1_S3.bmp"                            NAME="Hooker2Tex1_S3"                       GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex1_S4.bmp"                            NAME="Hooker2Tex1_S4"                       GROUP="Outfits"
 
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S0.pcx"                            NAME="Hooker2Tex2"                          GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S1.pcx"                            NAME="Hooker2Tex2_S1"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S2.pcx"                            NAME="Hooker2Tex2_S2"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S3.pcx"                            NAME="Hooker2Tex2_S3"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S4.pcx"                            NAME="Hooker2Tex2_S4"                       GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S0.pcx"                            NAME="Hooker2Tex2"                          GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S1.pcx"                            NAME="Hooker2Tex2_S1"                       GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S2.pcx"                            NAME="Hooker2Tex2_S2"                       GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S3.pcx"                            NAME="Hooker2Tex2_S3"                       GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex2_S4.pcx"                            NAME="Hooker2Tex2_S4"                       GROUP="Outfits" FLAGS=2
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex3_S0.bmp"                            NAME="Hooker2Tex3"                          GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\Hooker2Tex3_S1.bmp"                            NAME="Hooker2Tex3_S1"                       GROUP="Outfits"
@@ -436,11 +439,11 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MargaretWilliamsTex1_S3.bmp"                   NAME="MargaretWilliamsTex1_S3"              GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MargaretWilliamsTex1_S4.bmp"                   NAME="MargaretWilliamsTex1_S4"              GROUP="Outfits"
 
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S0.pcx"                         NAME="MaggieChowTex1"                       GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S1.pcx"                         NAME="MaggieChowTex1_S1"                    GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S2.pcx"                         NAME="MaggieChowTex1_S2"                    GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S3.pcx"                         NAME="MaggieChowTex1_S3"                    GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S4.pcx"                         NAME="MaggieChowTex1_S4"                    GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S0.pcx"                         NAME="MaggieChowTex1"                       GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S1.pcx"                         NAME="MaggieChowTex1_S1"                    GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S2.pcx"                         NAME="MaggieChowTex1_S2"                    GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S3.pcx"                         NAME="MaggieChowTex1_S3"                    GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\MaggieChowTex1_S4.pcx"                         NAME="MaggieChowTex1_S4"                    GROUP="Outfits" FLAGS=2
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex1_S0.bmp"                   NAME="NicoletteDuclareTex1"                 GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex1_S1.bmp"                   NAME="NicoletteDuclareTex1_S1"              GROUP="Outfits"
@@ -448,11 +451,11 @@ class AllOutfits expands Object abstract;
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex1_S3.bmp"                   NAME="NicoletteDuclareTex1_S3"              GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex1_S4.bmp"                   NAME="NicoletteDuclareTex1_S4"              GROUP="Outfits"
 
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S0.pcx"                   NAME="NicoletteDuclareTex2"                 GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S1.pcx"                   NAME="NicoletteDuclareTex2_S1"              GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S2.pcx"                   NAME="NicoletteDuclareTex2_S2"              GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S3.pcx"                   NAME="NicoletteDuclareTex2_S3"              GROUP="Outfits"
-#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S4.pcx"                   NAME="NicoletteDuclareTex2_S4"              GROUP="Outfits"
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S0.pcx"                   NAME="NicoletteDuclareTex2"                 GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S1.pcx"                   NAME="NicoletteDuclareTex2_S1"              GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S2.pcx"                   NAME="NicoletteDuclareTex2_S2"              GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S3.pcx"                   NAME="NicoletteDuclareTex2_S3"              GROUP="Outfits" FLAGS=2
+#exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex2_S4.pcx"                   NAME="NicoletteDuclareTex2_S4"              GROUP="Outfits" FLAGS=2
 
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex3_S0.bmp"                   NAME="NicoletteDuclareTex3"                 GROUP="Outfits"
 #exec TEXTURE IMPORT FILE="Textures\Vanilla Reskins\NicoletteDuClareTex3_S1.bmp"                   NAME="NicoletteDuclareTex3_S1"              GROUP="Outfits"

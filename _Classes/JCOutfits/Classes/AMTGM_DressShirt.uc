@@ -309,3 +309,7 @@ class AMTGM_DressShirt extends Object abstract;
 #exec MESH NOTIFY MESH=AMTGM_DressShirt_F SEQ=Strafe2H		TIME=0.6	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGM_DressShirt_F SEQ=RunShoot2H	TIME=0.1	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGM_DressShirt_F SEQ=RunShoot2H	TIME=0.6	FUNCTION=PlayFootStep
+
+defaultproperties
+{
+}

@@ -103,3 +103,7 @@ class AMTGM_Trench_F extends Object abstract;
 #exec MESH NOTIFY MESH=AMTGM_Trench_F SEQ=DeathBack	TIME=0.5	FUNCTION=PlayBodyThud
 #exec MESH NOTIFY MESH=AMTGM_Trench_F SEQ=Tread		TIME=0.3	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGM_Trench_F SEQ=TreadShoot	TIME=0.3	FUNCTION=PlayFootStep
+
+defaultproperties
+{
+}

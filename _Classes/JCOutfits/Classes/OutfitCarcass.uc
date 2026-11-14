@@ -40,3 +40,7 @@ function InitFor(Actor Other)
     multiskins[7] = Other.multiskins[7];
     Texture = Other.Texture;
 }
+
+defaultproperties
+{
+}

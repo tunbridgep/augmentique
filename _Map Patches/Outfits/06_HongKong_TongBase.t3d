@@ -14,7 +14,7 @@ Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner1
 End Actor
 Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner3
     Id="gordonquick"
-    requiredFlag="Have_ROM"
+    requiredFlags(0)=Have_ROM
     bDynamicLight=True
     LastRenderTime=102.584885
     Level=LevelInfo'MyLevel.LevelInfo0'
@@ -27,7 +27,8 @@ Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner3
 End Actor
 Begin Actor Class=OutfitSpawner2 Name=OutfitSpawner0
     Id="jaimereyes"
-    requiredFlag="JaimeRecruited"
+    requiredFlags(0)=Have_ROM
+    requiredFlags(1)=JaimeRecruited
     bDynamicLight=True
     LastRenderTime=99.985359
     Level=LevelInfo'MyLevel.LevelInfo0'

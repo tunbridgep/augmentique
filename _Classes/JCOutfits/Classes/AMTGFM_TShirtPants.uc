@@ -90,3 +90,7 @@ class AMTGFM_TShirtPants extends Object abstract;
 #exec MESH NOTIFY MESH=AMTGFM_TShirtPants SEQ=DeathBack	TIME=0.5	FUNCTION=PlayBodyThud
 #exec MESH NOTIFY MESH=AMTGFM_TShirtPants SEQ=Tread		TIME=0.3	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGFM_TShirtPants SEQ=TreadShoot	TIME=0.3	FUNCTION=PlayFootStep
+
+defaultproperties
+{
+}

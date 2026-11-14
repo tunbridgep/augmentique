@@ -105,3 +105,6 @@ function static ApplyOutfitToCarcass(DeusExCarcass C)
         C.Texture = C.augmentiqueData.textures[8];
 }
 
+defaultproperties
+{
+}

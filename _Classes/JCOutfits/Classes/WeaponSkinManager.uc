@@ -102,6 +102,8 @@ var private transient ProjectileSkin ProjectileSkins[255];
 var private transient int numProjectileSkins;
 var private transient int currentProjectileSkin;
 
+var const sound PickupSound;            //The sound made when picking up weapon skins
+
 var globalconfig bool bSwitchToNewSkins;
 
 const SKIN_PREFIX = "Augmentique.WeaponSkins.";
@@ -138,6 +140,8 @@ function Init(DeusExPlayer newPlayer)
     AddSkinOwnerClass("DeusEx.MJ12Troop");
     AddSkinOwnerClass("DeusEx.MJ12Elite");
     AddSkinOwnerClass("DeusEx.MJ12Elite2");
+    AddSkinOwnerClass("DeusEx.MIB");
+    AddSkinOwnerClass("DeusEx.WIB");
     AddSkinTex(1,SKIN_PREFIX $ "AssaultGunMJ121");
     Add3rdSkinTex(0,SKIN_PREFIX $ "AssaultGunMJ123rd");
     Add3rdSkinTex(1,SKIN_PREFIX $ "AssaultGunMJ123rd");
@@ -181,6 +185,8 @@ function Init(DeusExPlayer newPlayer)
     AddSkinOwnerClass("DeusEx.MJ12Troop");
     AddSkinOwnerClass("DeusEx.MJ12Elite");
     AddSkinOwnerClass("DeusEx.MJ12Elite2");
+    AddSkinOwnerClass("DeusEx.MIB");
+    AddSkinOwnerClass("DeusEx.WIB");
     AddSkinTex(0,SKIN_PREFIX $ "MJ12AssaultShotgun1");
     Add3rdSkinTex(0,SKIN_PREFIX $ "MJ12AssaultShotgun3rd");
     Add3rdSkinTex(1,SKIN_PREFIX $ "MJ12AssaultShotgun3rd");
@@ -298,6 +304,12 @@ function Init(DeusExPlayer newPlayer)
     Add3rdSkinTex(0,SKIN_PREFIX $ "HotpinkShotgun3rd");
     Add3rdSkinTex(1,SKIN_PREFIX $ "HotpinkShotgun3rd");
     
+    //RoSoDude
+    AddSkinL("meatshotgun","DeusEx.WeaponSawedOffShotgun",14);
+    AddSkinTex(1,"DeusExItems.Skins.WeaponHandsTex");
+    Add3rdSkinTex(0,"DeusExItems.Skins.WeaponHandsTex");
+    Add3rdSkinTex(1,"DeusExItems.Skins.WeaponHandsTex");
+    
     ////Stealth Pistol
 
     //Black Stealth Pistol
@@ -318,6 +330,8 @@ function Init(DeusExPlayer newPlayer)
     AddSkinOwnerClass("DeusEx.MJ12Troop");
     AddSkinOwnerClass("DeusEx.MJ12Elite");
     AddSkinOwnerClass("DeusEx.MJ12Elite2");
+    AddSkinOwnerClass("DeusEx.MIB");
+    AddSkinOwnerClass("DeusEx.WIB");
     AddSkinTex(1,SKIN_PREFIX $ "MJ12SniperRifle1");
     AddSkinTex(7,SKIN_PREFIX $ "MJ12SniperRifle1");
     Add3rdSkinTex(0,SKIN_PREFIX $ "MJ12SniperRifle3rd");
@@ -328,6 +342,8 @@ function Init(DeusExPlayer newPlayer)
     AddSkinOwnerClass("DeusEx.MJ12Troop");
     AddSkinOwnerClass("DeusEx.MJ12Elite");
     AddSkinOwnerClass("DeusEx.MJ12Elite2");
+    AddSkinOwnerClass("DeusEx.MIB");
+    AddSkinOwnerClass("DeusEx.WIB");
     AddSkinTex(0,SKIN_PREFIX $ "MJ12PlasmaRifle1");
     //AddSkinTex(1,SKIN_PREFIX $ "MJ12PlasmaRifleSFX");
     Add3rdSkinTex(1,SKIN_PREFIX $ "MJ12PlasmaRifle3rd");
@@ -347,10 +363,10 @@ function Init(DeusExPlayer newPlayer)
     SyncFromStoredData();
     
     //When we finish the game, or if we're in training, copy our weapon skins out permanently
-    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0) && !class'OutfitManager'.default.bDebugMode)
+    if (dxInfo != None && (dxInfo.missionNumber > 90 || dxInfo.missionNumber == 0 || class'OutfitManager'.default.bGlobalUnlocks) && !class'OutfitManager'.default.bDebugMode)
         CopyUnlocksToConfig();
 
-    //RefreshAllWeapons();
+    FixWeapons();
 
     bInited = true;
 }
@@ -422,35 +438,55 @@ function UpdateWeaponSkinsForPawn(ScriptedPawn P)
     }
 }
 
-//Unlocks skins when searching carcasses for items we can't pick up
-function GetSkinFromCarcass(DeusExPlayer P, DeusExWeapon weapon, DeusExCarcass carc)
+//Add a WPN SKIN icon to the received window
+function private ShowReceivedSkinWindow(DeusExPlayer P)
 {
     local WeaponSkinDisplayItem temp;
 
+    if (P != None && P.rootWindow != None)
+    {
+        //Create a temp object for the new item
+        temp = P.spawn(class'WeaponSkinDisplayItem',,, P.Location);
+
+        if (temp != None)
+        {
+            //Show the new icon
+            //P.PlaySound(weapon.CopyModsSound,SLOT_None,0.8);
+            //P.AddReceivedItem(temp,1);
+            DeusExRootWindow(P.rootWindow).hud.receivedItems.AddItem(temp, 1);
+            
+            //Destroy it
+            temp.Destroy();
+            temp = None;
+        }
+    }
+
+}
+
+//Unlocks skins when searching carcasses for items we can't pick up
+function GetSkinFromCarcass(DeusExPlayer P, DeusExWeapon weapon, DeusExCarcass carc)
+{
     //Log("GetSkinFromCarcass:" @ weapon.currentWeaponSkin @ IsUnlocked(weapon));
 
     if (weapon == None || carc == None)
         return;
 
     if (weapon.currentWeaponSkin != "default" && weapon.currentWeaponSkin != "" && !IsUnlocked(weapon))
+        UnlockSkin(weapon);
+}
+
+//Fix any weapons that have invalid skins
+function FixWeapons()
+{
+    local DeusExWeapon W;
+
+    if (player == None)
+        return;
+        
+	foreach player.AllActors(class'DeusExWeapon', W)
     {
-        if (UnlockSkin(weapon))
-        {
-            //Create a temp object for the new item
-            temp = carc.spawn(class'WeaponSkinDisplayItem',,, carc.Location);
-
-            if (temp != None)
-            {
-
-                //Show the new icon
-                //carc.PlaySound(weapon.CopyModsSound,SLOT_None,0.8);
-                carc.AddReceivedItem(P,temp,1);
-                
-                //Destroy it
-                temp.Destroy();
-                temp = None;
-            }
-        }
+        if (W.currentWeaponSkin == "")
+            W.currentWeaponSkin = "default";
     }
 }
 
@@ -463,6 +499,8 @@ function RefreshAllWeapons()
     if (player == None)
         return;
         
+    FixWeapons();
+
     //Refresh all weapons in the map
 	foreach player.AllActors(class'DeusExWeapon', W)
     {
@@ -637,7 +675,7 @@ function private bool IsIDUnlocked(string id)
 function bool UnlockSkin(DeusExWeapon weapon, optional bool bNoMessage)
 {
     if (weapon != None)
-        return UnlockSkinByID(weapon.currentWeaponSkin,false,weapon.itemName);
+        return UnlockSkinByID(weapon.currentWeaponSkin,bNoMessage,weapon.itemName);
     return false;
 }
 
@@ -678,7 +716,13 @@ function bool UnlockSkinByID(string id, optional bool bNoMessage, optional strin
                         msg = msg @ "[" $ messageExtra $ "]";
 
                     player.ClientMessage(msg);
+					player.PlaySound(PickupSound, SLOT_None);
+
+                    ShowReceivedSkinWindow(player);
                 }
+
+                if (class'OutfitManager'.default.bGlobalUnlocks)
+                    CopyUnlocksToConfig();
 
                 break;
             }
@@ -689,19 +733,21 @@ function bool UnlockSkinByID(string id, optional bool bNoMessage, optional strin
 }
 
 //Transfer the skin from the weapon we just picked up to our current weapon
-function TransferSkin(DeusExWeapon wep)
+function bool TransferSkin(DeusExWeapon wep)
 {
     local DeusExWeapon PW;
     
     PW = DeusExWeapon(player.Weapon);
 
     //If the items match, and our weapon is using the default skin, swap it.
-    if (PW != None && PW.Class == wep.Class && bSwitchToNewSkins/* && PW.currentWeaponSkin == "default"*/)
+    if (PW != None && PW.Class == wep.Class && bSwitchToNewSkins && !IsUnlocked(wep)/* && PW.currentWeaponSkin == "default"*/)
     {
         //wep.PlaySound(wep.CopyModsSound,SLOT_None,0.8);
         PW.currentWeaponSkin = wep.currentWeaponSkin;
         UpdateWeaponSkinTextures(PW);
+        return true;
     }
+    return false;
 }
 
 //Done as part of init and no other time
@@ -711,7 +757,7 @@ function private SyncFromStoredData()
        
     //Copy over unlocks from config
     for (i = 0;i < ArrayCount(unlockedWeaponSkinsGlobal); i++)
-        UnlockSkinByID(unlockedWeaponSkinsGlobal[i]);
+        UnlockSkinByID(unlockedWeaponSkinsGlobal[i],true);
 
     //Set "bUnlocked" on anything we've unlocked
     for (i = 0;i < ArrayCount(unlockedWeaponSkins);i++)
@@ -1109,5 +1155,7 @@ defaultproperties
     weaponSkinNames(11)="Hot Pink"
     weaponSkinNames(12)="EMPink"
     weaponSkinNames(13)="Gold Plated"
+    weaponSkinNames(14)="RoSoDude's Meat Shotgun"
     bSwitchToNewSkins=true
+	PickupSound=Sound'Augmentique.Outfits.WeaponSkinPickup'
 }

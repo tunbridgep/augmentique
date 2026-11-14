@@ -17,3 +17,7 @@ event InitWindow()
         S = WeaponSkinManager(player.weaponSkinManager);
     }
 }
+
+defaultproperties
+{
+}

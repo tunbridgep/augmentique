@@ -8,6 +8,6 @@ class WeaponSkinDisplayItem extends Inventory;
 
 defaultproperties
 {
-    beltDescription="WPN SKIN"
-    Icon=Texture'Augmentique.WeaponSkins.WeaponSkinIcon'
+     Icon=Texture'Augmentique.WeaponSkins.WeaponSkinIcon'
+     beltDescription="WPN SKIN"
 }

@@ -554,6 +554,7 @@ function PrevCustomOutfitSlot(int slot)
     P1 = O.GetPartOfType(slot);
     if (P1 != None)
     {
+        outfitManager.SetOutfitFlags(O, false);
         P2 = O.partsGroup.GetPreviousPartOfType(slot,P1.index);
         O.ReplacePart(slot,P2);
     }
@@ -578,6 +579,7 @@ function NextCustomOutfitSlot(int slot)
     P1 = O.GetPartOfType(slot);
     if (P1 != None)
     {
+        outfitManager.SetOutfitFlags(O, false);
         P2 = O.partsGroup.GetNextPartOfType(slot,P1.index);
         O.ReplacePart(slot,P2);
     }
@@ -768,15 +770,15 @@ function Equip(int index)
 
 defaultproperties
 {
+     ChangeCameraLabel="Change View"
      ShowAccessoriesLabel="Show Accessories"
      ShowDescriptionsLabel="Show Descriptions"
      OutfitsTitleText="Outfits"
      EquipButtonLabel="Equip"
      EditButtonLabel="Customize Outfit"
      SettingsButtonLabel="Settings"
-     ChangeCameraLabel="Change View"
+     newLabel="(New)"
      ModelVariantLabel="Body Type"
-     NewLabel="(New)"
      PartButtonNames(0)="Skin"
      PartButtonNames(1)="Main"
      PartButtonNames(2)="Coat"

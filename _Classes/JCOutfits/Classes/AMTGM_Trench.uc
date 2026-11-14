@@ -209,3 +209,7 @@ class AMTGM_Trench extends Object abstract;
 #exec MESH NOTIFY MESH=AMTGM_TrenchLeft SEQ=TreadShoot	TIME=0.3	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGM_TrenchLeft SEQ=Jump		TIME=0.05	FUNCTION=PlayFootStep
 #exec MESH NOTIFY MESH=AMTGM_TrenchLeft SEQ=Land		TIME=0.05	FUNCTION=PlayFootStep
+
+defaultproperties
+{
+}

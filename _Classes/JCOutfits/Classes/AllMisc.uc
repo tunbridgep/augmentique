@@ -5,8 +5,9 @@ class AllMisc expands Object abstract;
 // Mainly HDTP menus and other crap
 // ===========================================================================================================
 
-////Pickup Sound
+////Pickup Sounds
 #exec AUDIO IMPORT FILE="Sounds\BoxPickup.wav"			            NAME="BoxPickup"		  GROUP="Outfits"
+#exec AUDIO IMPORT FILE="Sounds\WeaponSkinPickup.wav"			    NAME="WeaponSkinPickup"		  GROUP="Outfits"
 
 ////HDTP Menus
 #exec TEXTURE IMPORT FILE="Textures\Menus\OptionsScreen_1.pcx"      NAME="OptionsScreen_1"    GROUP="UserInterface"
@@ -19,3 +20,7 @@ class AllMisc expands Object abstract;
 
 ////Cat Texture
 #exec TEXTURE IMPORT FILE="Textures\Cat\CatTex2.bmp"                                NAME="CatTex2"                              GROUP="Misc"
+
+defaultproperties
+{
+}
